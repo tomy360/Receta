@@ -1,0 +1,139 @@
+var DIAS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+var SLOTS = [
+  { comida: 'Desayuno',    fija: true  },
+  { comida: 'Snack',       fija: false },
+  { comida: 'Almuerzo',    fija: true  },
+  { comida: 'Snack 2',     fija: false },
+  { comida: 'Media tarde', fija: true  },
+  { comida: 'Cena',        fija: true  },
+  { comida: 'Postre',      fija: false },
+];
+var CLAVE_PLAN = 'recetario-plan-semanal';
+
+function obtenerPlan() {
+  var data = localStorage.getItem(CLAVE_PLAN);
+  return data ? JSON.parse(data) : {};
+}
+
+function guardarPlan(plan) {
+  localStorage.setItem(CLAVE_PLAN, JSON.stringify(plan));
+}
+
+function planificarReceta(dia, comida, nombreReceta, idReceta) {
+  var plan = obtenerPlan();
+  if (!plan[dia]) plan[dia] = {};
+  plan[dia][comida] = { nombre: nombreReceta, id: idReceta };
+  guardarPlan(plan);
+  renderizarPlan();
+}
+
+function eliminarSlot(dia, comida) {
+  var plan = obtenerPlan();
+  if (plan[dia]) {
+    delete plan[dia][comida];
+    var soloColapsado = Object.keys(plan[dia]).every(function (k) { return k === 'colapsado'; });
+    if (soloColapsado) delete plan[dia];
+  }
+  guardarPlan(plan);
+  renderizarPlan();
+}
+
+function toggleOpcionales(dia) {
+  var plan = obtenerPlan();
+  if (!plan[dia]) plan[dia] = {};
+  plan[dia].colapsado = !plan[dia].colapsado;
+  guardarPlan(plan);
+  renderizarPlan();
+}
+
+function limpiarPlan() {
+  if (!confirm('¿Limpiar toda la planificación semanal?')) return;
+  localStorage.removeItem(CLAVE_PLAN);
+  renderizarPlan();
+}
+
+function renderSlotLleno(dia, comida, item, estrella) {
+  return '<div class="plan-slot plan-slot-lleno">' +
+    '<span class="plan-slot-comida">' + comida + (estrella ? '*' : '') + '</span>' +
+    '<a class="plan-slot-nombre" href="receta.html?id=' + item.id + '">' + item.nombre + '</a>' +
+    '<button class="plan-slot-eliminar" onclick="eliminarSlot(\'' + dia + '\',\'' + comida + '\')" title="Quitar">✕</button>' +
+    '</div>';
+}
+
+function renderSlotVacio(dia, comida, estrella) {
+  return '<div class="plan-slot plan-slot-vacio" onclick="abrirSelector(\'' + dia + '\',\'' + comida + '\')">' +
+    '<span class="plan-slot-comida">' + comida + (estrella ? '*' : '') + '</span>' +
+    '<span class="plan-slot-agregar">+ Agregar</span>' +
+    '</div>';
+}
+
+function renderizarPlan() {
+  var grid = document.getElementById('planificadorGrid');
+  if (!grid) return;
+  var plan = obtenerPlan();
+  var html = '<div class="plan-dias">';
+  DIAS.forEach(function (dia) {
+    var info = plan[dia] || {};
+    var colapsado = info.colapsado === true;
+    html += '<div class="plan-dia">' +
+      '<div class="plan-dia-header">' +
+      '<span>' + dia + '</span>' +
+      '<button class="plan-toggle-btn" onclick="toggleOpcionales(\'' + dia + '\')" title="' + (colapsado ? 'Mostrar opcionales' : 'Ocultar opcionales') + '">' + (colapsado ? '[+]' : '[−]') + '</button>' +
+      '</div>';
+    SLOTS.forEach(function (s) {
+      if (s.fija) {
+        html += info[s.comida] ? renderSlotLleno(dia, s.comida, info[s.comida], false) : renderSlotVacio(dia, s.comida, false);
+      } else if (info[s.comida]) {
+        html += renderSlotLleno(dia, s.comida, info[s.comida], true);
+      } else if (!colapsado) {
+        html += renderSlotVacio(dia, s.comida, true);
+      }
+    });
+    html += '</div>';
+  });
+  html += '</div>';
+  grid.innerHTML = html;
+}
+
+var selectorVisible = false;
+var selectorDia = '';
+var selectorComida = '';
+
+function abrirSelector(dia, comida) {
+  selectorDia = dia;
+  selectorComida = comida;
+  var recetas = obtenerRecetas();
+  var overlay = document.getElementById('selectorRecetas');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'selectorRecetas';
+    overlay.className = 'modal';
+    overlay.onclick = function (e) { if (e.target === this) cerrarSelector(); };
+    document.body.appendChild(overlay);
+  }
+  var html = '<div class="modal-contenido modal-selector-recetas"><button class="modal-cerrar" onclick="cerrarSelector()">✕</button>';
+  html += '<h3>Seleccionar receta para ' + dia + ' — ' + comida + '</h3>';
+  html += '<div class="selector-lista">';
+  recetas.forEach(function (r) {
+    html += '<button class="selector-item" onclick="planificarReceta(\'' + dia + '\',\'' + comida + '\',\'' + r.titulo.replace(/'/g, "\\'") + '\',\'' + r.id + '\')">';
+    html += '<span class="selector-item-nombre">' + r.titulo + '</span>';
+    html += '<span class="selector-item-tipo">' + r.tipo + '</span>';
+    html += '</button>';
+  });
+  html += '</div></div>';
+  overlay.innerHTML = html;
+  overlay.classList.remove('oculto');
+  selectorVisible = true;
+}
+
+function cerrarSelector() {
+  var overlay = document.getElementById('selectorRecetas');
+  if (overlay) overlay.classList.add('oculto');
+  selectorVisible = false;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  renderizarPlan();
+  var btn = document.getElementById('btnLimpiarPlan');
+  if (btn) btn.addEventListener('click', limpiarPlan);
+});

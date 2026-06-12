@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>if(localStorage.getItem('recetario-modo-noche')==='1')document.documentElement.classList.add('modo-noche')</script>
+  <link rel="stylesheet" href="./CSS/estilo.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍳</text></svg>">
+  <title>Receta - Recetario Local</title>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+
+    <a class="nav-logo" href="./index.html">
+      <span class="nav-logo-icon">🍳</span>
+      <span>Recetario</span>
+    </a>
+
+    <div class="menu-botones">
+      <a class="BotonBa" href="./index.html">Inicio</a>
+      <a class="BotonBa" href="./index.html?tipo=Desayuno">Desayuno</a>
+      <a class="BotonBa" href="./index.html?tipo=Almuerzo">Almuerzo</a>
+      <a class="BotonBa" href="./index.html?tipo=Cena">Cena</a>
+      <a class="BotonBa" href="./index.html?tipo=Postre">Postres</a>
+      <a class="BotonBa" href="./planificador.html">📅 Planificador</a>
+      <button class="nav-dark-btn nav-timer-btn" onclick="abrirTimer()" title="Abrir temporizador">⏱️</button>
+      <button class="nav-dark-btn" id="btnModoNoche" aria-label="Activar modo noche" title="Modo noche">🌕</button>
+    </div>
+
+    <div class="nav-cta">
+      <a class="BotonP" href="./agregar.html">+ Añadir Receta</a>
+    </div>
+
+    <button class="nav-hamburger" id="navHamburger" aria-label="Abrir menú" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+  </div>
+
+  <div class="nav-mobile-menu" id="navMobileMenu" role="navigation">
+    <a class="nav-mobile-link" href="./index.html">
+      <span class="nav-mobile-icon">🏠</span> Inicio
+    </a>
+    <a class="nav-mobile-link" href="./index.html?tipo=Desayuno">
+      <span class="nav-mobile-icon">☀️</span> Desayuno
+    </a>
+    <a class="nav-mobile-link" href="./index.html?tipo=Almuerzo">
+      <span class="nav-mobile-icon">🥗</span> Almuerzo
+    </a>
+    <a class="nav-mobile-link" href="./index.html?tipo=Cena">
+      <span class="nav-mobile-icon">🌙</span> Cena
+    </a>
+    <a class="nav-mobile-link" href="./index.html?tipo=Postre">
+      <span class="nav-mobile-icon">🍰</span> Postres
+    </a>
+    <a class="nav-mobile-link" href="./planificador.html">
+      <span class="nav-mobile-icon">📅</span> Planificador
+    </a>
+    <a class="nav-mobile-link" role="button" tabindex="0" onclick="abrirTimer()">
+      <span class="nav-mobile-icon">⏱️</span> Temporizador
+    </a>
+    <a class="nav-mobile-link" role="button" tabindex="0" id="btnModoNocheMobile">
+      <span class="nav-mobile-icon" id="iconoModoNocheMobile">🌕</span> <span id="textoModoNocheMobile">Modo noche</span>
+    </a>
+    <div class="nav-mobile-divider"></div>
+    <div class="nav-mobile-cta">
+      <a class="BotonP" href="./agregar.html">+ Añadir Receta</a>
+    </div>
+  </div>
+</nav>
+
+<div class="nav-overlay" id="navOverlay"></div>
+
+<div class="detalle-contenedor" id="detalleContenido">
+  <p style="text-align:center;padding:3rem;color:#6b7280;">Cargando receta...</p>
+</div>
+
+  <!-- TIMER MODAL -->
+  <div class="modal oculto" id="modalTimer" onclick="if(event.target===this)cerrarTimer()">
+    <div class="modal-contenido modal-timer">
+      <button class="modal-cerrar" onclick="cerrarTimer()">✕</button>
+      <h3>⏱️ Temporizador</h3>
+      <div class="timer-display" id="timerDisplay">10:00</div>
+      <div class="timer-barra-track"><div class="timer-barra-fill" id="timerBarra" style="width:100%"></div></div>
+      <div class="timer-acciones">
+        <button class="btn-accion" id="timerBoton" onclick="toggleTimer()">▶</button>
+        <button class="btn-accion" onclick="reiniciarTimer()">⟳</button>
+        <div class="timer-presets">
+          <button class="btn-categoria" onclick="abrirTimer('5 min')">5</button>
+          <button class="btn-categoria" onclick="abrirTimer('10 min')">10</button>
+          <button class="btn-categoria" onclick="abrirTimer('15 min')">15</button>
+          <button class="btn-categoria" onclick="abrirTimer('30 min')">30</button>
+          <button class="btn-categoria" onclick="abrirTimer('60 min')">60</button>
+        </div>
+      </div>
+      <div class="timer-alarma oculto" id="timerAlarma">🔔 ¡Tiempo cumplido!</div>
+    </div>
+  </div>
+
+  <!-- MODO COCINA OVERLAY -->
+  <div class="cocina-overlay oculto" id="cocinaOverlay">
+    <div class="cocina-header">
+      <button class="cocina-cerrar" id="cocinaCerrar">✕ Salir</button>
+      <div class="cocina-progreso"><div class="cocina-progreso-fill" id="cocinaProgreso"></div></div>
+    </div>
+    <div class="cocina-cuerpo">
+      <div class="cocina-contenido">
+        <div class="cocina-paso-num" id="cocinaPasoNum"></div>
+        <h2 class="cocina-titulo" id="cocinaTitulo"></h2>
+        <div class="cocina-preparacion" id="cocinaPreparacion"></div>
+        <div class="cocina-ingredientes" id="cocinaIngredientes"></div>
+      </div>
+    </div>
+    <div class="cocina-footer">
+      <button class="btn-accion" id="cocinaPrev">◀ Anterior</button>
+      <button class="btn-accion btn-principal" id="cocinaNext">Siguiente ▶</button>
+    </div>
+  </div>
+
+<footer>
+  <div class="contenedor">
+    <p>Recetario Local — Tu app de recetas personales.</p>
+  </div>
+</footer>
+
+<script src="./JS/datos.js"></script>
+<script src="./JS/timer.js"></script>
+<script src="./JS/detalle-receta.js"></script>
+<button id="scrollTop" title="Volver arriba">↑</button>
+<script>
+const btn = document.getElementById("scrollTop");
+window.addEventListener("scroll", () => btn.classList.toggle("visible", window.scrollY > 300));
+btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+</script>
+
+<script>
+(function () {
+  var CLAVE = 'recetario-modo-noche';
+  var btnD = document.getElementById('btnModoNoche');
+  var btnM = document.getElementById('btnModoNocheMobile');
+  var iconoM = document.getElementById('iconoModoNocheMobile');
+  var textoM = document.getElementById('textoModoNocheMobile');
+
+  function activar() {
+    document.documentElement.classList.add('modo-noche');
+    btnD.textContent = '\u2600\uFE0F';
+    btnD.setAttribute('aria-label', 'Desactivar modo noche');
+    btnD.setAttribute('title', 'Modo d\u00EDa');
+    if (iconoM) iconoM.textContent = '\u2600\uFE0F';
+    if (textoM) textoM.textContent = 'Modo d\u00EDa';
+    localStorage.setItem(CLAVE, '1');
+  }
+
+  function desactivar() {
+    document.documentElement.classList.remove('modo-noche');
+    btnD.textContent = '\uD83C\uDF15';
+    btnD.setAttribute('aria-label', 'Activar modo noche');
+    btnD.setAttribute('title', 'Modo noche');
+    if (iconoM) iconoM.textContent = '\uD83C\uDF15';
+    if (textoM) textoM.textContent = 'Modo noche';
+    localStorage.removeItem(CLAVE);
+  }
+
+  function toggle() {
+    document.documentElement.classList.contains('modo-noche') ? desactivar() : activar();
+  }
+
+  if (localStorage.getItem(CLAVE) === '1') activar();
+
+  btnD.addEventListener('click', toggle);
+  if (btnM) {
+    btnM.addEventListener('click', function (e) { e.preventDefault(); toggle(); });
+  }
+})();
+</script>
+
+<script>
+(function () {
+  const hamburger = document.getElementById('navHamburger');
+  const menu      = document.getElementById('navMobileMenu');
+  const overlay   = document.getElementById('navOverlay');
+
+  function abrir() {
+    hamburger.classList.add('abierto');
+    menu.classList.add('visible');
+    overlay.classList.add('visible');
+    hamburger.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function cerrar() {
+    hamburger.classList.remove('abierto');
+    menu.classList.remove('visible');
+    overlay.classList.remove('visible');
+    hamburger.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  hamburger.addEventListener('click', function () {
+    menu.classList.contains('visible') ? cerrar() : abrir();
+  });
+
+  overlay.addEventListener('click', cerrar);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') cerrar();
+  });
+
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 860) cerrar();
+  });
+})();
+</script>
+</body>
+</html>
