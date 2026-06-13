@@ -37,7 +37,7 @@ async function guardarTip(tip) {
 async function actualizarTip(tip) {
   await peticionTips(SUPABASE_URL + '/rest/v1/' + TABLA_TIPS + '?id=eq.' + encodeURIComponent(tip.id), {
     method: 'PATCH',
-    body: JSON.stringify({ titulo: tip.titulo, contenido: tip.contenido })
+    body: JSON.stringify({ titulo: tip.titulo, contenido: tip.contenido, autor: tip.autor })
   });
 }
 
@@ -51,24 +51,34 @@ async function initConsejos() {
   var tips = await obtenerTips();
   renderizarConsejos(tips);
 
+  var nombreGuardado = localStorage.getItem('recetario-nombre-usuario') || '';
+  var nombreInput = document.getElementById('campoNombreConsejo');
+  if (nombreInput) nombreInput.value = nombreGuardado;
+
   document.getElementById('btnGuardarConsejo').addEventListener('click', async function () {
     var titulo = document.getElementById('campoTituloConsejo').value.trim();
     var contenido = document.getElementById('campoContenidoConsejo').value.trim();
     if (!titulo || !contenido) return;
 
+    var nombreInput = document.getElementById('campoNombreConsejo');
+    var nombre = (nombreInput ? nombreInput.value.trim() : '') || '';
+    if (nombre) localStorage.setItem('recetario-nombre-usuario', nombre);
+
     if (editandoTipId) {
-      await actualizarTip({ id: editandoTipId, titulo: titulo, contenido: contenido });
+      await actualizarTip({ id: editandoTipId, titulo: titulo, contenido: contenido, autor: nombre || 'Anónimo' });
       editandoTipId = null;
       document.getElementById('btnCancelarConsejo').classList.add('oculto');
     } else {
       await guardarTip({
         id: Date.now().toString(),
         titulo: titulo,
-        contenido: contenido
+        contenido: contenido,
+        autor: nombre || 'Anónimo'
       });
     }
 
     document.getElementById('campoTituloConsejo').value = '';
+    document.getElementById('campoNombreConsejo').value = nombre;
     document.getElementById('campoContenidoConsejo').value = '';
     document.getElementById('btnGuardarConsejo').textContent = '💾 Guardar consejo';
 
@@ -101,11 +111,12 @@ function renderizarConsejos(tips) {
     if (t.created_at) {
       fecha = new Date(t.created_at).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     }
+    var autor = t.autor ? t.autor + ' · ' : '';
     return '<div class="consejo-card">' +
       '<h3>' + t.titulo + '</h3>' +
       '<p>' + t.contenido + '</p>' +
       '<div class="consejo-meta">' +
-        '<span>' + fecha + '</span>' +
+        '<span>' + autor + fecha + '</span>' +
         '<div class="consejo-acciones">' +
           '<button class="btn-accion" onclick="editarTip(\'' + t.id + '\')">✏️</button>' +
           '<button class="btn-eliminar-tip" onclick="eliminarTipClick(\'' + t.id + '\')">🗑️</button>' +
