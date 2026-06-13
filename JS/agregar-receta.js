@@ -103,7 +103,8 @@ async function enviarFormulario() {
   const dificultad = document.getElementById('campoDificultad').value;
   const tiempo = document.getElementById('campoTiempo').value.trim();
   const porciones = parseInt(document.getElementById('campoPorciones').value) || 1;
-  const personas = parseInt(document.getElementById('campoPersonas').value) || 1;
+  const personasVal = document.getElementById('campoPersonas').value.trim();
+  const personas = personasVal ? parseInt(personasVal) : 0;
 
   let imagen = document.getElementById('campoImagen').value.trim();
 
