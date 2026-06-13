@@ -95,7 +95,7 @@ function agregarSeccion(nombre, ingredientesTexto, pasosTexto) {
   contenedor.appendChild(div);
 }
 
-function enviarFormulario() {
+async function enviarFormulario() {
   const titulo = document.getElementById('campoTitulo').value.trim();
   const descripcion = document.getElementById('campoDescripcion').value.trim();
   const tipo = document.getElementById('campoTipo').value;
