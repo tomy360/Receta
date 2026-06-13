@@ -243,12 +243,13 @@ function renderizarTab(tab) {
   const contenedor = document.getElementById('tabContenido');
   if (!contenedor) return;
 
-  contenedor.classList.remove('fade-in');
-  if (tab === 'ingredientes') renderizarIngredientes(contenedor);
-  else if (tab === 'notas') renderizarNotas(contenedor);
-  else if (tab === 'resenas') renderizarResenas(contenedor);
-  void contenedor.offsetWidth;
-  contenedor.classList.add('fade-in');
+  contenedor.style.opacity = '0';
+  setTimeout(function () {
+    if (tab === 'ingredientes') renderizarIngredientes(contenedor);
+    else if (tab === 'notas') renderizarNotas(contenedor);
+    else if (tab === 'resenas') renderizarResenas(contenedor);
+    contenedor.style.opacity = '1';
+  }, 60);
 }
 
 function escalarIngrediente(ing, factor) {

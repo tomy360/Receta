@@ -945,9 +945,7 @@ nav {
   background: var(--blanco);
   font-weight: 600;
 }
-
-.tab-contenido { padding: 1.5rem 2rem; }
-.tab-contenido.fade-in { animation: fadeIn 0.2s ease; }
+.tab-contenido { padding: 1.5rem 2rem; transition: opacity 0.15s ease; }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
