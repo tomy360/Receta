@@ -25,8 +25,13 @@ function parseTiempoAMinutos(str) {
   return total || Infinity;
 }
 
-function init() {
-  recetas = obtenerRecetas();
+async function init() {
+  try {
+    recetas = await obtenerRecetas();
+  } catch (e) {
+    console.error('Error al cargar recetas:', e);
+    recetas = [];
+  }
 
   const params = new URLSearchParams(window.location.search);
   filtroTipo = params.get('tipo') || 'Todos';
@@ -248,23 +253,23 @@ function renderizar() {
   grid.innerHTML = filtradas.map(r => crearTarjeta(r)).join('');
 }
 
-document.addEventListener('click', function (e) {
+document.addEventListener('click', async function (e) {
   var btn = e.target.closest('.card-fav-btn');
   if (btn) {
     e.preventDefault();
-    toggleFavorito(btn.dataset.id);
-    renderizar();
+    await toggleFavorito(btn.dataset.id);
     return;
   }
 });
 
-function toggleFavorito(id) {
-  const todas = obtenerRecetas();
-  const r = todas.find(r => r.id === id);
+async function toggleFavorito(id) {
+  var todas = await obtenerRecetas();
+  var r = todas.find(function (r) { return r.id === id; });
   if (!r) return;
   r.favorito = !r.favorito;
-  actualizarReceta(r);
-  recetas = obtenerRecetas();
+  await actualizarReceta(r);
+  recetas = await obtenerRecetas();
+  renderizar();
 }
 
 function crearTarjeta(r) {

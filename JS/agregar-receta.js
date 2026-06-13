@@ -1,20 +1,22 @@
 let contadorSecciones = 0;
 let editandoId = null;
 
-function init() {
+async function init() {
   const params = new URLSearchParams(window.location.search);
   editandoId = params.get('id');
 
   if (editandoId) {
-    const todas = obtenerRecetas();
-    const receta = todas.find(r => r.id === editandoId);
-    if (receta) {
-      document.querySelector('.form-header h1').textContent = 'Editar Receta';
-      document.querySelector('.form-header p').textContent = 'Modifica los datos de tu receta.';
-      document.querySelector('.btn-guardar').innerHTML = '✏️ Actualizar Receta';
-      cargarReceta(receta);
-      return;
-    }
+    try {
+      var todas = await obtenerRecetas();
+      var receta = todas.find(function (r) { return r.id === editandoId; });
+      if (receta) {
+        document.querySelector('.form-header h1').textContent = 'Editar Receta';
+        document.querySelector('.form-header p').textContent = 'Modifica los datos de tu receta.';
+        document.querySelector('.btn-guardar').innerHTML = '✏️ Actualizar Receta';
+        cargarReceta(receta);
+        return;
+      }
+    } catch (e) {}
   }
 
   agregarSeccion('Principal');
@@ -165,41 +167,41 @@ function enviarFormulario() {
   });
 
   if (editandoId) {
-    const todas = obtenerRecetas();
-    const existente = todas.find(r => r.id === editandoId);
+    var todas = await obtenerRecetas();
+    var existente = todas.find(function (r) { return r.id === editandoId; });
 
     if (existente) {
-      actualizarReceta({
+      await actualizarReceta({
         ...existente,
-        titulo,
-        descripcion,
-        tipo,
-        dificultad,
-        tiempo,
-        porciones,
-        imagen,
-        videoUrl,
-        autor,
-        preparaciones
+        titulo: titulo,
+        descripcion: descripcion,
+        tipo: tipo,
+        dificultad: dificultad,
+        tiempo: tiempo,
+        porciones: porciones,
+        imagen: imagen,
+        videoUrl: videoUrl,
+        autor: autor,
+        preparaciones: preparaciones
       });
     }
   } else {
-    guardarReceta({
+    await guardarReceta({
       id: Date.now().toString(),
-      titulo,
-      descripcion,
-      tipo,
-      dificultad,
-      tiempo,
-      porciones,
-      imagen,
-      videoUrl,
-      autor,
+      titulo: titulo,
+      descripcion: descripcion,
+      tipo: tipo,
+      dificultad: dificultad,
+      tiempo: tiempo,
+      porciones: porciones,
+      imagen: imagen,
+      videoUrl: videoUrl,
+      autor: autor,
       puntuacion: 0,
       favorito: false,
       resenas: [],
       notasPersonales: [],
-      preparaciones
+      preparaciones: preparaciones
     });
   }
 

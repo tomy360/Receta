@@ -10,45 +10,57 @@ var SLOTS = [
 ];
 var CLAVE_PLAN = 'recetario-plan-semanal';
 
-function obtenerPlan() {
-  var data = localStorage.getItem(CLAVE_PLAN);
-  return data ? JSON.parse(data) : {};
+async function obtenerPlan() {
+  try {
+    var res = await fetch(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN + '?select=plan_data&id=eq.1', {
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+    });
+    if (!res.ok) return {};
+    var data = await res.json();
+    return (data && data[0]) ? data[0].plan_data : {};
+  } catch (e) {
+    return {};
+  }
 }
 
-function guardarPlan(plan) {
-  localStorage.setItem(CLAVE_PLAN, JSON.stringify(plan));
+async function guardarPlan(plan) {
+  await fetch(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN + '?id=eq.1', {
+    method: 'PATCH',
+    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ plan_data: plan, updated_at: new Date().toISOString() })
+  });
 }
 
-function planificarReceta(dia, comida, nombreReceta, idReceta) {
-  var plan = obtenerPlan();
+async function planificarReceta(dia, comida, nombreReceta, idReceta) {
+  var plan = await obtenerPlan();
   if (!plan[dia]) plan[dia] = {};
   plan[dia][comida] = { nombre: nombreReceta, id: idReceta };
-  guardarPlan(plan);
+  await guardarPlan(plan);
   renderizarPlan();
 }
 
-function eliminarSlot(dia, comida) {
-  var plan = obtenerPlan();
+async function eliminarSlot(dia, comida) {
+  var plan = await obtenerPlan();
   if (plan[dia]) {
     delete plan[dia][comida];
     var soloColapsado = Object.keys(plan[dia]).every(function (k) { return k === 'colapsado'; });
     if (soloColapsado) delete plan[dia];
   }
-  guardarPlan(plan);
+  await guardarPlan(plan);
   renderizarPlan();
 }
 
-function toggleOpcionales(dia) {
-  var plan = obtenerPlan();
+async function toggleOpcionales(dia) {
+  var plan = await obtenerPlan();
   if (!plan[dia]) plan[dia] = {};
   plan[dia].colapsado = !plan[dia].colapsado;
-  guardarPlan(plan);
+  await guardarPlan(plan);
   renderizarPlan();
 }
 
-function limpiarPlan() {
+async function limpiarPlan() {
   if (!confirm('¿Limpiar toda la planificación semanal?')) return;
-  localStorage.removeItem(CLAVE_PLAN);
+  await guardarPlan({});
   renderizarPlan();
 }
 
@@ -67,10 +79,10 @@ function renderSlotVacio(dia, comida, estrella) {
     '</div>';
 }
 
-function renderizarPlan() {
+async function renderizarPlan() {
   var grid = document.getElementById('planificadorGrid');
   if (!grid) return;
-  var plan = obtenerPlan();
+  var plan = await obtenerPlan();
   var html = '<div class="plan-dias">';
   DIAS.forEach(function (dia) {
     var info = plan[dia] || {};
@@ -99,10 +111,10 @@ var selectorVisible = false;
 var selectorDia = '';
 var selectorComida = '';
 
-function abrirSelector(dia, comida) {
+async function abrirSelector(dia, comida) {
   selectorDia = dia;
   selectorComida = comida;
-  var recetas = obtenerRecetas();
+  var recetas = await obtenerRecetas();
   var overlay = document.getElementById('selectorRecetas');
   if (!overlay) {
     overlay = document.createElement('div');
@@ -132,8 +144,8 @@ function cerrarSelector() {
   selectorVisible = false;
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  renderizarPlan();
+document.addEventListener('DOMContentLoaded', async function () {
+  await renderizarPlan();
   var btn = document.getElementById('btnLimpiarPlan');
-  if (btn) btn.addEventListener('click', limpiarPlan);
+  if (btn) btn.addEventListener('click', async function () { await limpiarPlan(); });
 });

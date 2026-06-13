@@ -149,38 +149,5 @@ const recetasPorDefecto = [
   }
 ];
 
-function obtenerRecetas() {
-  try {
-    const almacenado = localStorage.getItem(CLAVE_STORAGE);
-    if (almacenado) {
-      var recetas = JSON.parse(almacenado);
-      recetas.forEach(function (r) { if (r.autor === undefined) r.autor = ''; });
-      return recetas;
-    }
-  } catch (e) {
-    console.error('Error al leer localStorage', e);
-  }
-  localStorage.setItem(CLAVE_STORAGE, JSON.stringify(recetasPorDefecto));
-  return recetasPorDefecto;
-}
-
-function guardarReceta(receta) {
-  const recetas = obtenerRecetas();
-  recetas.push(receta);
-  localStorage.setItem(CLAVE_STORAGE, JSON.stringify(recetas));
-}
-
-function actualizarReceta(recetaActualizada) {
-  const recetas = obtenerRecetas();
-  const idx = recetas.findIndex(r => r.id === recetaActualizada.id);
-  if (idx !== -1) {
-    recetas[idx] = recetaActualizada;
-    localStorage.setItem(CLAVE_STORAGE, JSON.stringify(recetas));
-  }
-}
-
-function eliminarReceta(id) {
-  const recetas = obtenerRecetas();
-  const filtradas = recetas.filter(r => r.id !== id);
-  localStorage.setItem(CLAVE_STORAGE, JSON.stringify(filtradas));
-}
+// obtenerRecetas, guardarReceta, actualizarReceta, eliminarReceta
+// ahora están en db.js con Supabase

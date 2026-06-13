@@ -93,7 +93,7 @@ function generarVideoHtml(url) {
     </div>`;
 }
 
-function init() {
+async function init() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
   if (!id) {
@@ -101,8 +101,14 @@ function init() {
     return;
   }
 
-  const todas = obtenerRecetas();
-  receta = todas.find(r => r.id === id);
+  try {
+    var todas = await obtenerRecetas();
+    receta = todas.find(function (r) { return r.id === id; });
+  } catch (e) {
+    document.getElementById('detalleContenido').innerHTML = '<p style="text-align:center;padding:3rem;color:#6b7280;">Error al cargar la receta.</p>';
+    return;
+  }
+
   if (!receta) {
     document.getElementById('detalleContenido').innerHTML = '<p style="text-align:center;padding:3rem;color:#6b7280;">Receta no encontrada.</p>';
     return;
@@ -357,31 +363,31 @@ function configurarNotasInput() {
   const btn = document.getElementById('btnGuardarNota');
   if (!input || !btn) return;
 
-  const guardar = function () {
-    const texto = input.value.trim();
-    if (!texto) return;
+    const guardar = async function () {
+      const texto = input.value.trim();
+      if (!texto) return;
 
-    const nota = {
-      id: Date.now().toString(),
-      texto: texto,
-      fecha: new Date().toISOString().split('T')[0]
+      const nota = {
+        id: Date.now().toString(),
+        texto: texto,
+        fecha: new Date().toISOString().split('T')[0]
+      };
+
+      const actualizada = JSON.parse(JSON.stringify(receta));
+      actualizada.notasPersonales.push(nota);
+
+      receta = actualizada;
+      await actualizarReceta(actualizada);
+      input.value = '';
+
+      const contenedor = document.getElementById('tabContenido');
+      renderizarNotas(contenedor);
     };
 
-    const actualizada = JSON.parse(JSON.stringify(receta));
-    actualizada.notasPersonales.push(nota);
-
-    receta = actualizada;
-    actualizarReceta(actualizada);
-    input.value = '';
-
-    const contenedor = document.getElementById('tabContenido');
-    renderizarNotas(contenedor);
-  };
-
-  btn.addEventListener('click', guardar);
-  input.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') guardar();
-  });
+    btn.addEventListener('click', guardar);
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); guardar(); }
+    });
 }
 
 function configurarNotasAcciones() {
@@ -427,27 +433,27 @@ function configurarNotasAcciones() {
   }
 }
 
-function eliminarNota(id) {
+async function eliminarNota(id) {
   if (!confirm('¿Eliminar esta nota personal?')) return;
   const actualizada = JSON.parse(JSON.stringify(receta));
-  actualizada.notasPersonales = actualizada.notasPersonales.filter(n => n.id !== id);
+  actualizada.notasPersonales = actualizada.notasPersonales.filter(function (n) { return n.id !== id; });
   receta = actualizada;
-  actualizarReceta(actualizada);
+  await actualizarReceta(actualizada);
   const contenedor = document.getElementById('tabContenido');
   renderizarNotas(contenedor);
 }
 
-function guardarEditarNota(id) {
+async function guardarEditarNota(id) {
   const input = document.getElementById('editNotaInput');
   if (!input || !input.value.trim()) return;
   const actualizada = JSON.parse(JSON.stringify(receta));
-  const nota = actualizada.notasPersonales.find(n => n.id === id);
+  const nota = actualizada.notasPersonales.find(function (n) { return n.id === id; });
   if (nota) {
     nota.texto = input.value.trim();
     nota.fecha = new Date().toISOString().split('T')[0];
   }
   receta = actualizada;
-  actualizarReceta(actualizada);
+  await actualizarReceta(actualizada);
   editandoNotaId = null;
   const contenedor = document.getElementById('tabContenido');
   renderizarNotas(contenedor);
@@ -586,7 +592,7 @@ function configurarResenasInteractivo() {
 
   const btnPublicar = document.getElementById('btnPublicarResena');
   if (btnPublicar) {
-    btnPublicar.addEventListener('click', function () {
+    btnPublicar.addEventListener('click', async function () {
       const texto = document.getElementById('textoResena');
       if (!texto || !texto.value.trim()) return;
 
@@ -599,20 +605,21 @@ function configurarResenasInteractivo() {
       };
 
       const actualizada = JSON.parse(JSON.stringify(receta));
-      const nuevasResenas = [...(actualizada.resenas || []), resena];
-      const avg = nuevasResenas.reduce((ac, r) => ac + r.puntuacion, 0) / nuevasResenas.length;
+      const nuevasResenas = (actualizada.resenas || []).concat([resena]);
+      var avg = nuevasResenas.reduce(function (ac, r) { return ac + r.puntuacion; }, 0) / nuevasResenas.length;
 
       actualizada.resenas = nuevasResenas;
       actualizada.puntuacion = Number(avg.toFixed(1));
 
       receta = actualizada;
-      actualizarReceta(actualizada);
+      await actualizarReceta(actualizada);
       mostrarFormResena = false;
       nuevaPuntuacion = 5;
 
       const contenedor = document.getElementById('tabContenido');
       renderizarResenas(contenedor);
-      document.querySelector('.detalle-meta-item:last-child .detalle-meta-valor').textContent = actualizada.puntuacion;
+      var meta = document.querySelector('.detalle-meta-item:last-child .detalle-meta-valor');
+      if (meta) meta.textContent = actualizada.puntuacion;
     });
   }
 }
@@ -668,42 +675,44 @@ function configurarResenasAcciones() {
   }
 }
 
-function eliminarResena(id) {
+async function eliminarResena(id) {
   if (!confirm('¿Eliminar esta opinión?')) return;
   const actualizada = JSON.parse(JSON.stringify(receta));
-  const nuevasResenas = actualizada.resenas.filter(r => r.id !== id);
-  const avg = nuevasResenas.length > 0
-    ? nuevasResenas.reduce((ac, r) => ac + r.puntuacion, 0) / nuevasResenas.length
+  const nuevasResenas = actualizada.resenas.filter(function (r) { return r.id !== id; });
+  var avg = nuevasResenas.length > 0
+    ? nuevasResenas.reduce(function (ac, r) { return ac + r.puntuacion; }, 0) / nuevasResenas.length
     : 0;
   actualizada.resenas = nuevasResenas;
   actualizada.puntuacion = nuevasResenas.length > 0 ? Number(avg.toFixed(1)) : 0;
   receta = actualizada;
-  actualizarReceta(actualizada);
+  await actualizarReceta(actualizada);
   editandoResenaId = null;
   const contenedor = document.getElementById('tabContenido');
   renderizarResenas(contenedor);
-  document.querySelector('.detalle-meta-item:last-child .detalle-meta-valor').textContent = actualizada.puntuacion;
+  var meta = document.querySelector('.detalle-meta-item:last-child .detalle-meta-valor');
+  if (meta) meta.textContent = actualizada.puntuacion;
 }
 
-function guardarEditarResena(id) {
+async function guardarEditarResena(id) {
   const texto = document.getElementById('editResenaTexto');
   if (!texto || !texto.value.trim()) return;
   const actualizada = JSON.parse(JSON.stringify(receta));
-  const resena = actualizada.resenas.find(r => r.id === id);
+  const resena = actualizada.resenas.find(function (r) { return r.id === id; });
   if (resena) {
     resena.puntuacion = editPuntuacion;
     resena.comentario = texto.value.trim();
     resena.fecha = new Date().toISOString().split('T')[0];
   }
-  const avg = actualizada.resenas.reduce((ac, r) => ac + r.puntuacion, 0) / actualizada.resenas.length;
+  var avg = actualizada.resenas.reduce(function (ac, r) { return ac + r.puntuacion; }, 0) / actualizada.resenas.length;
   actualizada.puntuacion = Number(avg.toFixed(1));
   receta = actualizada;
-  actualizarReceta(actualizada);
+  await actualizarReceta(actualizada);
   editandoResenaId = null;
   editPuntuacion = 5;
   const contenedor = document.getElementById('tabContenido');
   renderizarResenas(contenedor);
-  document.querySelector('.detalle-meta-item:last-child .detalle-meta-valor').textContent = actualizada.puntuacion;
+  var meta = document.querySelector('.detalle-meta-item:last-child .detalle-meta-valor');
+  if (meta) meta.textContent = actualizada.puntuacion;
 }
 
 function compartirReceta() {
@@ -808,10 +817,10 @@ function renderizarCocinaPaso() {
   if (progreso) progreso.style.width = ((cocinaPaso + 1) / cocinaPasos.length * 100) + '%';
 }
 
-function toggleFavoritoDetalle() {
+async function toggleFavoritoDetalle() {
   var r = receta;
   r.favorito = !r.favorito;
-  actualizarReceta(r);
+  await actualizarReceta(r);
   var btn = document.getElementById('btnFavDetalle');
   if (btn) {
     btn.innerHTML = r.favorito ? '❤️ Favorito' : '🤍 Favorito';
@@ -819,11 +828,11 @@ function toggleFavoritoDetalle() {
   }
 }
 
-function eliminarRecetaActual() {
+async function eliminarRecetaActual() {
   if (!receta) return;
   if (!confirm('¿Estás seguro de eliminar "' + receta.titulo + '"? Esta acción no se puede deshacer.')) return;
 
-  eliminarReceta(receta.id);
+  await eliminarReceta(receta.id);
   window.location.href = 'index.html';
 }
 
