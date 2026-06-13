@@ -252,8 +252,10 @@ function renderizarTab(tab) {
   else if (tab === 'resenas') renderizarResenas(contenedor);
 
   requestAnimationFrame(function () {
-    contenedor.style.transition = 'opacity 0.15s ease';
-    contenedor.style.opacity = '1';
+    contenedor.style.transition = 'opacity 0.2s ease';
+    requestAnimationFrame(function () {
+      contenedor.style.opacity = '1';
+    });
   });
 }
 
