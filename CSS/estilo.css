@@ -543,7 +543,7 @@ nav {
 
 .tarjeta-imagen {
   position: relative;
-  height: 192px;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
 }
 
