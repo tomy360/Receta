@@ -132,6 +132,14 @@ function renderizarDetalle() {
     videoHtml = generarVideoHtml(r.videoUrl);
   }
 
+  let categoriasHtml = '';
+  if (r.categorias) {
+    var cats = r.categorias.split(',').map(function(c) { return c.trim(); }).filter(function(c) { return c; });
+    if (cats.length) {
+      categoriasHtml = '<div class="detalle-categorias">' + cats.map(function(c) { return '<span class="categoria-badge">' + c + '</span>'; }).join('') + '</div>';
+    }
+  }
+
   contenedor.innerHTML = `
     <div class="detalle-volver">
       <a href="index.html">
@@ -195,6 +203,7 @@ function renderizarDetalle() {
       <div class="detalle-info">
         <h1>${r.titulo}</h1>
         <p class="detalle-descripcion">${r.descripcion}</p>
+        ${categoriasHtml}
         ${videoHtml}
 
         <div class="tabs">

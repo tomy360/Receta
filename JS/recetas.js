@@ -14,6 +14,7 @@ let filtroPuntuacion = 'Cualquiera';
 let filtroFavorito = 'Todos';
 let filtroAutor = 'Todos';
 let busqueda = '';
+let filtroCategoria = 'Todas';
 
 function parseTiempoAMinutos(str) {
   if (!str) return Infinity;
@@ -74,6 +75,7 @@ async function init() {
   renderizarFiltrosPuntuacion();
   renderizarFiltrosFavorito();
   renderizarFiltrosAutor();
+  renderizarFiltrosCategorias();
   renderizar();
 }
 
@@ -183,6 +185,35 @@ function renderizarFiltrosFavorito() {
   });
 }
 
+function renderizarFiltrosCategorias() {
+  const contenedor = document.getElementById('filtrosCategorias');
+  if (!contenedor) return;
+  var cats = ['Todas'].concat(recetas
+    .reduce(function (acc, r) {
+      if (r.categorias) {
+        r.categorias.split(',').forEach(function (c) {
+          var t = c.trim();
+          if (t && acc.indexOf(t) === -1) acc.push(t);
+        });
+      }
+      return acc;
+    }, [])
+    .sort()
+  );
+  contenedor.innerHTML = '';
+  cats.forEach(function (c) {
+    const btn = document.createElement('button');
+    btn.className = 'btn-categoria' + (filtroCategoria === c ? ' activo' : '');
+    btn.textContent = c === 'Todas' ? c : '🏷️ ' + c;
+    btn.addEventListener('click', function () {
+      filtroCategoria = c;
+      renderizarFiltrosCategorias();
+      renderizar();
+    });
+    contenedor.appendChild(btn);
+  });
+}
+
 function renderizarFiltrosAutor() {
   const contenedor = document.getElementById('filtrosAutor');
   if (!contenedor) return;
@@ -226,13 +257,15 @@ function recetasFiltradas() {
       (filtroPuntuacion === '2+ ★' && punt >= 2) ||
       (filtroPuntuacion === '1+ ★' && punt >= 1);
     const porFavorito = filtroFavorito === 'Todos' || (filtroFavorito === 'Favoritos' && r.favorito);
+    var categoriasReceta = r.categorias ? r.categorias.split(',').map(function(c) { return c.trim(); }) : [];
+    const porCategoria = filtroCategoria === 'Todas' || categoriasReceta.indexOf(filtroCategoria) !== -1;
     const porAutor = filtroAutor === 'Todos' || (r.autor || 'Anónimo') === filtroAutor;
     const porBusqueda = busqueda === '' ||
       r.titulo.toLowerCase().includes(busqueda.toLowerCase()) ||
       r.preparaciones.some(p =>
         p.ingredientes.some(i => i.toLowerCase().includes(busqueda.toLowerCase()))
       );
-    return porTipo && porDificultad && porTiempo && porPorciones && porPuntuacion && porFavorito && porAutor && porBusqueda;
+    return porTipo && porDificultad && porTiempo && porPorciones && porPuntuacion && porFavorito && porCategoria && porAutor && porBusqueda;
   });
 }
 
@@ -312,6 +345,7 @@ function limpiarFiltros() {
   filtroPuntuacion = 'Cualquiera';
   filtroFavorito = 'Todos';
   filtroAutor = 'Todos';
+  filtroCategoria = 'Todas';
   filtroTipo = 'Todos';
   const buscador = document.getElementById('buscador');
   if (buscador) buscador.value = '';
@@ -325,6 +359,7 @@ function limpiarFiltros() {
   renderizarFiltrosPuntuacion();
   renderizarFiltrosFavorito();
   renderizarFiltrosAutor();
+  renderizarFiltrosCategorias();
   renderizar();
 }
 
