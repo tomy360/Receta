@@ -167,18 +167,26 @@
   var menu = document.getElementById('nrfMenu');
   var construido = false;
 
+  function irATab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('activo'); });
+    var btn = document.querySelector('.tab-btn[data-tab="' + tab + '"]');
+    if (btn) btn.classList.add('activo');
+    if (typeof renderizarTab === 'function') renderizarTab(tab);
+  }
+
   function construirMenu() {
     if (construido) return;
     var html = '';
     if (typeof receta !== 'undefined' && receta && receta.preparaciones) {
-      var numPaso = 0;
+      var multi = receta.preparaciones.length > 1;
       receta.preparaciones.forEach(function (prep, pIdx) {
+        var nombreSec = multi ? (prep.nombre || 'Principal') : '';
+        var sufijo = nombreSec ? ' (' + nombreSec + ')' : '';
+        if (prep.ingredientes && prep.ingredientes.length) {
+          html += '<button class="nrf-item" data-ir="ingredientes-' + pIdx + '">📋 Ingredientes' + sufijo + '</button>';
+        }
         if (prep.pasos && prep.pasos.length) {
-          prep.pasos.forEach(function (paso, idx) {
-            numPaso++;
-            var textoPaso = paso.length > 50 ? paso.substring(0, 50) + '...' : paso;
-            html += '<button class="nrf-item" data-paso="' + pIdx + '-' + idx + '">' + numPaso + '. ' + textoPaso + '</button>';
-          });
+          html += '<button class="nrf-item" data-ir="pasos-' + pIdx + '">👨‍🍳 Pasos' + sufijo + '</button>';
         }
       });
       if (html) html += '<div class="nrf-divider"></div>';
@@ -186,12 +194,18 @@
     html += '<button class="nrf-item" id="nrfSubir">⬆ Subir</button>';
     menu.innerHTML = html;
 
-    menu.querySelectorAll('.nrf-item[data-paso]').forEach(function (btn) {
+    menu.querySelectorAll('.nrf-item[data-ir]').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        var id = 'paso-' + this.dataset.paso;
+        var target = this.dataset.ir;
         nav.classList.remove('abierto');
-        var el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        var parts = target.split('-');
+        var tipo = parts[0];
+        var idx = parts[1];
+        irATab('ingredientes');
+        setTimeout(function () {
+          var el = document.getElementById('seccion-' + target);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
       });
     });
 
