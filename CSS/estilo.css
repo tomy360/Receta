@@ -1600,6 +1600,94 @@ footer .contenedor {
   box-shadow: 0 6px 20px var(--sombra-v);
 }
 
+/* ========== NAV RECETA FLOTANTE ========== */
+.nav-receta-flotante {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  z-index: 200;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+.nav-receta-flotante.visible {
+  opacity: 1;
+  visibility: visible;
+}
+.nrf-toggle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--verde);
+  color: var(--blanco);
+  border: none;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 12px var(--sombra-v);
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  z-index: 2;
+}
+.nrf-toggle:hover {
+  background: var(--verde-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--sombra-v);
+}
+.nrf-menu {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  transform-origin: bottom center;
+  background: var(--blanco, #fff);
+  border: 1px solid var(--crema-medio, #e5e7eb);
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  min-width: 190px;
+  padding: 0.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+}
+.nav-receta-flotante.abierto .nrf-menu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) scale(1);
+}
+.nrf-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.65rem 1rem;
+  border: none;
+  border-radius: 0.6rem;
+  background: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--texto, #374151);
+  font-family: inherit;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.nrf-item:hover {
+  background: var(--crema-medio, #f3f4f6);
+}
+.nrf-divider {
+  height: 1px;
+  background: var(--crema-medio, #e5e7eb);
+  margin: 0.25rem 0.5rem;
+}
+html.modo-noche .nrf-menu {
+  background: var(--card-fondo, #1f2937);
+  border-color: var(--borde, #374151);
+}
+html.modo-noche .nrf-item:hover {
+  background: #374151;
+}
+
 /* ========== ANIMACIONES ========== */
 [data-anim] {
   opacity: 0;

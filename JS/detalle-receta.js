@@ -296,19 +296,19 @@ function renderizarIngredientes(contenedor) {
   const r = receta;
   let html = '<div style="display:flex;flex-direction:column;gap:2.5rem;">';
 
-  r.preparaciones.forEach(prep => {
+  r.preparaciones.forEach((prep, pIdx) => {
     html += `<div class="prep-seccion">`;
     if (prep.nombre && prep.nombre !== 'Principal') {
       html += `<h2 class="prep-titulo">${prep.nombre}</h2>`;
     }
     html += `<div class="prep-grid">
-      <div>
+      <div id="seccion-ingredientes-${pIdx}">
         <h3 class="prep-subtitulo">📋 Ingredientes</h3>
         <ul class="lista-ingredientes">`;
     prep.ingredientes.forEach(ing => {
       html += `<li><span class="punto"></span>${escalarIngrediente(ing, porcionesEscala)}</li>`;
     });
-    html += `</ul></div><div>
+    html += `</ul></div><div id="seccion-pasos-${pIdx}">
         <h3 class="prep-subtitulo">👨‍🍳 Preparación</h3>
         <div class="lista-pasos">`;
     prep.pasos.forEach((paso, idx) => {

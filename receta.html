@@ -156,11 +156,78 @@
 <script src="./JS/db.js?v=2"></script>
 <script src="./JS/timer.js?v=2"></script>
 <script src="./JS/detalle-receta.js?v=2"></script>
-<button id="scrollTop" title="Volver arriba">↑</button>
+<nav class="nav-receta-flotante" id="navRecetaFlotante">
+  <button class="nrf-toggle" id="nrfToggle" title="Navegar receta">📋</button>
+  <div class="nrf-menu" id="nrfMenu">
+    <button class="nrf-item" data-target="ingredientes-0">📋 Ingredientes</button>
+    <button class="nrf-item" data-target="pasos-0">👨‍🍳 Pasos</button>
+    <div class="nrf-divider"></div>
+    <button class="nrf-item" data-target="notas">📝 Notas</button>
+    <button class="nrf-item" data-target="resenas">💬 Opiniones</button>
+    <div class="nrf-divider"></div>
+    <button class="nrf-item" id="nrfSubir">⬆ Subir</button>
+  </div>
+</nav>
 <script>
-const btn = document.getElementById("scrollTop");
-window.addEventListener("scroll", () => btn.classList.toggle("visible", window.scrollY > 300));
-btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+(function () {
+  var nav = document.getElementById('navRecetaFlotante');
+  var toggle = document.getElementById('nrfToggle');
+  var menu = document.getElementById('nrfMenu');
+
+  toggle.addEventListener('click', function (e) {
+    e.stopPropagation();
+    nav.classList.toggle('abierto');
+  });
+
+  document.addEventListener('click', function () {
+    nav.classList.remove('abierto');
+  });
+
+  menu.addEventListener('click', function (e) {
+    e.stopPropagation();
+  });
+
+  function irATab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('activo'); });
+    var btn = document.querySelector('.tab-btn[data-tab="' + tab + '"]');
+    if (btn) btn.classList.add('activo');
+    if (typeof renderizarTab === 'function') renderizarTab(tab);
+  }
+
+  document.querySelectorAll('.nrf-item[data-target]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var target = this.dataset.target;
+      nav.classList.remove('abierto');
+
+      if (target === 'ingredientes-0') {
+        irATab('ingredientes');
+        setTimeout(function () {
+          var el = document.getElementById('seccion-ingredientes-0');
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      } else if (target === 'pasos-0') {
+        irATab('ingredientes');
+        setTimeout(function () {
+          var el = document.getElementById('seccion-pasos-0');
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      } else if (target === 'notas') {
+        irATab('notas');
+      } else if (target === 'resenas') {
+        irATab('resenas');
+      }
+    });
+  });
+
+  document.getElementById('nrfSubir').addEventListener('click', function () {
+    nav.classList.remove('abierto');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  window.addEventListener('scroll', function () {
+    nav.classList.toggle('visible', window.scrollY > 300);
+  });
+})();
 </script>
 
 <script>
