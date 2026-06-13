@@ -53,24 +53,31 @@
     <a class="nav-mobile-link" href="./index.html">
       <span class="nav-mobile-icon">🏠</span> Inicio
     </a>
-    <a class="nav-mobile-link" href="./index.html?tipo=Desayuno">
-      <span class="nav-mobile-icon">☀️</span> Desayuno
-    </a>
-    <a class="nav-mobile-link" href="./index.html?tipo=Almuerzo">
-      <span class="nav-mobile-icon">🥗</span> Almuerzo
-    </a>
-    <a class="nav-mobile-link" href="./index.html?tipo=Cena">
-      <span class="nav-mobile-icon">🌙</span> Cena
-    </a>
-    <a class="nav-mobile-link" href="./index.html?tipo=Postre">
-      <span class="nav-mobile-icon">🍰</span> Postres
-    </a>
-    <a class="nav-mobile-link" href="./index.html?tipo=Snack">
-      <span class="nav-mobile-icon">🥨</span> Snack
-    </a>
-    <a class="nav-mobile-link" href="./index.html?tipo=Media Tarde">
-      <span class="nav-mobile-icon">🕑</span> Media Tarde
-    </a>
+    <div class="nav-mobile-submenu">
+      <a class="nav-mobile-link nav-mobile-submenu-trigger" role="button" tabindex="0">
+        <span class="nav-mobile-icon">🍽️</span> Comidas <span class="submenu-arrow">▾</span>
+      </a>
+      <div class="nav-mobile-submenu-items">
+        <a class="nav-mobile-link" href="./index.html?tipo=Desayuno">
+          <span class="nav-mobile-icon">☀️</span> Desayuno
+        </a>
+        <a class="nav-mobile-link" href="./index.html?tipo=Almuerzo">
+          <span class="nav-mobile-icon">🥗</span> Almuerzo
+        </a>
+        <a class="nav-mobile-link" href="./index.html?tipo=Cena">
+          <span class="nav-mobile-icon">🌙</span> Cena
+        </a>
+        <a class="nav-mobile-link" href="./index.html?tipo=Postre">
+          <span class="nav-mobile-icon">🍰</span> Postres
+        </a>
+        <a class="nav-mobile-link" href="./index.html?tipo=Snack">
+          <span class="nav-mobile-icon">🥨</span> Snack
+        </a>
+        <a class="nav-mobile-link" href="./index.html?tipo=Media Tarde">
+          <span class="nav-mobile-icon">🕑</span> Media Tarde
+        </a>
+      </div>
+    </div>
     <a class="nav-mobile-link" href="./planificador.html">
       <span class="nav-mobile-icon">📅</span> Planificador
     </a>
@@ -234,6 +241,16 @@ btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth"
 
   window.addEventListener('resize', function () {
     if (window.innerWidth > 860) cerrar();
+  });
+
+  document.querySelectorAll('.nav-mobile-submenu-trigger').forEach(function (trigger) {
+    trigger.addEventListener('click', function () {
+      var items = this.nextElementSibling;
+      if (items) {
+        items.classList.toggle('visible');
+        this.classList.toggle('abierto');
+      }
+    });
   });
 })();
 </script>
