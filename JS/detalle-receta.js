@@ -297,7 +297,7 @@ function renderizarIngredientes(contenedor) {
   let html = '<div style="display:flex;flex-direction:column;gap:2.5rem;">';
 
   r.preparaciones.forEach((prep, pIdx) => {
-    html += `<div class="prep-seccion">`;
+    html += `<div class="prep-seccion" id="seccion-${pIdx}">`;
     if (prep.nombre && prep.nombre !== 'Principal') {
       html += `<h2 class="prep-titulo">${prep.nombre}</h2>`;
     }

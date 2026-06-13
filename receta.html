@@ -178,32 +178,22 @@
     if (construido) return;
     var html = '';
     if (typeof receta !== 'undefined' && receta && receta.preparaciones) {
-      var multi = receta.preparaciones.length > 1;
       receta.preparaciones.forEach(function (prep, pIdx) {
-        var nombreSec = multi ? (prep.nombre || 'Principal') : '';
-        var sufijo = nombreSec ? ' (' + nombreSec + ')' : '';
-        if (prep.ingredientes && prep.ingredientes.length) {
-          html += '<button class="nrf-item" data-ir="ingredientes-' + pIdx + '">📋 Ingredientes' + sufijo + '</button>';
-        }
-        if (prep.pasos && prep.pasos.length) {
-          html += '<button class="nrf-item" data-ir="pasos-' + pIdx + '">👨‍🍳 Pasos' + sufijo + '</button>';
-        }
+        var nombreSec = (prep.nombre && prep.nombre !== 'Principal') ? prep.nombre : 'Preparación';
+        html += '<button class="nrf-item" data-seccion="' + pIdx + '">👨‍🍳 ' + nombreSec + '</button>';
       });
       if (html) html += '<div class="nrf-divider"></div>';
     }
     html += '<button class="nrf-item" id="nrfSubir">⬆ Subir</button>';
     menu.innerHTML = html;
 
-    menu.querySelectorAll('.nrf-item[data-ir]').forEach(function (btn) {
+    menu.querySelectorAll('.nrf-item[data-seccion]').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        var target = this.dataset.ir;
+        var idx = this.dataset.seccion;
         nav.classList.remove('abierto');
-        var parts = target.split('-');
-        var tipo = parts[0];
-        var idx = parts[1];
         irATab('ingredientes');
         setTimeout(function () {
-          var el = document.getElementById('seccion-' + target);
+          var el = document.getElementById('seccion-' + idx);
           if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
       });
