@@ -4,6 +4,7 @@
   --verde:       #9AB17A;
   --verde-hover: #7c9660;
   --verde-claro: #C3CC9B;
+  --verde-oscuro:#5f784f;
   --crema-medio: #E4DFB5;
   --crema:       #FBE8CE;
   --fondo:       #FDF8F0;
@@ -11,6 +12,7 @@
   --texto:       #2d3a1e;
   --texto-med:   #4f5e38;
   --texto-muted: #7e8f6a;
+  --texto-claro: #f5f7f0;
   --blanco:      #ffffff;
   --borde:       #d4dbb4;
   --sombra-v:    rgba(154,177,122,0.28);
@@ -1838,6 +1840,7 @@ html.modo-noche {
   --verde:       #7aaa5a;
   --verde-hover: #5e8f41;
   --verde-claro: #4d7a36;
+  --verde-oscuro:#3d5a28;
   --crema-medio: #2a3220;
   --crema:       #1a1f12;
   --fondo:       #14180e;
@@ -1845,6 +1848,7 @@ html.modo-noche {
   --texto:       #e8eddf;
   --texto-med:   #b8c8a2;
   --texto-muted: #7a9068;
+  --texto-claro: #e8eddf;
   --blanco:      #222b18;
   --borde:       #2e3b22;
   --sombra-v:    rgba(90,140,60,0.25);
@@ -2150,10 +2154,10 @@ html.modo-noche .porciones-btn:hover { background: var(--verde-oscuro); color: v
 }
 
 .plan-toggle-btn:hover { background: rgba(255,255,255,0.35); }
+html.modo-noche .plan-dia-header { background: var(--verde-oscuro); color: var(--texto-claro); }
 
-html.modo-noche .plan-dia-header { background: var(--verde-oscuro); }
-html.modo-noche .plan-toggle-btn { background: rgba(255,255,255,0.12); }
-html.modo-noche .plan-toggle-btn:hover { background: rgba(255,255,255,0.25); }
+html.modo-noche .plan-toggle-btn { background: rgba(255,255,255,0.18); color: var(--texto-claro); }
+html.modo-noche .plan-toggle-btn:hover { background: rgba(255,255,255,0.3); }
 
 .plan-slot {
   padding: 0.75rem 1rem;
