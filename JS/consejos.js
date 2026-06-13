@@ -101,6 +101,7 @@ async function initConsejos() {
   });
 
   document.getElementById('btnCancelarConsejo').addEventListener('click', ocultarFormularioConsejo);
+  document.getElementById('btnCerrarConsejo').addEventListener('click', ocultarFormularioConsejo);
 }
 
 function renderizarConsejos(tips) {

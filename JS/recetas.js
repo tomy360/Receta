@@ -313,8 +313,7 @@ function crearTarjeta(r) {
     <div class="tarjeta">
       <button class="card-fav-btn${favClase}" data-id="${r.id}" title="${r.favorito ? 'Quitar de favoritos' : 'Añadir a favoritos'}">${r.favorito ? '❤️' : '🤍'}</button>
       <a href="receta.html?id=${r.id}">
-        <div class="tarjeta-imagen">
-          <img src="${r.imagen}" alt="${r.titulo}" loading="lazy" width="400" height="300">
+        <div class="tarjeta-imagen" style="background-image:url('${r.imagen}')">
           <span class="tarjeta-tipo">${r.tipo}</span>
         </div>
         <div class="tarjeta-info">
