@@ -191,7 +191,7 @@ function renderizarDetalle() {
           <div class="detalle-meta-divisor"></div>
           <div class="detalle-meta-item">
             <div class="detalle-meta-icono dificultad">👥</div>
-            <span class="detalle-meta-valor">${r.personas || r.porciones || '—'}</span>
+            <span class="detalle-meta-valor">${r.personas > 0 ? r.personas : '—'}</span>
             <span class="detalle-meta-label">Personas</span>
           </div>
           <div class="detalle-meta-divisor"></div>

@@ -347,7 +347,7 @@ function crearTarjeta(r) {
           <div class="tarjeta-footer">
             <span><span class="icono">🕐</span> ${r.tiempo}</span>
             <span><span class="icono">📊</span> ${r.dificultad}</span>
-            <span><span class="icono">👥</span> ${r.personas || r.porciones || '—'} pers.</span>
+            <span><span class="icono">👥</span> ${r.personas > 0 ? r.personas : '—'} pers.</span>
           </div>
         </div>
       </a>
