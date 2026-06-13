@@ -1432,6 +1432,7 @@ nav {
 
 @media (min-width: 768px) {
   .form-fila { grid-template-columns: repeat(4, 1fr); }
+  .form-fila .campo-ancho2 { grid-column: span 2; }
 }
 
 .form-divisor {

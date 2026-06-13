@@ -1,4 +1,4 @@
-const tipos = ['Todos', 'Desayuno', 'Almuerzo', 'Cena', 'Postre', 'Snack', 'Media Tarde'];
+const tipos = ['Todos', 'Desayuno', 'Almuerzo', 'Cena', 'Media Tarde'];
 const dificultades = ['Todas', 'Fácil', 'Media', 'Difícil'];
 const tiempos = ['Cualquiera', '≤ 15 min', '≤ 30 min', '≤ 60 min', '> 60 min'];
 const porcionesOpts = ['Cualquiera', '1', '2', '4', '6', '8+'];

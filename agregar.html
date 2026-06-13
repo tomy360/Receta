@@ -142,13 +142,11 @@
 
           <div class="form-fila">
             <div class="form-campo">
-              <label for="campoTipo">Tipo *</label>
+              <label for="campoTipo">Momento *</label>
               <select id="campoTipo">
                 <option value="Desayuno">Desayuno</option>
                 <option value="Almuerzo" selected>Almuerzo</option>
                 <option value="Cena">Cena</option>
-                <option value="Postre">Postre</option>
-                <option value="Snack">Snack</option>
                 <option value="Media Tarde">Media Tarde</option>
               </select>
             </div>
@@ -172,6 +170,11 @@
             <div class="form-campo">
               <label for="campoPersonas">Cantidad de personas</label>
               <input type="number" id="campoPersonas" placeholder="Ej: 4" min="1" step="1">
+            </div>
+            <div class="form-campo campo-ancho2">
+              <label for="campoCategorias">Categorías (Opcional)</label>
+              <input type="text" id="campoCategorias" placeholder="Ej: tartas, guisos, pastas, ensaladas">
+              <p class="ayuda">Separa con comas para poder filtrar. Ej: <strong>tartas, pastas, guisos</strong></p>
             </div>
           </div>
         </div>
@@ -210,12 +213,6 @@
             <input type="text" id="campoVideo" placeholder="https://youtube.com/... o ./videos/mireceta.mp4">
             <p class="ayuda">YouTube, Instagram, TikTok, Facebook, o un archivo local: <strong>./videos/nombre.mp4</strong></p>
           </div>
-        </div>
-
-        <div class="form-campo">
-          <label for="campoCategorias">Categorías (Opcional)</label>
-          <input type="text" id="campoCategorias" placeholder="Ej: tartas, guisos, pastas, ensaladas">
-          <p class="ayuda">Separa con comas para poder filtrar. Ej: <strong>tartas, pastas, guisos</strong></p>
         </div>
 
         <div class="form-submit">
