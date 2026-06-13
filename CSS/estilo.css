@@ -408,13 +408,10 @@ nav {
   border-radius: 1.25rem;
   border: 1.5px solid var(--borde);
   margin-bottom: 2rem;
-  display: block;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
+  display: none;
 }
 
-.panel-filtros.visible { visibility: visible; opacity: 1; }
+.panel-filtros.visible { display: block; animation: fadeIn 0.2s ease; }
 
 .panel-filtros-header {
   display: flex;
