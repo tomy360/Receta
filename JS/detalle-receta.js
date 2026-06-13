@@ -312,7 +312,7 @@ function renderizarIngredientes(contenedor) {
         <h3 class="prep-subtitulo">👨‍🍳 Preparación</h3>
         <div class="lista-pasos">`;
     prep.pasos.forEach((paso, idx) => {
-      html += `<div class="paso-item">
+      html += `<div class="paso-item" id="paso-${pIdx}-${idx}">
         <div class="paso-numero">${idx + 1}</div>
         <p class="paso-texto">${paso}</p>
       </div>`;

@@ -1649,14 +1649,15 @@ html.modo-noche .nav-receta-flotante {
 .nrf-menu {
   position: absolute;
   bottom: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%) scale(0.9);
-  transform-origin: bottom center;
+  left: 0;
+  transform: scale(0.9);
+  transform-origin: bottom left;
   background: var(--blanco, #fff);
   border: 1px solid var(--crema-medio, #e5e7eb);
   border-radius: 1rem;
   box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-  min-width: 190px;
+  max-width: 260px;
+  min-width: 180px;
   padding: 0.5rem;
   opacity: 0;
   pointer-events: none;
@@ -1665,7 +1666,7 @@ html.modo-noche .nav-receta-flotante {
 .nav-receta-flotante.abierto .nrf-menu {
   opacity: 1;
   pointer-events: auto;
-  transform: translateX(-50%) scale(1);
+  transform: scale(1);
 }
 .nrf-item {
   display: block;
@@ -1681,6 +1682,8 @@ html.modo-noche .nav-receta-flotante {
   font-family: inherit;
   transition: background 0.15s;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .nrf-item:hover {
   background: var(--crema-medio, #f3f4f6);

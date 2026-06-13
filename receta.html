@@ -158,24 +158,54 @@
 <script src="./JS/detalle-receta.js?v=2"></script>
 <nav class="nav-receta-flotante" id="navRecetaFlotante">
   <button class="nrf-toggle" id="nrfToggle" title="Navegar receta">📋</button>
-  <div class="nrf-menu" id="nrfMenu">
-    <button class="nrf-item" data-target="ingredientes-0">📋 Ingredientes</button>
-    <button class="nrf-item" data-target="pasos-0">👨‍🍳 Pasos</button>
-    <div class="nrf-divider"></div>
-    <button class="nrf-item" data-target="notas">📝 Notas</button>
-    <button class="nrf-item" data-target="resenas">💬 Opiniones</button>
-    <div class="nrf-divider"></div>
-    <button class="nrf-item" id="nrfSubir">⬆ Subir</button>
-  </div>
+  <div class="nrf-menu" id="nrfMenu"></div>
 </nav>
 <script>
 (function () {
   var nav = document.getElementById('navRecetaFlotante');
   var toggle = document.getElementById('nrfToggle');
   var menu = document.getElementById('nrfMenu');
+  var construido = false;
+
+  function construirMenu() {
+    if (construido) return;
+    var html = '';
+    if (typeof receta !== 'undefined' && receta && receta.preparaciones) {
+      var numPaso = 0;
+      receta.preparaciones.forEach(function (prep, pIdx) {
+        if (prep.pasos && prep.pasos.length) {
+          prep.pasos.forEach(function (paso, idx) {
+            numPaso++;
+            var textoPaso = paso.length > 50 ? paso.substring(0, 50) + '...' : paso;
+            html += '<button class="nrf-item" data-paso="' + pIdx + '-' + idx + '">' + numPaso + '. ' + textoPaso + '</button>';
+          });
+        }
+      });
+      if (html) html += '<div class="nrf-divider"></div>';
+    }
+    html += '<button class="nrf-item" id="nrfSubir">⬆ Subir</button>';
+    menu.innerHTML = html;
+
+    menu.querySelectorAll('.nrf-item[data-paso]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = 'paso-' + this.dataset.paso;
+        nav.classList.remove('abierto');
+        var el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    document.getElementById('nrfSubir').addEventListener('click', function () {
+      nav.classList.remove('abierto');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    construido = true;
+  }
 
   toggle.addEventListener('click', function (e) {
     e.stopPropagation();
+    construirMenu();
     nav.classList.toggle('abierto');
   });
 
@@ -185,43 +215,6 @@
 
   menu.addEventListener('click', function (e) {
     e.stopPropagation();
-  });
-
-  function irATab(tab) {
-    document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('activo'); });
-    var btn = document.querySelector('.tab-btn[data-tab="' + tab + '"]');
-    if (btn) btn.classList.add('activo');
-    if (typeof renderizarTab === 'function') renderizarTab(tab);
-  }
-
-  document.querySelectorAll('.nrf-item[data-target]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var target = this.dataset.target;
-      nav.classList.remove('abierto');
-
-      if (target === 'ingredientes-0') {
-        irATab('ingredientes');
-        setTimeout(function () {
-          var el = document.getElementById('seccion-ingredientes-0');
-          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
-      } else if (target === 'pasos-0') {
-        irATab('ingredientes');
-        setTimeout(function () {
-          var el = document.getElementById('seccion-pasos-0');
-          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
-      } else if (target === 'notas') {
-        irATab('notas');
-      } else if (target === 'resenas') {
-        irATab('resenas');
-      }
-    });
-  });
-
-  document.getElementById('nrfSubir').addEventListener('click', function () {
-    nav.classList.remove('abierto');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
   window.addEventListener('scroll', function () {
