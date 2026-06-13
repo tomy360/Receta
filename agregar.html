@@ -20,10 +20,17 @@
 
     <div class="menu-botones">
       <a class="BotonBa" href="./index.html">Inicio</a>
-      <a class="BotonBa" href="./index.html?tipo=Desayuno">Desayuno</a>
-      <a class="BotonBa" href="./index.html?tipo=Almuerzo">Almuerzo</a>
-      <a class="BotonBa" href="./index.html?tipo=Cena">Cena</a>
-      <a class="BotonBa" href="./index.html?tipo=Postre">Postres</a>
+      <div class="nav-dropdown">
+        <a class="BotonBa" href="./index.html?tipo=Todos">🍽️ Comidas</a>
+        <div class="nav-dropdown-menu">
+          <a class="BotonBa" href="./index.html?tipo=Desayuno">Desayuno</a>
+          <a class="BotonBa" href="./index.html?tipo=Almuerzo">Almuerzo</a>
+          <a class="BotonBa" href="./index.html?tipo=Cena">Cena</a>
+          <a class="BotonBa" href="./index.html?tipo=Postre">Postre</a>
+          <a class="BotonBa" href="./index.html?tipo=Snack">Snack</a>
+          <a class="BotonBa" href="./index.html?tipo=Media Tarde">Media Tarde</a>
+        </div>
+      </div>
       <a class="BotonBa" href="./planificador.html">📅 Planificador</a>
       <a class="BotonBa" href="./consejos.html">💡 Consejos</a>
       <button class="nav-dark-btn nav-timer-btn" onclick="abrirTimer()" title="Abrir temporizador">⏱️</button>
@@ -57,6 +64,12 @@
     </a>
     <a class="nav-mobile-link" href="./index.html?tipo=Postre">
       <span class="nav-mobile-icon">🍰</span> Postres
+    </a>
+    <a class="nav-mobile-link" href="./index.html?tipo=Snack">
+      <span class="nav-mobile-icon">🥨</span> Snack
+    </a>
+    <a class="nav-mobile-link" href="./index.html?tipo=Media Tarde">
+      <span class="nav-mobile-icon">🕑</span> Media Tarde
     </a>
     <a class="nav-mobile-link" href="./planificador.html">
       <span class="nav-mobile-icon">📅</span> Planificador
@@ -123,6 +136,7 @@
                 <option value="Cena">Cena</option>
                 <option value="Postre">Postre</option>
                 <option value="Snack">Snack</option>
+                <option value="Media Tarde">Media Tarde</option>
               </select>
             </div>
             <div class="form-campo">
@@ -140,7 +154,11 @@
             </div>
             <div class="form-campo">
               <label for="campoPorciones">Porciones</label>
-              <input type="number" id="campoPorciones" placeholder="Ej: 4" min="1" step="1">
+              <input type="number" id="campoPorciones" placeholder="Ej: 8" min="1" step="1">
+            </div>
+            <div class="form-campo">
+              <label for="campoPersonas">Cantidad de personas</label>
+              <input type="number" id="campoPersonas" placeholder="Ej: 4" min="1" step="1">
             </div>
           </div>
         </div>
