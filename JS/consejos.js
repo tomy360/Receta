@@ -47,6 +47,20 @@ async function eliminarTip(id) {
   });
 }
 
+function mostrarFormularioConsejo(mostrar) {
+  document.getElementById('consejosForm').classList.toggle('oculto', !mostrar);
+  document.getElementById('btnAgregarConsejo').classList.toggle('oculto', mostrar);
+}
+
+function ocultarFormularioConsejo() {
+  mostrarFormularioConsejo(false);
+  editandoTipId = null;
+  document.getElementById('campoTituloConsejo').value = '';
+  document.getElementById('campoContenidoConsejo').value = '';
+  document.getElementById('btnGuardarConsejo').textContent = '💾 Guardar consejo';
+  document.getElementById('btnCancelarConsejo').classList.add('oculto');
+}
+
 async function initConsejos() {
   var tips = await obtenerTips();
   renderizarConsejos(tips);
@@ -54,6 +68,11 @@ async function initConsejos() {
   var nombreGuardado = localStorage.getItem('recetario-nombre-usuario') || '';
   var nombreInput = document.getElementById('campoNombreConsejo');
   if (nombreInput) nombreInput.value = nombreGuardado;
+
+  document.getElementById('btnAgregarConsejo').addEventListener('click', function () {
+    document.getElementById('campoNombreConsejo').value = localStorage.getItem('recetario-nombre-usuario') || '';
+    mostrarFormularioConsejo(true);
+  });
 
   document.getElementById('btnGuardarConsejo').addEventListener('click', async function () {
     var titulo = document.getElementById('campoTituloConsejo').value.trim();
@@ -66,8 +85,6 @@ async function initConsejos() {
 
     if (editandoTipId) {
       await actualizarTip({ id: editandoTipId, titulo: titulo, contenido: contenido, autor: nombre || 'Anónimo' });
-      editandoTipId = null;
-      document.getElementById('btnCancelarConsejo').classList.add('oculto');
     } else {
       await guardarTip({
         id: Date.now().toString(),
@@ -77,22 +94,13 @@ async function initConsejos() {
       });
     }
 
-    document.getElementById('campoTituloConsejo').value = '';
-    document.getElementById('campoNombreConsejo').value = nombre;
-    document.getElementById('campoContenidoConsejo').value = '';
-    document.getElementById('btnGuardarConsejo').textContent = '💾 Guardar consejo';
+    ocultarFormularioConsejo();
 
     var tips = await obtenerTips();
     renderizarConsejos(tips);
   });
 
-  document.getElementById('btnCancelarConsejo').addEventListener('click', function () {
-    editandoTipId = null;
-    document.getElementById('campoTituloConsejo').value = '';
-    document.getElementById('campoContenidoConsejo').value = '';
-    document.getElementById('btnGuardarConsejo').textContent = '💾 Guardar consejo';
-    document.getElementById('btnCancelarConsejo').classList.add('oculto');
-  });
+  document.getElementById('btnCancelarConsejo').addEventListener('click', ocultarFormularioConsejo);
 }
 
 function renderizarConsejos(tips) {
@@ -131,6 +139,7 @@ async function editarTip(id) {
   var tip = tips.find(function (t) { return t.id === id; });
   if (!tip) return;
 
+  mostrarFormularioConsejo(true);
   editandoTipId = tip.id;
   document.getElementById('campoTituloConsejo').value = tip.titulo;
   document.getElementById('campoContenidoConsejo').value = tip.contenido;

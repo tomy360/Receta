@@ -552,6 +552,7 @@ nav {
   height: 100%;
   object-fit: cover;
   transition: transform 0.35s ease;
+  aspect-ratio: 4 / 3;
 }
 
 .tarjeta:hover .tarjeta-imagen img { transform: scale(1.07); }
@@ -2297,8 +2298,7 @@ html.modo-noche .btn-eliminar-tip:hover { background: #5a2020; }
 .nav-dropdown-menu {
   position: absolute;
   top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
   background: var(--blanco, #fff);
   border: 1px solid var(--crema-medio, #e5e7eb);
   border-radius: 0.75rem;
@@ -2309,12 +2309,12 @@ html.modo-noche .btn-eliminar-tip:hover { background: #5a2020; }
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease, transform 0.2s ease;
-  transform: translateX(-50%) translateY(4px);
+  transform: translateY(4px);
 }
 .nav-dropdown:hover .nav-dropdown-menu {
   opacity: 1;
   pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
+  transform: translateY(0);
 }
 .nav-dropdown-menu .BotonBa {
   display: block;
