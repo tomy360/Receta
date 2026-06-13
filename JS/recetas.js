@@ -43,9 +43,14 @@ async function init() {
   const btnCerrarFiltros = document.getElementById('btnCerrarFiltros');
 
   if (buscador) {
+    var timeoutBusqueda;
     buscador.addEventListener('input', function () {
-      busqueda = this.value.trim();
-      renderizar();
+      clearTimeout(timeoutBusqueda);
+      var self = this;
+      timeoutBusqueda = setTimeout(function () {
+        busqueda = self.value.trim();
+        renderizar();
+      }, 200);
     });
   }
 
