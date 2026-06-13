@@ -2244,5 +2244,37 @@ html.modo-noche .tarjeta-imagen img, html.modo-noche .detalle-imagen img {
   background: #374151;
 }
 
+/* ========== MOBILE SUBMENU ========== */
+.nav-mobile-submenu { }
+.nav-mobile-submenu-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-mobile-submenu-trigger .submenu-arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+  margin-left: auto;
+  font-size: 0.75rem;
+}
+.nav-mobile-submenu-trigger.abierto .submenu-arrow {
+  transform: rotate(180deg);
+}
+.nav-mobile-submenu-items {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding: 0 0 0 1.5rem;
+}
+.nav-mobile-submenu-items.visible {
+  max-height: 400px;
+}
+
+/* ========== NOTAS AUTOR ========== */
+.nota-autor {
+  font-size: 0.8rem;
+  color: var(--texto-suave, #9ca3af);
+}
+
 /* ========== UTILIDADES ========== */
 .oculto { display: none !important; }

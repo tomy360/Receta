@@ -250,9 +250,15 @@ function renderizarTab(tab) {
 
 function escalarIngrediente(ing, factor) {
   if (factor === 1) return ing;
-  return ing.replace(/(^\d+)(?:\s*\/\s*(\d+))?/, function (match, entero, denominador) {
-    var num = parseInt(entero, 10);
-    if (denominador) num = num / parseInt(denominador, 10);
+  var fracMap = { '½': 0.5, '¼': 0.25, '⅓': 1/3, '⅔': 2/3, '¾': 0.75 };
+  var u = '[½¼⅓⅔¾]';
+  var re = new RegExp('^(\\d+)\\s*(' + u + ')|^(' + u + ')|^(\\d+)(?:\\s*\\/\\s*(\\d+))?');
+  return ing.replace(re, function (match, ent1, uni1, uni2, dig, den) {
+    var num;
+    if (ent1 !== undefined) num = parseInt(ent1, 10) + fracMap[uni1];
+    else if (uni2 !== undefined) num = fracMap[uni2];
+    else if (den !== undefined) num = parseInt(dig, 10) / parseInt(den, 10);
+    else num = parseInt(dig, 10);
     var escalado = num * factor;
     if (Number.isInteger(escalado)) return escalado.toString();
     var fraccion = '';
@@ -323,6 +329,7 @@ function renderizarNotas(contenedor) {
   let html = `
     <div class="notas-form">
       <h4>Añadir una nota personal</h4>
+      <input type="text" id="inputNotaNombre" value="${nombreUsuario}" placeholder="Tu nombre (opcional)" style="width:100%;padding:0.65rem 1rem;border:1px solid var(--borde);border-radius:0.75rem;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:0.75rem;">
       <div class="notas-input-grupo">
         <input type="text" id="inputNota" placeholder="Ej: Usé leche de almendras en vez de vaca...">
         <button class="BotonP" id="btnGuardarNota" style="padding:0.5rem 1rem;font-size:0.875rem;">💾 Guardar</button>
@@ -352,7 +359,7 @@ function renderizarNotas(contenedor) {
           <div class="nota-item">
             <p>${nota.texto}</p>
             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.25rem;">
-              <span class="fecha">${nota.fecha}</span>
+              <span class="nota-autor">${nota.nombre || 'Anónimo'} · ${nota.fecha}</span>
               <div class="nota-acciones">
                 <button class="nota-btn nota-btn-editar" data-id="${nota.id}" title="Editar nota">✏️</button>
                 <button class="nota-btn nota-btn-eliminar" data-id="${nota.id}" title="Eliminar nota">🗑️</button>
@@ -383,9 +390,17 @@ function configurarNotasInput() {
       const texto = input.value.trim();
       if (!texto) return;
 
+      const nombreInput = document.getElementById('inputNotaNombre');
+      const nombre = (nombreInput ? nombreInput.value.trim() : '') || '';
+      if (nombre) {
+        nombreUsuario = nombre;
+        localStorage.setItem('recetario-nombre-usuario', nombre);
+      }
+
       const nota = {
         id: Date.now().toString(),
         texto: texto,
+        nombre: nombre || 'Anónimo',
         fecha: new Date().toISOString().split('T')[0]
       };
 
