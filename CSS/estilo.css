@@ -2185,5 +2185,64 @@ nav, .tarjeta, .form-card, .panel-filtros,
 html.modo-noche .btn-eliminar-tip { background: #4a1a1a; color: #fca5a5; }
 html.modo-noche .btn-eliminar-tip:hover { background: #5a2020; }
 
+/* ========== NAV DROPDOWN ========== */
+.nav-dropdown {
+  position: relative;
+}
+.nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--blanco, #fff);
+  border: 1px solid var(--crema-medio, #e5e7eb);
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  min-width: 170px;
+  z-index: 1000;
+  padding: 0.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  transform: translateX(-50%) translateY(4px);
+}
+.nav-dropdown:hover .nav-dropdown-menu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.nav-dropdown-menu .BotonBa {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  white-space: nowrap;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--texto, #374151);
+  text-decoration: none;
+}
+.nav-dropdown-menu .BotonBa:hover {
+  background: var(--crema-medio, #f3f4f6);
+}
+html.modo-noche .nav-dropdown-menu {
+  background: var(--card-fondo, #1f2937);
+  border-color: var(--borde, #374151);
+}
+html.modo-noche .nav-dropdown-menu .BotonBa:hover {
+  background: #374151;
+}
+
+/* image placeholder while loading */
+.tarjeta-imagen img, .detalle-imagen img {
+  background: #e5e7eb;
+}
+html.modo-noche .tarjeta-imagen img, html.modo-noche .detalle-imagen img {
+  background: #374151;
+}
+
 /* ========== UTILIDADES ========== */
 .oculto { display: none !important; }

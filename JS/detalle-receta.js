@@ -12,6 +12,7 @@ let mostrarFormResena = false;
 let editandoNotaId = null;
 let editandoResenaId = null;
 let editPuntuacion = 5;
+let nombreUsuario = localStorage.getItem('recetario-nombre-usuario') || '';
 
 function generarVideoHtml(url) {
   if (!url) return '';
@@ -188,8 +189,14 @@ function renderizarDetalle() {
             <span class="detalle-meta-label">Autor</span>
           </div>
           <div class="detalle-meta-divisor"></div>
-          <div class="detalle-meta-item" id="porcionesControl">
+          <div class="detalle-meta-item">
             <div class="detalle-meta-icono dificultad">👥</div>
+            <span class="detalle-meta-valor">${r.personas || r.porciones || '—'}</span>
+            <span class="detalle-meta-label">Personas</span>
+          </div>
+          <div class="detalle-meta-divisor"></div>
+          <div class="detalle-meta-item" id="porcionesControl">
+            <div class="detalle-meta-icono dificultad">🍕</div>
             <div class="porciones-control">
               <button class="porciones-btn" onclick="cambiarPorciones(-1)">−</button>
               <span class="detalle-meta-valor" id="porcionesValor">${r.porciones || '—'}</span>
@@ -492,6 +499,7 @@ function renderizarResenas(contenedor) {
                   ${estrellasEdit}
                 </div>
               </div>
+              <input type="text" id="editNombreResena" value="${res.usuario === 'Anónimo' ? '' : res.usuario}" placeholder="Tu nombre (opcional)" style="width:100%;padding:0.65rem 1rem;border:1px solid var(--borde);border-radius:0.75rem;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:0.75rem;">
               <textarea id="editResenaTexto" placeholder="¿Qué te pareció la receta?" style="margin-bottom:1rem;">${res.comentario}</textarea>
               <div class="resena-acciones">
                 <button class="btn-cancelar" id="btnCancelEditResena">Cancelar</button>
@@ -505,7 +513,7 @@ function renderizarResenas(contenedor) {
         for (let i = 0; i < 5; i++) {
           estrellas += `<span class="resena-estrella${i < res.puntuacion ? ' llena' : ''}">★</span>`;
         }
-        const esPropia = res.usuario === 'Tú';
+        const esPropia = res.usuario === (nombreUsuario || 'Anónimo') || res.usuario === 'Tú';
         html += `
           <div class="resena-item">
             <div class="resena-header">
@@ -546,6 +554,7 @@ function renderizarResenas(contenedor) {
             <span class="estrella" data-val="5">★</span>
           </div>
         </div>
+        <input type="text" id="nombreResena" value="${nombreUsuario}" placeholder="Tu nombre (opcional)" style="width:100%;padding:0.65rem 1rem;border:1px solid var(--borde);border-radius:0.75rem;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:0.75rem;">
         <textarea id="textoResena" placeholder="¿Qué te pareció la receta?" style="margin-bottom:1rem;"></textarea>
         <div class="resena-acciones">
           <button class="btn-cancelar" id="btnCancelarResena">Cancelar</button>
@@ -605,9 +614,12 @@ function configurarResenasInteractivo() {
       const texto = document.getElementById('textoResena');
       if (!texto || !texto.value.trim()) return;
 
+      const nombreInput = document.getElementById('nombreResena');
+      nombreUsuario = (nombreInput ? nombreInput.value.trim() : '') || '';
+      if (nombreUsuario) localStorage.setItem('recetario-nombre-usuario', nombreUsuario);
       const resena = {
         id: Date.now().toString(),
-        usuario: 'Tú',
+        usuario: nombreUsuario || 'Anónimo',
         puntuacion: nuevaPuntuacion,
         comentario: texto.value.trim(),
         fecha: new Date().toISOString().split('T')[0]
@@ -708,6 +720,10 @@ async function guardarEditarResena(id) {
   const actualizada = JSON.parse(JSON.stringify(receta));
   const resena = actualizada.resenas.find(function (r) { return r.id === id; });
   if (resena) {
+    const nombreEdit = document.getElementById('editNombreResena');
+    const nombreEditVal = nombreEdit ? nombreEdit.value.trim() : '';
+    if (nombreEditVal) localStorage.setItem('recetario-nombre-usuario', nombreEditVal);
+    resena.usuario = nombreEditVal || 'Anónimo';
     resena.puntuacion = editPuntuacion;
     resena.comentario = texto.value.trim();
     resena.fecha = new Date().toISOString().split('T')[0];

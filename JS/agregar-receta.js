@@ -29,6 +29,7 @@ function cargarReceta(r) {
   document.getElementById('campoDificultad').value = r.dificultad;
   document.getElementById('campoTiempo').value = r.tiempo;
   document.getElementById('campoPorciones').value = r.porciones || '';
+  document.getElementById('campoPersonas').value = r.personas || '';
   document.getElementById('campoImagen').value = r.imagen || '';
   document.getElementById('campoVideo').value = r.videoUrl || '';
   document.getElementById('campoCategorias').value = r.categorias || '';
@@ -102,6 +103,7 @@ async function enviarFormulario() {
   const dificultad = document.getElementById('campoDificultad').value;
   const tiempo = document.getElementById('campoTiempo').value.trim();
   const porciones = parseInt(document.getElementById('campoPorciones').value) || 1;
+  const personas = parseInt(document.getElementById('campoPersonas').value) || 1;
 
   let imagen = document.getElementById('campoImagen').value.trim();
 
@@ -181,6 +183,7 @@ async function enviarFormulario() {
         dificultad: dificultad,
         tiempo: tiempo,
         porciones: porciones,
+        personas: personas,
         imagen: imagen,
         videoUrl: videoUrl,
         categorias: categorias,
@@ -197,6 +200,7 @@ async function enviarFormulario() {
       dificultad: dificultad,
       tiempo: tiempo,
       porciones: porciones,
+      personas: personas,
       imagen: imagen,
       videoUrl: videoUrl,
       autor: autor,

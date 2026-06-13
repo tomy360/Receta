@@ -1,4 +1,4 @@
-const tipos = ['Todos', 'Desayuno', 'Almuerzo', 'Cena', 'Postre', 'Snack'];
+const tipos = ['Todos', 'Desayuno', 'Almuerzo', 'Cena', 'Postre', 'Snack', 'Media Tarde'];
 const dificultades = ['Todas', 'Fácil', 'Media', 'Difícil'];
 const tiempos = ['Cualquiera', '≤ 15 min', '≤ 30 min', '≤ 60 min', '> 60 min'];
 const porcionesOpts = ['Cualquiera', '1', '2', '4', '6', '8+'];
@@ -329,7 +329,7 @@ function crearTarjeta(r) {
           <div class="tarjeta-footer">
             <span><span class="icono">🕐</span> ${r.tiempo}</span>
             <span><span class="icono">📊</span> ${r.dificultad}</span>
-            <span><span class="icono">👥</span> ${r.porciones || '—'} pers.</span>
+            <span><span class="icono">👥</span> ${r.personas || r.porciones || '—'} pers.</span>
           </div>
         </div>
       </a>
