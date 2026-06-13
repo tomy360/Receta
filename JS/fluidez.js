@@ -25,27 +25,6 @@ function mostrarSkeletons(contenedor, cantidad) {
   contenedor.innerHTML = html;
 }
 
-document.addEventListener('click', function (e) {
-  if (e.target.closest('button, input, select, textarea, [role="button"]')) return;
-  var link = e.target.closest('a');
-  if (!link) return;
-  var href = link.getAttribute('href');
-  if (!href || href.startsWith('http') || href.startsWith('//') || href.indexOf('#') !== -1 || href.indexOf('javascript:') === 0) return;
-  e.preventDefault();
-  document.documentElement.style.opacity = '0.85';
-  setTimeout(function () { window.location.href = href; }, 150);
-});
-
-window.addEventListener('pageshow', function (event) {
-  if (event.persisted) {
-    document.documentElement.style.opacity = '0';
-    setTimeout(function () {
-      document.documentElement.style.opacity = '1';
-      document.documentElement.style.transition = 'opacity 0.3s ease-in-out';
-    }, 50);
-  }
-});
-
 function scrollSuave(el) {
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
