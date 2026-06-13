@@ -1609,6 +1609,16 @@ footer .contenedor {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s, visibility 0.3s;
+  background: transparent;
+  border-bottom: none;
+  top: auto;
+  box-shadow: none;
+  width: auto;
+}
+html.modo-noche .nav-receta-flotante {
+  background: transparent;
+  border-bottom: none;
+  box-shadow: none;
 }
 .nav-receta-flotante.visible {
   opacity: 1;
