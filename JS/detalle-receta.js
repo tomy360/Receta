@@ -383,7 +383,7 @@ function renderizarNotas(contenedor) {
     html += `<p class="nota-vacia">No tienes notas personales para esta receta todavía.</p>`;
   } else {
     r.notasPersonales.forEach(nota => {
-      var esPropiaNota = sesion && nota.user_id === sesion.userId;
+      var esPropiaNota = sesion && (nota.user_id === sesion.userId || (!nota.user_id && nota.nombre === sesion.username));
       if (editandoNotaId === nota.id && esPropiaNota) {
         html += `
           <div class="nota-item">
@@ -570,7 +570,7 @@ function renderizarResenas(contenedor) {
         for (let i = 0; i < 5; i++) {
           estrellas += `<span class="resena-estrella${i < res.puntuacion ? ' llena' : ''}">★</span>`;
         }
-        const esPropia = res.usuario === (nombreUsuario || 'Anónimo') || res.usuario === 'Tú' || (sesion && res.user_id === sesion.userId);
+        const esPropia = sesion && (res.user_id === sesion.userId || (!res.user_id && res.usuario === sesion.username));
         var avatarResena = res.user_id ? avatarHtmlFor(res.usuario, res.avatar_url, 32) : `<div class="resena-avatar">${res.usuario.charAt(0)}</div>`;
         html += `
           <div class="resena-item">

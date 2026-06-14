@@ -66,44 +66,37 @@ async function initConsejos() {
   renderizarConsejos(tips);
 
   var sesionInicio = obtenerSesion();
+  var btnAgregar = document.getElementById('btnAgregarConsejo');
   var nombreField = document.getElementById('campoNombreConsejo');
-  if (sesionInicio) {
-    // Logged-in users don't need the name field, but keep it for visitors
-  } else {
-    var nombreGuardado = localStorage.getItem('recetario-nombre-usuario') || '';
-    if (nombreField) nombreField.value = nombreGuardado;
+  if (!sesionInicio) {
+    btnAgregar.style.display = 'none';
   }
+  if (nombreField) nombreField.closest('.form-campo').style.display = 'none';
 
   document.getElementById('btnAgregarConsejo').addEventListener('click', function () {
     var ses = obtenerSesion();
-    if (ses) {
-      if (nombreField) nombreField.value = ses.username;
-    } else {
-      if (nombreField) nombreField.value = localStorage.getItem('recetario-nombre-usuario') || '';
-    }
+    if (!ses) return;
     mostrarFormularioConsejo(true);
   });
 
   document.getElementById('btnGuardarConsejo').addEventListener('click', async function () {
+    var sesionTips = obtenerSesion();
+    if (!sesionTips) return;
+
     var titulo = document.getElementById('campoTituloConsejo').value.trim();
     var contenido = document.getElementById('campoContenidoConsejo').value.trim();
     if (!titulo || !contenido) return;
 
-    var sesionTips = obtenerSesion();
-    var nombreInput = document.getElementById('campoNombreConsejo');
-    var nombre = sesionTips ? sesionTips.username : ((nombreInput ? nombreInput.value.trim() : '') || '');
-    if (nombre && !sesionTips) localStorage.setItem('recetario-nombre-usuario', nombre);
-
     if (editandoTipId) {
-      await actualizarTip({ id: editandoTipId, titulo: titulo, contenido: contenido, autor: nombre || 'Anónimo', user_id: sesionTips ? sesionTips.userId : null, avatar_url: sesionTips ? sesionTips.avatarUrl : '' });
+      await actualizarTip({ id: editandoTipId, titulo: titulo, contenido: contenido, autor: sesionTips.username, user_id: sesionTips.userId, avatar_url: sesionTips.avatarUrl || '' });
     } else {
       await guardarTip({
         id: Date.now().toString(),
         titulo: titulo,
         contenido: contenido,
-        autor: nombre || 'Anónimo',
-        user_id: sesionTips ? sesionTips.userId : null,
-        avatar_url: sesionTips ? sesionTips.avatarUrl : ''
+        autor: sesionTips.username,
+        user_id: sesionTips.userId,
+        avatar_url: sesionTips.avatarUrl || ''
       });
     }
 
