@@ -87,11 +87,64 @@
   <div class="admin-error" id="adminError"></div>
   <div class="admin-success" id="adminSuccess"></div>
   <button class="login-btn" id="adminBtn">Crear usuario</button>
+
+  <hr style="border:none;border-top:1px solid var(--borde,#e5e7eb);margin:1.5rem 0;">
+
+  <h3 style="font-size:1rem;margin:0 0 1rem;">Usuarios existentes</h3>
+  <div id="adminUserList">
+    <p style="text-align:center;color:var(--texto-suave,#6b7280);font-size:0.875rem;">Ingresá el código secreto y hace clic en "Cargar usuarios"</p>
+  </div>
+  <button class="login-btn" id="adminCargarUsuarios" style="margin-top:0.5rem;background:#6b7280;">Cargar usuarios</button>
+
   <p style="text-align:center;margin-top:1rem;"><a href="index.html" style="font-size:0.813rem;color:var(--texto-suave,#6b7280);">← Volver al inicio</a></p>
 </div>
 
 <script>
 const ADMIN_SECRET = 'bocalomas1B*';
+
+async function cargarUsuarios() {
+  var codigo = document.getElementById('adminCodigo').value.trim();
+  var listEl = document.getElementById('adminUserList');
+  if (codigo !== ADMIN_SECRET) {
+    listEl.innerHTML = '<p style="text-align:center;color:#ef4444;font-size:0.875rem;">Código secreto incorrecto</p>';
+    return;
+  }
+  try {
+    var data = await peticionAuth(SUPABASE_URL + '/rest/v1/usuarios?select=id,username,avatar_url,created_at&order=created_at.asc');
+    if (!data || !data.length) {
+      listEl.innerHTML = '<p style="text-align:center;color:var(--texto-suave,#6b7280);font-size:0.875rem;">No hay usuarios</p>';
+      return;
+    }
+    var html = '<div style="display:flex;flex-direction:column;gap:0.5rem;">';
+    data.forEach(function (u) {
+      html += '<div style="display:flex;align-items:center;gap:0.75rem;padding:0.5rem 0.75rem;background:var(--fondo,#f9fafb);border-radius:0.5rem;border:1px solid var(--borde,#e5e7eb);">' +
+        '<span style="width:28px;height:28px;border-radius:50%;background:var(--verde,#4caf50);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:0.75rem;flex-shrink:0;">' + u.username.charAt(0).toUpperCase() + '</span>' +
+        '<span style="flex:1;font-size:0.875rem;">' + u.username + '</span>' +
+        '<button class="btn-eliminar-usuario" data-id="' + u.id + '" data-username="' + u.username.replace(/"/g, '&quot;') + '" style="background:#ef4444;color:#fff;border:none;padding:0.25rem 0.6rem;border-radius:0.375rem;font-size:0.75rem;cursor:pointer;">🗑️</button>' +
+        '</div>';
+    });
+    html += '</div>';
+    listEl.innerHTML = html;
+
+    listEl.querySelectorAll('.btn-eliminar-usuario').forEach(function (btn) {
+      btn.addEventListener('click', async function () {
+        var id = this.dataset.id;
+        var name = this.dataset.username;
+        if (!confirm('¿Eliminar al usuario "' + name + '"? No se pueden deshacer.')) return;
+        try {
+          await peticionAuth(SUPABASE_URL + '/rest/v1/usuarios?id=eq.' + encodeURIComponent(id), { method: 'DELETE' });
+          cargarUsuarios();
+        } catch (e) {
+          alert('Error al eliminar: ' + e.message);
+        }
+      });
+    });
+  } catch (e) {
+    listEl.innerHTML = '<p style="text-align:center;color:#ef4444;font-size:0.875rem;">Error al cargar: ' + e.message + '</p>';
+  }
+}
+
+document.getElementById('adminCargarUsuarios').addEventListener('click', cargarUsuarios);
 
 document.getElementById('adminBtn').addEventListener('click', async function () {
   var codigo = document.getElementById('adminCodigo').value.trim();
@@ -123,6 +176,7 @@ document.getElementById('adminBtn').addEventListener('click', async function () 
     document.getElementById('adminUsername').value = '';
     document.getElementById('adminPassword').value = '';
     document.getElementById('adminAvatar').value = '';
+    cargarUsuarios();
   } catch (e) {
     errorEl.textContent = 'Error al crear usuario: ' + e.message;
   }
