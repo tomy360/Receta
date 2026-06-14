@@ -15,6 +15,7 @@ let filtroFavorito = 'Todos';
 let filtroAutor = 'Todos';
 let busqueda = '';
 let filtroCategoria = 'Todas';
+var favoritosUsuario = [];
 
 function parseTiempoAMinutos(str) {
   if (!str) return Infinity;
@@ -32,6 +33,11 @@ async function init() {
   } catch (e) {
     console.error('Error al cargar recetas:', e);
     recetas = [];
+  }
+
+  var sesion = obtenerSesion();
+  if (sesion) {
+    favoritosUsuario = await obtenerFavoritos(sesion.userId);
   }
 
   const params = new URLSearchParams(window.location.search);
@@ -78,10 +84,13 @@ async function init() {
   renderizarFiltrosTiempo();
   renderizarFiltrosPorciones();
   renderizarFiltrosPuntuacion();
-  renderizarFiltrosFavorito();
+  if (estaLogueado()) renderizarFiltrosFavorito();
   renderizarFiltrosAutor();
   renderizarFiltrosCategorias();
   renderizar();
+
+  var filtroFavGrupo = document.querySelector('.panel-filtros .filtro-grupo:nth-child(6)');
+  if (filtroFavGrupo) filtroFavGrupo.style.display = estaLogueado() ? '' : 'none';
 }
 
 function renderizarFiltrosTipo() {
@@ -261,7 +270,8 @@ function recetasFiltradas() {
       (filtroPuntuacion === '3+ ★' && punt >= 3) ||
       (filtroPuntuacion === '2+ ★' && punt >= 2) ||
       (filtroPuntuacion === '1+ ★' && punt >= 1);
-    const porFavorito = filtroFavorito === 'Todos' || (filtroFavorito === 'Favoritos' && r.favorito);
+    const esFavUsuario = favoritosUsuario.indexOf(r.id) !== -1;
+    const porFavorito = filtroFavorito === 'Todos' || (filtroFavorito === 'Favoritos' && (r.favorito || esFavUsuario));
     var categoriasReceta = r.categorias ? r.categorias.split(',').map(function(c) { return c.trim(); }) : [];
     const porCategoria = filtroCategoria === 'Todas' || categoriasReceta.indexOf(filtroCategoria) !== -1;
     const porAutor = filtroAutor === 'Todos' || (r.autor || 'Anónimo') === filtroAutor;
@@ -315,11 +325,23 @@ document.addEventListener('click', async function (e) {
 });
 
 async function toggleFavorito(id) {
-  var todas = await obtenerRecetas();
-  var r = todas.find(function (r) { return r.id === id; });
-  if (!r) return;
-  r.favorito = !r.favorito;
-  await actualizarReceta(r);
+  var sesion = obtenerSesion();
+  if (sesion) {
+    var idx = favoritosUsuario.indexOf(id);
+    if (idx === -1) {
+      await agregarFavorito(sesion.userId, id);
+      favoritosUsuario.push(id);
+    } else {
+      await quitarFavorito(sesion.userId, id);
+      favoritosUsuario.splice(idx, 1);
+    }
+  } else {
+    var todas = await obtenerRecetas();
+    var r = todas.find(function (r) { return r.id === id; });
+    if (!r) return;
+    r.favorito = !r.favorito;
+    await actualizarReceta(r);
+  }
   recetas = await obtenerRecetas();
   renderizar();
 }
@@ -327,10 +349,12 @@ async function toggleFavorito(id) {
 function crearTarjeta(r) {
   const estrellas = '★'.repeat(Math.round(r.puntuacion));
   const estrellaVacia = '☆'.repeat(5 - Math.round(r.puntuacion));
-  const favClase = r.favorito ? ' card-fav-activo' : '';
+  var esFav = r.favorito || favoritosUsuario.indexOf(r.id) !== -1;
+  const favClase = esFav ? ' card-fav-activo' : '';
+  const favBtn = estaLogueado() ? `<button class="card-fav-btn${favClase}" data-id="${r.id}" title="${esFav ? 'Quitar de favoritos' : 'Añadir a favoritos'}">${esFav ? '❤️' : '🤍'}</button>` : '';
   return `
     <div class="tarjeta">
-      <button class="card-fav-btn${favClase}" data-id="${r.id}" title="${r.favorito ? 'Quitar de favoritos' : 'Añadir a favoritos'}">${r.favorito ? '❤️' : '🤍'}</button>
+      ${favBtn}
       <a href="receta.html?id=${r.id}">
         <div class="tarjeta-imagen" style="background-image:url('${r.imagen}')">
           <span class="tarjeta-tipo">${r.tipo}</span>

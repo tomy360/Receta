@@ -119,18 +119,62 @@ async function eliminarReceta(id) {
   } catch (e) {}
 }
 
-async function obtenerPlan() {
+async function obtenerFavoritos(userId) {
   try {
-    var data = await peticion(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN + '?select=plan_data&id=eq.1');
+    var data = await peticion(SUPABASE_URL + '/rest/v1/' + 'favoritos' + '?select=recipe_id&user_id=eq.' + encodeURIComponent(userId));
+    return data ? data.map(function (f) { return f.recipe_id; }) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+async function agregarFavorito(userId, recipeId) {
+  var id = userId + '-' + recipeId;
+  try {
+    await peticion(SUPABASE_URL + '/rest/v1/' + 'favoritos', {
+      method: 'POST',
+      body: JSON.stringify({ id: id, user_id: userId, recipe_id: recipeId })
+    });
+  } catch (e) {
+    if (e.message.indexOf('409') === -1) console.warn('Error al agregar favorito', e);
+  }
+}
+
+async function quitarFavorito(userId, recipeId) {
+  try {
+    await peticion(SUPABASE_URL + '/rest/v1/' + 'favoritos' + '?user_id=eq.' + encodeURIComponent(userId) + '&recipe_id=eq.' + encodeURIComponent(recipeId), {
+      method: 'DELETE'
+    });
+  } catch (e) {
+    console.warn('Error al quitar favorito', e);
+  }
+}
+
+async function obtenerPlan(userId) {
+  if (!userId) return {};
+  try {
+    var data = await peticion(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN + '?select=plan_data&id=eq.' + encodeURIComponent(userId));
     return (data && data[0]) ? data[0].plan_data : {};
   } catch (e) {
     return {};
   }
 }
 
-async function guardarPlan(plan) {
-  await peticion(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN + '?id=eq.1', {
-    method: 'PATCH',
-    body: JSON.stringify({ plan_data: plan, updated_at: new Date().toISOString() })
-  });
+async function guardarPlan(plan, userId) {
+  if (!userId) return;
+  try {
+    await peticion(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN + '?id=eq.' + encodeURIComponent(userId), {
+      method: 'PATCH',
+      body: JSON.stringify({ plan_data: plan, updated_at: new Date().toISOString() })
+    });
+  } catch (e) {
+    if (e.message.indexOf('404') !== -1 || e.message.indexOf('200') !== -1) {
+      try {
+        await peticion(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN, {
+          method: 'POST',
+          body: JSON.stringify({ id: userId, plan_data: plan, updated_at: new Date().toISOString() })
+        });
+      } catch (e2) {}
+    }
+  }
 }

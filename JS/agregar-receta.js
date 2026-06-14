@@ -2,6 +2,10 @@ let contadorSecciones = 0;
 let editandoId = null;
 
 async function init() {
+  if (!estaLogueado()) {
+    window.location.href = 'index.html';
+    return;
+  }
   const params = new URLSearchParams(window.location.search);
   editandoId = params.get('id');
 

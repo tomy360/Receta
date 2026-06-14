@@ -37,7 +37,7 @@ async function guardarTip(tip) {
 async function actualizarTip(tip) {
   await peticionTips(SUPABASE_URL + '/rest/v1/' + TABLA_TIPS + '?id=eq.' + encodeURIComponent(tip.id), {
     method: 'PATCH',
-    body: JSON.stringify({ titulo: tip.titulo, contenido: tip.contenido, autor: tip.autor })
+    body: JSON.stringify({ titulo: tip.titulo, contenido: tip.contenido, autor: tip.autor, user_id: tip.user_id || null, avatar_url: tip.avatar_url || '' })
   });
 }
 
@@ -65,12 +65,22 @@ async function initConsejos() {
   var tips = await obtenerTips();
   renderizarConsejos(tips);
 
-  var nombreGuardado = localStorage.getItem('recetario-nombre-usuario') || '';
-  var nombreInput = document.getElementById('campoNombreConsejo');
-  if (nombreInput) nombreInput.value = nombreGuardado;
+  var sesionInicio = obtenerSesion();
+  var nombreField = document.getElementById('campoNombreConsejo');
+  if (sesionInicio) {
+    // Logged-in users don't need the name field, but keep it for visitors
+  } else {
+    var nombreGuardado = localStorage.getItem('recetario-nombre-usuario') || '';
+    if (nombreField) nombreField.value = nombreGuardado;
+  }
 
   document.getElementById('btnAgregarConsejo').addEventListener('click', function () {
-    document.getElementById('campoNombreConsejo').value = localStorage.getItem('recetario-nombre-usuario') || '';
+    var ses = obtenerSesion();
+    if (ses) {
+      if (nombreField) nombreField.value = ses.username;
+    } else {
+      if (nombreField) nombreField.value = localStorage.getItem('recetario-nombre-usuario') || '';
+    }
     mostrarFormularioConsejo(true);
   });
 
@@ -79,18 +89,21 @@ async function initConsejos() {
     var contenido = document.getElementById('campoContenidoConsejo').value.trim();
     if (!titulo || !contenido) return;
 
+    var sesionTips = obtenerSesion();
     var nombreInput = document.getElementById('campoNombreConsejo');
-    var nombre = (nombreInput ? nombreInput.value.trim() : '') || '';
-    if (nombre) localStorage.setItem('recetario-nombre-usuario', nombre);
+    var nombre = sesionTips ? sesionTips.username : ((nombreInput ? nombreInput.value.trim() : '') || '');
+    if (nombre && !sesionTips) localStorage.setItem('recetario-nombre-usuario', nombre);
 
     if (editandoTipId) {
-      await actualizarTip({ id: editandoTipId, titulo: titulo, contenido: contenido, autor: nombre || 'Anónimo' });
+      await actualizarTip({ id: editandoTipId, titulo: titulo, contenido: contenido, autor: nombre || 'Anónimo', user_id: sesionTips ? sesionTips.userId : null, avatar_url: sesionTips ? sesionTips.avatarUrl : '' });
     } else {
       await guardarTip({
         id: Date.now().toString(),
         titulo: titulo,
         contenido: contenido,
-        autor: nombre || 'Anónimo'
+        autor: nombre || 'Anónimo',
+        user_id: sesionTips ? sesionTips.userId : null,
+        avatar_url: sesionTips ? sesionTips.avatarUrl : ''
       });
     }
 
@@ -107,6 +120,7 @@ async function initConsejos() {
 function renderizarConsejos(tips) {
   var grid = document.getElementById('consejosGrid');
   var sin = document.getElementById('sinConsejos');
+  var sesion = obtenerSesion();
 
   if (!tips.length) {
     grid.innerHTML = '';
@@ -120,16 +134,21 @@ function renderizarConsejos(tips) {
     if (t.created_at) {
       fecha = new Date(t.created_at).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     }
-    var autor = t.autor ? t.autor + ' · ' : '';
+    var esPropio = sesion && t.user_id === sesion.userId;
+    var avatarTip = t.user_id ? avatarHtmlFor(t.autor, t.avatar_url, 24) : '';
+    var autor = (avatarTip ? avatarTip + ' ' : '') + '<span>' + (t.autor || 'Anónimo') + '</span>';
+    var acciones = esPropio
+      ? '<div class="consejo-acciones">' +
+          '<button class="btn-accion" onclick="editarTip(\'' + t.id + '\')">✏️</button>' +
+          '<button class="btn-eliminar-tip" onclick="eliminarTipClick(\'' + t.id + '\')">🗑️</button>' +
+        '</div>'
+      : '';
     return '<div class="consejo-card">' +
       '<h3>' + t.titulo + '</h3>' +
       '<p>' + t.contenido + '</p>' +
       '<div class="consejo-meta">' +
-        '<span>' + autor + fecha + '</span>' +
-        '<div class="consejo-acciones">' +
-          '<button class="btn-accion" onclick="editarTip(\'' + t.id + '\')">✏️</button>' +
-          '<button class="btn-eliminar-tip" onclick="eliminarTipClick(\'' + t.id + '\')">🗑️</button>' +
-        '</div>' +
+        '<span>' + autor + ' · ' + fecha + '</span>' +
+        acciones +
       '</div>' +
     '</div>';
   }).join('');
@@ -139,6 +158,9 @@ async function editarTip(id) {
   var tips = await obtenerTips();
   var tip = tips.find(function (t) { return t.id === id; });
   if (!tip) return;
+  var sesion = obtenerSesion();
+  if (tip.user_id && sesion && tip.user_id !== sesion.userId) return;
+  if (tip.user_id && !sesion) return;
 
   mostrarFormularioConsejo(true);
   editandoTipId = tip.id;
@@ -150,6 +172,12 @@ async function editarTip(id) {
 }
 
 async function eliminarTipClick(id) {
+  var tips = await obtenerTips();
+  var tip = tips.find(function (t) { return t.id === id; });
+  if (!tip) return;
+  var sesion = obtenerSesion();
+  if (tip.user_id && sesion && tip.user_id !== sesion.userId) return;
+  if (tip.user_id && !sesion) return;
   if (!confirm('¿Eliminar este consejo?')) return;
   await eliminarTip(id);
   var tips = await obtenerTips();

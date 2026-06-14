@@ -141,6 +141,17 @@ function renderizarDetalle() {
     }
   }
 
+  var logueado = estaLogueado();
+  var sesion = obtenerSesion();
+  var esFav = r.favorito;
+  if (sesion) {
+    var recetaFavId = r.id;
+  }
+
+  var editarBtn = logueado ? `<a href="agregar.html?id=${r.id}" class="btn-accion btn-editar">✏️ Editar receta</a>` : '';
+  var favBtn = logueado ? `<button class="btn-accion btn-fav" id="btnFavDetalle" onclick="toggleFavoritoDetalle()">🤍 Favorito</button>` : '';
+  var eliminarBtn = logueado ? `<button class="btn-accion btn-eliminar" onclick="eliminarRecetaActual()">🗑️ Eliminar receta</button>` : '';
+
   contenedor.innerHTML = `
     <div class="detalle-volver">
       <a href="index.html">
@@ -149,11 +160,11 @@ function renderizarDetalle() {
     </div>
 
     <div class="detalle-acciones">
-      <a href="agregar.html?id=${r.id}" class="btn-accion btn-editar">✏️ Editar receta</a>
-      <button class="btn-accion ${r.favorito ? 'btn-fav-activo' : 'btn-fav'}" id="btnFavDetalle" onclick="toggleFavoritoDetalle()">${r.favorito ? '❤️' : '🤍'} Favorito</button>
+      ${editarBtn}
+      ${favBtn}
       <button class="btn-accion btn-principal" id="btnModoCocina" onclick="abrirModoCocina(receta)">👨‍🍳 Modo Cocina</button>
       <button class="btn-accion" id="btnCompartir" onclick="compartirReceta()">📤 Compartir</button>
-      <button class="btn-accion btn-eliminar" onclick="eliminarRecetaActual()">🗑️ Eliminar receta</button>
+      ${eliminarBtn}
     </div>
 
     <div class="detalle-grid">
@@ -216,7 +227,7 @@ function renderizarDetalle() {
         <div class="tabs">
           <div class="tabs-header">
             <button class="tab-btn activo" data-tab="ingredientes">✅ Ingredientes</button>
-            <button class="tab-btn" data-tab="notas">📝 Notas</button>
+            ${logueado ? '<button class="tab-btn" data-tab="notas">📝 Notas</button>' : ''}
             <button class="tab-btn" data-tab="resenas">💬 Opiniones</button>
           </div>
           <div class="tab-contenido" id="tabContenido"></div>
@@ -226,6 +237,18 @@ function renderizarDetalle() {
   `;
 
   renderizarTab('ingredientes');
+
+  if (logueado) {
+    obtenerFavoritos(sesion.userId).then(function (favs) {
+      if (favs.indexOf(r.id) !== -1) {
+        var btn = document.getElementById('btnFavDetalle');
+        if (btn) {
+          btn.innerHTML = '❤️ Favorito';
+          btn.className = 'btn-accion btn-fav-activo';
+        }
+      }
+    });
+  }
 }
 
 function configurarTabs() {
@@ -337,10 +360,10 @@ function renderizarIngredientes(contenedor) {
 
 function renderizarNotas(contenedor) {
   const r = receta;
+  var sesion = obtenerSesion();
   let html = `
     <div class="notas-form">
       <h4>Añadir una nota personal</h4>
-      <input type="text" id="inputNotaNombre" value="${nombreUsuario}" placeholder="Tu nombre (opcional)" style="width:100%;padding:0.65rem 1rem;border:1px solid var(--borde);border-radius:0.75rem;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:0.75rem;">
       <div class="notas-input-grupo">
         <input type="text" id="inputNota" placeholder="Ej: Usé leche de almendras en vez de vaca...">
         <button class="BotonP" id="btnGuardarNota" style="padding:0.5rem 1rem;font-size:0.875rem;">💾 Guardar</button>
@@ -353,7 +376,8 @@ function renderizarNotas(contenedor) {
     html += `<p class="nota-vacia">No tienes notas personales para esta receta todavía.</p>`;
   } else {
     r.notasPersonales.forEach(nota => {
-      if (editandoNotaId === nota.id) {
+      var esPropiaNota = sesion && nota.user_id === sesion.userId;
+      if (editandoNotaId === nota.id && esPropiaNota) {
         html += `
           <div class="nota-item">
             <div class="nota-editar-input">
@@ -366,15 +390,16 @@ function renderizarNotas(contenedor) {
           </div>
         `;
       } else {
+        var avatarNota = nota.user_id ? avatarHtmlFor(nota.nombre || 'Anónimo', nota.avatar_url, 24) : '';
         html += `
           <div class="nota-item">
             <p>${nota.texto}</p>
             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.25rem;">
-              <span class="nota-autor">${nota.nombre || 'Anónimo'} · ${nota.fecha}</span>
-              <div class="nota-acciones">
+              <span class="nota-autor">${avatarNota ? avatarNota + ' ' : ''}${nota.nombre || 'Anónimo'} · ${nota.fecha}</span>
+              ${esPropiaNota ? `<div class="nota-acciones">
                 <button class="nota-btn nota-btn-editar" data-id="${nota.id}" title="Editar nota">✏️</button>
                 <button class="nota-btn nota-btn-eliminar" data-id="${nota.id}" title="Eliminar nota">🗑️</button>
-              </div>
+              </div>` : ''}
             </div>
           </div>
         `;
@@ -401,18 +426,16 @@ function configurarNotasInput() {
       const texto = input.value.trim();
       if (!texto) return;
 
-      const nombreInput = document.getElementById('inputNotaNombre');
-      const nombre = (nombreInput ? nombreInput.value.trim() : '') || '';
-      if (nombre) {
-        nombreUsuario = nombre;
-        localStorage.setItem('recetario-nombre-usuario', nombre);
-      }
+      var sesionNota = obtenerSesion();
+      const nombre = sesionNota ? sesionNota.username : 'Anónimo';
 
       const nota = {
         id: Date.now().toString(),
         texto: texto,
-        nombre: nombre || 'Anónimo',
-        fecha: new Date().toISOString().split('T')[0]
+        nombre: nombre,
+        fecha: new Date().toISOString().split('T')[0],
+        user_id: sesionNota ? sesionNota.userId : null,
+        avatar_url: sesionNota ? sesionNota.avatarUrl : ''
       };
 
       const actualizada = JSON.parse(JSON.stringify(receta));
@@ -503,6 +526,7 @@ async function guardarEditarNota(id) {
 
 function renderizarResenas(contenedor) {
   const r = receta;
+  var sesion = obtenerSesion();
   let html = '';
 
   if (!r.resenas || r.resenas.length === 0) {
@@ -539,12 +563,13 @@ function renderizarResenas(contenedor) {
         for (let i = 0; i < 5; i++) {
           estrellas += `<span class="resena-estrella${i < res.puntuacion ? ' llena' : ''}">★</span>`;
         }
-        const esPropia = res.usuario === (nombreUsuario || 'Anónimo') || res.usuario === 'Tú';
+        const esPropia = res.usuario === (nombreUsuario || 'Anónimo') || res.usuario === 'Tú' || (sesion && res.user_id === sesion.userId);
+        var avatarResena = res.user_id ? avatarHtmlFor(res.usuario, res.avatar_url, 32) : `<div class="resena-avatar">${res.usuario.charAt(0)}</div>`;
         html += `
           <div class="resena-item">
             <div class="resena-header">
               <div class="resena-usuario">
-                <div class="resena-avatar">${res.usuario.charAt(0)}</div>
+                ${avatarResena}
                 <div>
                   <h4 class="resena-nombre">${res.usuario}</h4>
                   <div class="resena-estrellas">${estrellas}</div>
@@ -580,7 +605,7 @@ function renderizarResenas(contenedor) {
             <span class="estrella" data-val="5">★</span>
           </div>
         </div>
-        <input type="text" id="nombreResena" value="${nombreUsuario}" placeholder="Tu nombre (opcional)" style="width:100%;padding:0.65rem 1rem;border:1px solid var(--borde);border-radius:0.75rem;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:0.75rem;">
+        <input type="text" id="nombreResena" value="${sesion ? sesion.username : nombreUsuario}" placeholder="${sesion ? '' : 'Tu nombre (opcional)'}" style="width:100%;padding:0.65rem 1rem;border:1px solid var(--borde);border-radius:0.75rem;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:0.75rem;" ${sesion ? 'readonly' : ''}>
         <textarea id="textoResena" placeholder="¿Qué te pareció la receta?" style="margin-bottom:1rem;"></textarea>
         <div class="resena-acciones">
           <button class="btn-cancelar" id="btnCancelarResena">Cancelar</button>
@@ -643,12 +668,15 @@ function configurarResenasInteractivo() {
       const nombreInput = document.getElementById('nombreResena');
       nombreUsuario = (nombreInput ? nombreInput.value.trim() : '') || '';
       if (nombreUsuario) localStorage.setItem('recetario-nombre-usuario', nombreUsuario);
+      var sesionResena = obtenerSesion();
       const resena = {
         id: Date.now().toString(),
-        usuario: nombreUsuario || 'Anónimo',
+        usuario: (nombreUsuario || (sesionResena ? sesionResena.username : '')) || 'Anónimo',
         puntuacion: nuevaPuntuacion,
         comentario: texto.value.trim(),
-        fecha: new Date().toISOString().split('T')[0]
+        fecha: new Date().toISOString().split('T')[0],
+        user_id: sesionResena ? sesionResena.userId : null,
+        avatar_url: sesionResena ? sesionResena.avatarUrl : ''
       };
 
       const actualizada = JSON.parse(JSON.stringify(receta));
@@ -723,6 +751,11 @@ function configurarResenasAcciones() {
 }
 
 async function eliminarResena(id) {
+  var sesionElim = obtenerSesion();
+  var resenaElim = receta.resenas.find(function (r) { return r.id === id; });
+  if (resenaElim && resenaElim.user_id) {
+    if (!sesionElim || resenaElim.user_id !== sesionElim.userId) return;
+  }
   if (!confirm('¿Eliminar esta opinión?')) return;
   const actualizada = JSON.parse(JSON.stringify(receta));
   const nuevasResenas = actualizada.resenas.filter(function (r) { return r.id !== id; });
@@ -869,18 +902,26 @@ function renderizarCocinaPaso() {
 }
 
 async function toggleFavoritoDetalle() {
+  var sesion = obtenerSesion();
+  if (!sesion) return;
   var r = receta;
-  r.favorito = !r.favorito;
-  await actualizarReceta(r);
+  var favs = await obtenerFavoritos(sesion.userId);
+  var esFav = favs.indexOf(r.id) !== -1;
+  if (esFav) {
+    await quitarFavorito(sesion.userId, r.id);
+  } else {
+    await agregarFavorito(sesion.userId, r.id);
+  }
   var btn = document.getElementById('btnFavDetalle');
   if (btn) {
-    btn.innerHTML = r.favorito ? '❤️ Favorito' : '🤍 Favorito';
-    btn.className = 'btn-accion ' + (r.favorito ? 'btn-fav-activo' : 'btn-fav');
+    btn.innerHTML = esFav ? '🤍 Favorito' : '❤️ Favorito';
+    btn.className = 'btn-accion ' + (esFav ? 'btn-fav' : 'btn-fav-activo');
   }
 }
 
 async function eliminarRecetaActual() {
   if (!receta) return;
+  if (!estaLogueado()) return;
   if (!confirm('¿Estás seguro de eliminar "' + receta.titulo + '"? Esta acción no se puede deshacer.')) return;
 
   await eliminarReceta(receta.id);

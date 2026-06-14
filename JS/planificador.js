@@ -10,9 +10,16 @@ var SLOTS = [
 ];
 var CLAVE_PLAN = 'recetario-plan-semanal';
 
+function obtenerUserId() {
+  var sesion = obtenerSesion();
+  return sesion ? sesion.userId : null;
+}
+
 async function obtenerPlan() {
+  var userId = obtenerUserId();
+  if (!userId) return {};
   try {
-    var res = await fetch(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN + '?select=plan_data&id=eq.1', {
+    var res = await fetch(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN + '?select=plan_data&id=eq.' + encodeURIComponent(userId), {
       headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
     });
     if (!res.ok) return {};
@@ -24,11 +31,23 @@ async function obtenerPlan() {
 }
 
 async function guardarPlan(plan) {
-  await fetch(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN + '?id=eq.1', {
-    method: 'PATCH',
-    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ plan_data: plan, updated_at: new Date().toISOString() })
-  });
+  var userId = obtenerUserId();
+  if (!userId) return;
+  try {
+    await fetch(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN + '?id=eq.' + encodeURIComponent(userId), {
+      method: 'PATCH',
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan_data: plan, updated_at: new Date().toISOString() })
+    });
+  } catch (e) {
+    try {
+      await fetch(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN, {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+        body: JSON.stringify({ id: userId, plan_data: plan, updated_at: new Date().toISOString() })
+      });
+    } catch (e2) {}
+  }
 }
 
 async function planificarReceta(dia, comida, nombreReceta, idReceta) {
