@@ -232,7 +232,7 @@ function renderizarDetalle() {
         <div class="tabs">
           <div class="tabs-header">
             <button class="tab-btn activo" data-tab="ingredientes">✅ Ingredientes</button>
-            ${logueado ? '<button class="tab-btn" data-tab="notas">📝 Notas</button>' : ''}
+            <button class="tab-btn" data-tab="notas">📝 Notas</button>
             <button class="tab-btn" data-tab="resenas">💬 Opiniones</button>
           </div>
           <div class="tab-contenido" id="tabContenido"></div>
@@ -366,16 +366,18 @@ function renderizarIngredientes(contenedor) {
 function renderizarNotas(contenedor) {
   const r = receta;
   var sesion = obtenerSesion();
-  let html = `
-    <div class="notas-form">
-      <h4>Añadir una nota personal</h4>
-      <div class="notas-input-grupo">
-        <input type="text" id="inputNota" placeholder="Ej: Usé leche de almendras en vez de vaca...">
-        <button class="BotonP" id="btnGuardarNota" style="padding:0.5rem 1rem;font-size:0.875rem;">💾 Guardar</button>
-      </div>
-    </div>
-    <div class="notas-lista" id="notasLista">
-  `;
+  let html = '';
+  if (sesion) {
+    html += `
+      <div class="notas-form">
+        <h4>Añadir una nota personal</h4>
+        <div class="notas-input-grupo">
+          <input type="text" id="inputNota" placeholder="Ej: Usé leche de almendras en vez de vaca...">
+          <button class="BotonP" id="btnGuardarNota" style="padding:0.5rem 1rem;font-size:0.875rem;">💾 Guardar</button>
+        </div>
+      </div>`;
+  }
+  html += `<div class="notas-lista" id="notasLista">`;
 
   if (!r.notasPersonales || r.notasPersonales.length === 0) {
     html += `<p class="nota-vacia">No tienes notas personales para esta receta todavía.</p>`;

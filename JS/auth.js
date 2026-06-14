@@ -150,18 +150,22 @@ function abrirModalLogin() {
   overlay.className = 'modal-login-overlay';
   overlay.id = 'modalLoginOverlay';
   overlay.onclick = function (e) { if (e.target === this) cerrarModalLogin(); };
+  var savedUser = localStorage.getItem('recetario-recordar-usuario') || '';
   overlay.innerHTML = '<div class="modal-login">' +
     '<button class="modal-login-cerrar" onclick="cerrarModalLogin()">✕</button>' +
     '<h2>🔑 Iniciar sesión</h2>' +
     '<div class="login-form">' +
       '<div class="login-campo">' +
         '<label for="loginUsername">Usuario</label>' +
-        '<input type="text" id="loginUsername" placeholder="Nombre de usuario" autocomplete="off">' +
+        '<input type="text" id="loginUsername" placeholder="Nombre de usuario" value="' + savedUser + '">' +
       '</div>' +
       '<div class="login-campo">' +
         '<label for="loginPassword">Contraseña</label>' +
         '<input type="password" id="loginPassword" placeholder="Contraseña" autocomplete="off">' +
       '</div>' +
+      '<label class="login-recordar">' +
+        '<input type="checkbox" id="loginRecordar"' + (savedUser ? ' checked' : '') + '> Recordar usuario' +
+      '</label>' +
       '<div class="login-error" id="loginError"></div>' +
       '<button class="login-btn" id="loginBtn">Iniciar sesión</button>' +
       '<p class="login-admin-link"><a href="admin.html">🔧 Administrar usuarios</a></p>' +
@@ -174,6 +178,7 @@ function abrirModalLogin() {
   document.getElementById('loginBtn').addEventListener('click', async function () {
     var username = document.getElementById('loginUsername').value.trim();
     var password = document.getElementById('loginPassword').value.trim();
+    var recordar = document.getElementById('loginRecordar').checked;
     var errorEl = document.getElementById('loginError');
     if (!username || !password) {
       errorEl.textContent = 'Completa ambos campos';
@@ -182,6 +187,11 @@ function abrirModalLogin() {
     try {
       var ok = await iniciarSesion(username, password);
       if (ok) {
+        if (recordar) {
+          localStorage.setItem('recetario-recordar-usuario', username);
+        } else {
+          localStorage.removeItem('recetario-recordar-usuario');
+        }
         cerrarModalLogin();
       } else {
         errorEl.textContent = 'Usuario o contraseña incorrectos';
