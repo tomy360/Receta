@@ -220,7 +220,7 @@ function renderizarDetalle() {
             </div>
             <span class="detalle-meta-label">Porciones</span>
           </div>
-          ${r.socialUrl ? (function(url){ var icon='🔗',label='Red social'; if(url.includes('instagram.com')){icon='📸';label='Instagram'}else if(url.includes('tiktok.com')){icon='🎵';label='TikTok'}else if(url.includes('facebook.com')||url.includes('fb.watch')){icon='📘';label='Facebook'}else if(url.includes('x.com')||url.includes('twitter.com')){icon='🐦';label='X / Twitter'}else if(url.includes('youtube.com')||url.includes('youtu.be')){icon='📺';label='YouTube'}; return '<div class="detalle-meta-item"><div class="detalle-meta-icono dificultad">'+icon+'</div><a href="'+url+'" target="_blank" rel="noopener noreferrer" class="detalle-meta-enlace">'+label+'</a><span class="detalle-meta-label">Red social</span></div>'; })(r.socialUrl) : ''}
+          ${r.socialUrl ? (function(url){ var icon='🔗',label='Red social'; if(url.includes('instagram.com')){icon='📸';label='Instagram'}else if(url.includes('tiktok.com')){icon='🎵';label='TikTok'}else if(url.includes('facebook.com')||url.includes('fb.watch')){icon='📘';label='Facebook'}else if(url.includes('x.com')||url.includes('twitter.com')){icon='🐦';label='X / Twitter'}else if(url.includes('youtube.com')||url.includes('youtu.be')){icon='📺';label='YouTube'}; var href=url.replace(/&/g,'&amp;').replace(/"/g,'&quot;'); return '<div class="detalle-meta-item"><div class="detalle-meta-icono dificultad">'+icon+'</div><a href="'+href+'" target="_blank" rel="noopener noreferrer" class="detalle-meta-enlace">'+label+'</a><span class="detalle-meta-label">Red social</span></div>'; })(r.socialUrl) : ''}
         </div>
       </div>
 
