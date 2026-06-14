@@ -40,7 +40,7 @@ function guardarSesion(usuario) {
 
 function cerrarSesion() {
   localStorage.removeItem(CLAVE_SESION);
-  actualizarUI();
+  window.location.reload();
 }
 
 async function iniciarSesion(username, password) {
@@ -96,7 +96,6 @@ function actualizarUI() {
   var logueado = estaLogueado();
   var sesion = obtenerSesion();
 
-  // Nav CTA - botón añadir receta
   document.querySelectorAll('.nav-cta').forEach(function (el) {
     el.style.display = logueado ? '' : 'none';
   });
@@ -104,7 +103,6 @@ function actualizarUI() {
     el.style.display = logueado ? '' : 'none';
   });
 
-  // Botón de login/logout en nav
   document.querySelectorAll('.nav-auth').forEach(function (el) { el.remove(); });
 
   var navInner = document.querySelector('.nav-inner');
@@ -116,7 +114,7 @@ function actualizarUI() {
       authBtn.innerHTML = '<div class="nav-auth-usuario">' +
         avatarHtml(28) +
         '<span class="nav-auth-username">' + sesion.username + '</span>' +
-        '<button class="nav-auth-logout" onclick="cerrarSesion()" title="Cerrar sesión">🚪</button>' +
+        '<button class="nav-auth-logout" onclick="cerrarSesion()" title="Cerrar secion">🚪 Cerrar secion</button>' +
         '</div>';
     } else {
       authBtn.innerHTML = '<button class="nav-auth-login" onclick="abrirModalLogin()">🔑 Iniciar sesión</button>';
@@ -124,7 +122,6 @@ function actualizarUI() {
     menuBotones.appendChild(authBtn);
   }
 
-  // Mobile auth
   document.querySelectorAll('.nav-mobile-auth').forEach(function (el) { el.remove(); });
   var mobileMenu = document.getElementById('navMobileMenu');
   if (mobileMenu) {
@@ -136,7 +133,7 @@ function actualizarUI() {
         mobileAuth.innerHTML = '<div style="display:flex;align-items:center;gap:0.5rem;padding:0.75rem 1rem;">' +
           avatarHtml(28) +
           '<span style="flex:1;font-size:0.875rem;">' + sesion.username + '</span>' +
-          '<button class="nav-auth-logout" onclick="cerrarSesion()" title="Cerrar sesión">🚪 Cerrar sesión</button>' +
+          '<button class="nav-auth-logout" onclick="cerrarSesion()" title="Cerrar secion">🚪 Cerrar secion</button>' +
           '</div>';
       } else {
         mobileAuth.innerHTML = '<div style="padding:0.75rem 1rem;"><button class="nav-auth-login" onclick="abrirModalLogin()" style="width:100%;padding:0.5rem;background:var(--verde);color:#fff;border:none;border-radius:0.5rem;cursor:pointer;">🔑 Iniciar sesión</button></div>';
@@ -145,8 +142,9 @@ function actualizarUI() {
     }
   }
 
-  // Planificador: redirigir si no logueado
+  // Planificador: avisar si no logueado
   if (window.location.pathname.indexOf('planificador') !== -1 && !logueado) {
+    alert('Debes iniciar sesión para usar el planificador.');
     window.location.href = 'index.html';
   }
 }
@@ -166,11 +164,11 @@ function abrirModalLogin() {
     '<div class="login-form">' +
       '<div class="login-campo">' +
         '<label for="loginUsername">Usuario</label>' +
-        '<input type="text" id="loginUsername" placeholder="Nombre de usuario">' +
+        '<input type="text" id="loginUsername" placeholder="Nombre de usuario" autocomplete="off">' +
       '</div>' +
       '<div class="login-campo">' +
         '<label for="loginPassword">Contraseña</label>' +
-        '<input type="password" id="loginPassword" placeholder="Contraseña">' +
+        '<input type="password" id="loginPassword" placeholder="Contraseña" autocomplete="off">' +
       '</div>' +
       '<div class="login-error" id="loginError"></div>' +
       '<button class="login-btn" id="loginBtn">Iniciar sesión</button>' +

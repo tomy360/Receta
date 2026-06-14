@@ -195,6 +195,12 @@ function renderizarDetalle() {
           </div>
           <div class="detalle-meta-divisor"></div>
           <div class="detalle-meta-item">
+            <div class="detalle-meta-icono dificultad">🍽️</div>
+            <span class="detalle-meta-valor">${r.tipo || 'Indefinido'}</span>
+            <span class="detalle-meta-label">Momento</span>
+          </div>
+          <div class="detalle-meta-divisor"></div>
+          <div class="detalle-meta-item">
             <div class="detalle-meta-icono dificultad">✍️</div>
             <span class="detalle-meta-valor">${r.autor || 'Anónimo'}</span>
             <span class="detalle-meta-label">Autor</span>
