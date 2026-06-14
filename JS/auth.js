@@ -45,7 +45,7 @@ function cerrarSesion() {
 
 async function iniciarSesion(username, password) {
   var hash = await sha256(password);
-  var data = await peticionAuth(SUPABASE_URL + '/rest/v1/usuarios?select=*&username=eq.' + encodeURIComponent(username));
+  var data = await peticionAuth(SUPABASE_URL + '/rest/v1/usuarios?select=*&username=ilike.' + encodeURIComponent(username));
   if (data && data[0] && data[0].password === hash) {
     guardarSesion(data[0]);
     window.location.reload();
