@@ -882,6 +882,19 @@ nav {
   color: var(--texto);
 }
 
+.detalle-meta-enlace {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--verde);
+  text-decoration: none;
+}
+
+.detalle-meta-enlace:hover {
+  text-decoration: underline;
+  color: var(--verde-hover);
+}
+
 .detalle-meta-label {
   display: block;
   font-size: 0.75rem;
@@ -2000,8 +2013,8 @@ html.modo-noche .timer-display { color: var(--verde-claro); }
 
 .timer-acciones { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
 
-.timer-presets { display: flex; gap: 0.35rem; flex-wrap: wrap; justify-content: center; }
-.timer-presets .btn-categoria { font-size: 0.85rem; padding: 0.35rem 0.7rem; }
+.timer-presets { display: flex; gap: 0.3rem; flex-wrap: wrap; justify-content: center; max-height: 120px; overflow-y: auto; padding: 0.25rem; }
+.timer-presets .btn-categoria { font-size: 0.75rem; padding: 0.25rem 0.5rem; min-width: 2.4rem; }
 
 .timer-alarma {
   margin-top: 0.75rem;

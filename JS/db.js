@@ -5,6 +5,7 @@ function normalizarReceta(r) {
   return {
     ...r,
     videoUrl: r.videoUrl || r.videourl || '',
+    socialUrl: r.socialUrl || r.socialurl || '',
     notasPersonales: r.notasPersonales || r.notaspersonales || []
   };
 }
@@ -14,6 +15,7 @@ function paraDb(r) {
   var db = {};
   for (var k in r) {
     if (k === 'videoUrl') db.videourl = r.videoUrl || '';
+    else if (k === 'socialUrl') db.socialurl = r.socialUrl || '';
     else if (k === 'notasPersonales') db.notaspersonales = r.notasPersonales || [];
     else if (k !== 'created_at' && k !== 'updated_at') db[k] = r[k];
   }

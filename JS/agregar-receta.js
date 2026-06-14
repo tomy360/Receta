@@ -36,6 +36,7 @@ function cargarReceta(r) {
   document.getElementById('campoPersonas').value = r.personas || '';
   document.getElementById('campoImagen').value = r.imagen || '';
   document.getElementById('campoVideo').value = r.videoUrl || '';
+  document.getElementById('campoSocial').value = r.socialUrl || '';
   document.getElementById('campoCategorias').value = r.categorias || '';
   document.getElementById('campoAutor').value = r.autor || '';
 
@@ -127,6 +128,7 @@ async function enviarFormulario() {
   }
 
   const videoUrl = document.getElementById('campoVideo').value.trim();
+  const socialUrl = document.getElementById('campoSocial').value.trim();
   const categorias = document.getElementById('campoCategorias').value.trim();
   const autor = document.getElementById('campoAutor').value.trim();
 
@@ -191,6 +193,7 @@ async function enviarFormulario() {
         personas: personas,
         imagen: imagen,
         videoUrl: videoUrl,
+        socialUrl: socialUrl,
         categorias: categorias,
         autor: autor,
         preparaciones: preparaciones
@@ -208,6 +211,7 @@ async function enviarFormulario() {
       personas: personas,
       imagen: imagen,
       videoUrl: videoUrl,
+      socialUrl: socialUrl,
       autor: autor,
       categorias: categorias,
       puntuacion: 0,

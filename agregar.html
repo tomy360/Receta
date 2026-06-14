@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="./CSS/auth.css">
   <style>.nav-cta,.nav-mobile-cta{display:none}</style>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍳</text></svg>">
-  <title>Añadir Receta - Recetario Local</title>
+  <title>Añadir Receta - Recetas del día</title>
   <script defer src="./JS/supabase.js?v=2"></script>
   <script defer src="./JS/datos.js?v=2"></script>
   <script defer src="./JS/db.js?v=2"></script>
@@ -24,7 +24,7 @@
 
     <a class="nav-logo" href="./index.html">
       <span class="nav-logo-icon">🍳</span>
-      <span>Recetario</span>
+      <span>Recetas del día</span>
     </a>
 
     <div class="menu-botones">
@@ -113,7 +113,7 @@
   <div class="form-card">
     <div class="form-header">
       <h1>Añadir Nueva Receta</h1>
-      <p>Guarda tu receta en tu libro de recetas personal.</p>
+      <p>Guarda tu receta en Recetas del día.</p>
     </div>
 
     <form id="formReceta" autocomplete="off">
@@ -213,6 +213,11 @@
             <input type="text" id="campoVideo" placeholder="https://youtube.com/... o ./videos/mireceta.mp4">
             <p class="ayuda">YouTube, Instagram, TikTok, Facebook, o un archivo local: <strong>./videos/nombre.mp4</strong></p>
           </div>
+          <div class="form-campo">
+            <label for="campoSocial">Red social (Opcional)</label>
+            <input type="text" id="campoSocial" placeholder="https://instagram.com/...">
+            <p class="ayuda">Link a Instagram, TikTok, Facebook, etc.</p>
+          </div>
         </div>
 
         <div class="form-submit">
@@ -226,7 +231,7 @@
 
 <footer>
   <div class="contenedor">
-    <p>Recetario Local — Tu app de recetas personales.</p>
+    <p>Recetas del día — Tu app de recetas personales.</p>
   </div>
 </footer>
 
