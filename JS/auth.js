@@ -78,7 +78,7 @@ function avatarHtml(size) {
   var url = sesion.avatarUrl;
   var inicial = sesion.username.charAt(0).toUpperCase();
   if (url) {
-    return '<img src="' + url + '" class="avatar-img" style="width:' + size + 'px;height:' + size + 'px;border-radius:50%;object-fit:cover;" alt="Avatar">';
+    return '<img src="' + url + '" class="avatar-img" style="width:' + size + 'px;height:' + size + 'px;border-radius:50%;object-fit:cover;" alt="Avatar" onerror="this.remove()">';
   }
   return '<span class="avatar-inicial" style="width:' + size + 'px;height:' + size + 'px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--verde);color:#fff;font-weight:600;font-size:' + (size * 0.45) + 'px;flex-shrink:0;">' + inicial + '</span>';
 }
@@ -87,7 +87,7 @@ function avatarHtmlFor(username, avatarUrl, size) {
   size = size || 32;
   var inicial = (username || '?').charAt(0).toUpperCase();
   if (avatarUrl) {
-    return '<img src="' + avatarUrl + '" class="avatar-img" style="width:' + size + 'px;height:' + size + 'px;border-radius:50%;object-fit:cover;" alt="Avatar">';
+    return '<img src="' + avatarUrl + '" class="avatar-img" style="width:' + size + 'px;height:' + size + 'px;border-radius:50%;object-fit:cover;" alt="Avatar" onerror="this.remove()">';
   }
   return '<span class="avatar-inicial" style="width:' + size + 'px;height:' + size + 'px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--verde);color:#fff;font-weight:600;font-size:' + (size * 0.45) + 'px;flex-shrink:0;">' + inicial + '</span>';
 }
