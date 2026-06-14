@@ -181,43 +181,36 @@ function renderizarDetalle() {
             <span class="detalle-meta-valor">${r.tiempo}</span>
             <span class="detalle-meta-label">Tiempo</span>
           </div>
-          <div class="detalle-meta-divisor"></div>
           <div class="detalle-meta-item">
             <div class="detalle-meta-icono dificultad">📊</div>
             <span class="detalle-meta-valor">${r.dificultad}</span>
             <span class="detalle-meta-label">Dificultad</span>
           </div>
-          <div class="detalle-meta-divisor"></div>
           <div class="detalle-meta-item">
             <div class="detalle-meta-icono puntuacion">★</div>
             <span class="detalle-meta-valor">${r.puntuacion}</span>
             <span class="detalle-meta-label">Puntaje</span>
           </div>
-          <div class="detalle-meta-divisor"></div>
           <div class="detalle-meta-item">
             <div class="detalle-meta-icono dificultad">🍽️</div>
             <span class="detalle-meta-valor">${r.tipo || 'Indefinido'}</span>
             <span class="detalle-meta-label">Momento</span>
           </div>
-          <div class="detalle-meta-divisor"></div>
           <div class="detalle-meta-item">
             <div class="detalle-meta-icono dificultad">🏷️</div>
             <span class="detalle-meta-valor">${r.categorias ? r.categorias.split(',').map(function(c){return c.trim();}).filter(function(c){return c;}).join(', ') : '—'}</span>
             <span class="detalle-meta-label">Categoría</span>
           </div>
-          <div class="detalle-meta-divisor"></div>
           <div class="detalle-meta-item">
             <div class="detalle-meta-icono dificultad">✍️</div>
             <span class="detalle-meta-valor">${r.autor || 'Anónimo'}</span>
             <span class="detalle-meta-label">Autor</span>
           </div>
-          <div class="detalle-meta-divisor"></div>
           <div class="detalle-meta-item">
             <div class="detalle-meta-icono dificultad">👥</div>
             <span class="detalle-meta-valor">${r.personas > 0 ? r.personas : '—'}</span>
             <span class="detalle-meta-label">Personas</span>
           </div>
-          <div class="detalle-meta-divisor"></div>
           <div class="detalle-meta-item" id="porcionesControl">
             <div class="detalle-meta-icono dificultad">🍕</div>
             <div class="porciones-control">

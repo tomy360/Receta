@@ -111,11 +111,7 @@ function actualizarUI() {
     var authBtn = document.createElement('div');
     authBtn.className = 'nav-auth';
     if (logueado) {
-      authBtn.innerHTML = '<div class="nav-auth-usuario">' +
-        avatarHtml(28) +
-        '<span class="nav-auth-username">' + sesion.username + '</span>' +
-        '<button class="nav-auth-logout" onclick="cerrarSesion()" title="Cerrar secion">🚪 Cerrar secion</button>' +
-        '</div>';
+      authBtn.innerHTML = '<button class="nav-auth-logout" onclick="cerrarSesion()" title="Cerrar sesión">🚪 Cerrar secion</button>';
     } else {
       authBtn.innerHTML = '<button class="nav-auth-login" onclick="abrirModalLogin()">🔑 Iniciar sesión</button>';
     }
@@ -130,11 +126,7 @@ function actualizarUI() {
       var mobileAuth = document.createElement('div');
       mobileAuth.className = 'nav-mobile-auth';
       if (logueado) {
-        mobileAuth.innerHTML = '<div style="display:flex;align-items:center;gap:0.5rem;padding:0.75rem 1rem;">' +
-          avatarHtml(28) +
-          '<span style="flex:1;font-size:0.875rem;">' + sesion.username + '</span>' +
-          '<button class="nav-auth-logout" onclick="cerrarSesion()" title="Cerrar secion">🚪 Cerrar secion</button>' +
-          '</div>';
+        mobileAuth.innerHTML = '<div style="padding:0.75rem 1rem;"><button class="nav-auth-logout" onclick="cerrarSesion()" title="Cerrar sesión" style="width:100%;padding:0.5rem;">🚪 Cerrar secion</button></div>';
       } else {
         mobileAuth.innerHTML = '<div style="padding:0.75rem 1rem;"><button class="nav-auth-login" onclick="abrirModalLogin()" style="width:100%;padding:0.5rem;background:var(--verde);color:#fff;border:none;border-radius:0.5rem;cursor:pointer;">🔑 Iniciar sesión</button></div>';
       }
