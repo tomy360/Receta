@@ -14,6 +14,7 @@ function paraDb(r) {
   if (!r) return r;
   var db = {};
   for (var k in r) {
+    if (k === 'videourl' || k === 'socialurl' || k === 'notaspersonales') continue;
     if (k === 'videoUrl') db.videourl = r.videoUrl || '';
     else if (k === 'socialUrl') db.socialurl = r.socialUrl || '';
     else if (k === 'notasPersonales') db.notaspersonales = r.notasPersonales || [];

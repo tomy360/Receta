@@ -26,10 +26,15 @@ ALTER TABLE tips ADD COLUMN IF NOT EXISTS avatar_url TEXT;
 ALTER TABLE usuarios ENABLE ROW LEVEL SECURITY;
 ALTER TABLE favoritos ENABLE ROW LEVEL SECURITY;
 
--- Permitir anónimo SELECT/INSERT en usuarios (necesario para login y admin)
-CREATE POLICY IF NOT EXISTS "anon_select_usuarios" ON usuarios FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS "anon_insert_usuarios" ON usuarios FOR INSERT WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "anon_all_favoritos" ON favoritos FOR ALL USING (true) WITH CHECK (true);
+-- Permitir anónimo SELECT/INSERT/DELETE en usuarios (necesario para login, admin y borrar)
+DROP POLICY IF EXISTS "anon_select_usuarios" ON usuarios;
+DROP POLICY IF EXISTS "anon_insert_usuarios" ON usuarios;
+DROP POLICY IF EXISTS "anon_delete_usuarios" ON usuarios;
+DROP POLICY IF EXISTS "anon_all_favoritos" ON favoritos;
+CREATE POLICY "anon_select_usuarios" ON usuarios FOR SELECT USING (true);
+CREATE POLICY "anon_insert_usuarios" ON usuarios FOR INSERT WITH CHECK (true);
+CREATE POLICY "anon_delete_usuarios" ON usuarios FOR DELETE USING (true);
+CREATE POLICY "anon_all_favoritos" ON favoritos FOR ALL USING (true) WITH CHECK (true);
 
 -- 5. Insertar usuario admin por defecto
 -- Contraseña: admin1234 (SHA-256: ac9689e2272427085e35b9d3e3e8bed88cb3434828b43b86fc0596cad4c6e270)

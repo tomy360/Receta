@@ -97,10 +97,10 @@ function actualizarUI() {
   var sesion = obtenerSesion();
 
   document.querySelectorAll('.nav-cta').forEach(function (el) {
-    el.style.display = logueado ? '' : 'none';
+    el.style.display = logueado ? 'flex' : 'none';
   });
   document.querySelectorAll('.nav-mobile-cta').forEach(function (el) {
-    el.style.display = logueado ? '' : 'none';
+    el.style.display = logueado ? 'flex' : 'none';
   });
 
   document.querySelectorAll('.nav-auth').forEach(function (el) { el.remove(); });
