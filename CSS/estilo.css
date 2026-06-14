@@ -645,6 +645,22 @@ nav {
 
 .tarjeta-footer .icono { color: var(--verde-claro); }
 
+.tarjeta-categorias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0.5rem 1rem 0.75rem;
+}
+
+.mini-categoria {
+  background: var(--crema-medio);
+  color: var(--texto-med);
+  font-size: 0.688rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+}
+
 /* ========== SIN RESULTADOS ========== */
 .sin-resultados {
   text-align: center;

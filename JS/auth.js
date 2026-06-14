@@ -48,7 +48,7 @@ async function iniciarSesion(username, password) {
   var data = await peticionAuth(SUPABASE_URL + '/rest/v1/usuarios?select=*&username=eq.' + encodeURIComponent(username));
   if (data && data[0] && data[0].password === hash) {
     guardarSesion(data[0]);
-    actualizarUI();
+    window.location.reload();
     return true;
   }
   return false;
@@ -191,9 +191,6 @@ function abrirModalLogin() {
       var ok = await iniciarSesion(username, password);
       if (ok) {
         cerrarModalLogin();
-        if (window.location.pathname.indexOf('agregar') !== -1 || window.location.pathname.indexOf('planificador') !== -1) {
-          window.location.reload();
-        }
       } else {
         errorEl.textContent = 'Usuario o contraseña incorrectos';
       }

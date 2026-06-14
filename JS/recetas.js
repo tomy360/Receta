@@ -371,9 +371,9 @@ function crearTarjeta(r) {
           <div class="tarjeta-footer">
             <span><span class="icono">🕐</span> ${r.tiempo}</span>
             <span><span class="icono">📊</span> ${r.dificultad}</span>
-            <span><span class="icono">🍽️</span> ${r.tipo}</span>
             <span><span class="icono">👥</span> ${r.personas > 0 ? r.personas : '—'} pers.</span>
           </div>
+          ${r.categorias ? '<div class="tarjeta-categorias">' + r.categorias.split(',').map(function(c) { return '<span class="mini-categoria">' + c.trim() + '</span>'; }).join('') + '</div>' : ''}
         </div>
       </a>
     </div>
