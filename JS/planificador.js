@@ -133,7 +133,7 @@ var selectorComida = '';
 async function abrirSelector(dia, comida) {
   selectorDia = dia;
   selectorComida = comida;
-  var recetas = await obtenerRecetas();
+  window._selectorRecetas = await obtenerRecetas();
   var overlay = document.getElementById('selectorRecetas');
   if (!overlay) {
     overlay = document.createElement('div');
@@ -144,17 +144,44 @@ async function abrirSelector(dia, comida) {
   }
   var html = '<div class="modal-contenido modal-selector-recetas"><button class="modal-cerrar" onclick="cerrarSelector()">✕</button>';
   html += '<h3>Seleccionar receta para ' + dia + ' — ' + comida + '</h3>';
-  html += '<div class="selector-lista">';
-  recetas.forEach(function (r) {
-    html += '<button class="selector-item" onclick="planificarReceta(\'' + dia + '\',\'' + comida + '\',\'' + r.titulo.replace(/'/g, "\\'") + '\',\'' + r.id + '\')">';
-    html += '<span class="selector-item-nombre">' + r.titulo + '</span>';
-    html += '<span class="selector-item-tipo">' + r.tipo + '</span>';
-    html += '</button>';
-  });
-  html += '</div></div>';
+  html += '<div class="selector-filtros">';
+  html += '<input type="text" id="selectorBusqueda" class="selector-input" placeholder="Buscar receta...">';
+  html += '<select id="selectorFiltroTipo" class="selector-select"><option value="Todos">Todos los momentos</option><option value="Desayuno">Desayuno</option><option value="Almuerzo">Almuerzo</option><option value="Cena">Cena</option><option value="Media Tarde">Media Tarde</option><option value="Indefinido">Indefinido</option></select>';
+  html += '<select id="selectorFiltroDieta" class="selector-select"><option value="Todas">Todas las dietas</option><option value="">Ninguna</option><option value="Diabéticos">Diabéticos</option><option value="Celíacos">Celíacos</option><option value="Veganos">Veganos</option><option value="Vegetarianos">Vegetarianos</option></select>';
+  html += '</div>';
+  html += '<div class="selector-lista" id="selectorListaRecetas"></div></div>';
   overlay.innerHTML = html;
   overlay.classList.remove('oculto');
   selectorVisible = true;
+  document.getElementById('selectorBusqueda').addEventListener('input', renderizarSelectorLista);
+  document.getElementById('selectorFiltroTipo').addEventListener('change', renderizarSelectorLista);
+  document.getElementById('selectorFiltroDieta').addEventListener('change', renderizarSelectorLista);
+  renderizarSelectorLista();
+}
+
+function renderizarSelectorLista() {
+  var recetas = window._selectorRecetas || [];
+  var busqueda = (document.getElementById('selectorBusqueda').value || '').toLowerCase();
+  var filtroTipo = document.getElementById('selectorFiltroTipo').value;
+  var filtroDieta = document.getElementById('selectorFiltroDieta').value;
+  var filtradas = recetas.filter(function (r) {
+    var porBusqueda = !busqueda || r.titulo.toLowerCase().indexOf(busqueda) !== -1;
+    var porTipo = filtroTipo === 'Todos' || r.tipo === filtroTipo;
+    var porDieta = filtroDieta === 'Todas' || (filtroDieta === '' ? !r.dieta : r.dieta === filtroDieta);
+    return porBusqueda && porTipo && porDieta;
+  });
+  var contenedor = document.getElementById('selectorListaRecetas');
+  if (!contenedor) return;
+  if (!filtradas.length) {
+    contenedor.innerHTML = '<p style="text-align:center;padding:2rem;color:var(--texto-suave);">No hay recetas que coincidan.</p>';
+    return;
+  }
+  contenedor.innerHTML = filtradas.map(function (r) {
+    return '<button class="selector-item" onclick="planificarReceta(\'' + selectorDia + '\',\'' + selectorComida + '\',\'' + r.titulo.replace(/'/g, "\\'") + '\',\'' + r.id + '\')">' +
+      '<span class="selector-item-nombre">' + r.titulo + '</span>' +
+      '<span class="selector-item-tipo">' + r.tipo + '</span>' +
+      '</button>';
+  }).join('');
 }
 
 function cerrarSelector() {
