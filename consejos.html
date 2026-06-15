@@ -113,32 +113,33 @@
     </div>
   </div>
 
-  <button class="BotonP" id="btnAgregarConsejo" style="margin-bottom:1.5rem;">➕ Agregar consejo</button>
-  <div class="consejos-form oculto" id="consejosForm">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-      <h4 style="margin:0;">Nuevo consejo</h4>
-      <button class="btn-cerrar-form" id="btnCerrarConsejo" type="button" title="Cerrar">✕</button>
+  <div class="consejos-layout">
+    <div class="consejos-list">
+      <div class="consejos-grid" id="consejosGrid"></div>
+      <p class="sin-resultados oculto" id="sinConsejos" style="text-align:center;padding:3rem;color:var(--texto-suave);">Aún no hay consejos. ¡Escribe el primero!</p>
     </div>
-    <div class="form-campo">
-      <label for="campoTituloConsejo">Título</label>
-      <input type="text" id="campoTituloConsejo" placeholder="Ej: Cómo pelar ajos fácilmente" style="width:100%;padding:0.65rem 1rem;border:1px solid var(--borde);border-radius:0.75rem;font-size:0.9rem;outline:none;">
-    </div>
-    <div class="form-campo">
-      <label for="campoNombreConsejo">Tu nombre (opcional)</label>
-      <input type="text" id="campoNombreConsejo" placeholder="Tu nombre (opcional)" style="width:100%;padding:0.65rem 1rem;border:1px solid var(--borde);border-radius:0.75rem;font-size:0.9rem;outline:none;box-sizing:border-box;">
-    </div>
-    <div class="form-campo">
-      <label for="campoContenidoConsejo">Contenido</label>
-      <textarea id="campoContenidoConsejo" placeholder="Escribe tu consejo aquí..."></textarea>
-    </div>
-    <div class="form-acciones">
-      <button class="btn-cancelar oculto" id="btnCancelarConsejo" type="button">Cancelar</button>
-      <button class="btn-guardar" id="btnGuardarConsejo">💾 Guardar consejo</button>
+    <div class="consejos-sidebar" id="consejosSidebar">
+      <div class="consejos-form" id="consejosForm">
+        <h4 style="margin:0 0 1rem;">✏️ Nuevo consejo</h4>
+        <div class="form-campo">
+          <label for="campoTituloConsejo">Título</label>
+          <input type="text" id="campoTituloConsejo" placeholder="Ej: Cómo pelar ajos fácilmente" style="width:100%;padding:0.65rem 1rem;border:1px solid var(--borde);border-radius:0.75rem;font-size:0.9rem;outline:none;box-sizing:border-box;">
+        </div>
+        <div class="form-campo oculto">
+          <label for="campoNombreConsejo">Tu nombre</label>
+          <input type="text" id="campoNombreConsejo" placeholder="Tu nombre" style="width:100%;padding:0.65rem 1rem;border:1px solid var(--borde);border-radius:0.75rem;font-size:0.9rem;outline:none;box-sizing:border-box;">
+        </div>
+        <div class="form-campo">
+          <label for="campoContenidoConsejo">Contenido</label>
+          <textarea id="campoContenidoConsejo" placeholder="Escribe tu consejo aquí..."></textarea>
+        </div>
+        <div class="form-acciones">
+          <button class="btn-guardar" id="btnGuardarConsejo">💾 Guardar consejo</button>
+          <button class="btn-cancelar oculto" id="btnCancelarConsejo" type="button">Cancelar</button>
+        </div>
+      </div>
     </div>
   </div>
-
-  <div class="consejos-grid" id="consejosGrid"></div>
-  <p class="sin-resultados oculto" id="sinConsejos" style="text-align:center;padding:3rem;color:var(--texto-suave);">Aún no hay consejos. ¡Escribe el primero!</p>
 </div>
 
 <!-- TIMER MODAL -->
