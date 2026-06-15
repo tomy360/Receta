@@ -72,7 +72,7 @@ async function eliminarSlot(dia, comida) {
 async function toggleOpcionales(dia) {
   var plan = await obtenerPlan();
   if (!plan[dia]) plan[dia] = {};
-  plan[dia].colapsado = !plan[dia].colapsado;
+  plan[dia].colapsado = plan[dia].colapsado === undefined ? false : !plan[dia].colapsado;
   await guardarPlan(plan);
   renderizarPlan();
 }
@@ -105,7 +105,7 @@ async function renderizarPlan() {
   var html = '<div class="plan-dias">';
   DIAS.forEach(function (dia) {
     var info = plan[dia] || {};
-    var colapsado = info.colapsado === true;
+    var colapsado = info.colapsado === undefined ? true : info.colapsado;
     html += '<div class="plan-dia">' +
       '<div class="plan-dia-header">' +
       '<span>' + dia + '</span>' +
