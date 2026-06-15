@@ -184,14 +184,6 @@ function renderizarDetalle() {
   }
   let socialEmbedHtml = generarSocialEmbed(r.socialUrl);
 
-  let categoriasHtml = '';
-  if (r.categorias) {
-    var cats = r.categorias.split(',').map(function(c) { return c.trim(); }).filter(function(c) { return c; });
-    if (cats.length) {
-      categoriasHtml = '<div class="detalle-categorias">' + cats.map(function(c) { return '<span class="categoria-badge">' + c + '</span>'; }).join('') + '</div>';
-    }
-  }
-
   var logueado = estaLogueado();
   var sesion = obtenerSesion();
   var esFav = r.favorito;
@@ -279,7 +271,6 @@ function renderizarDetalle() {
         <h1>${r.titulo}</h1>
         ${r.etiquetas ? '<div class="detalle-etiquetas">' + r.etiquetas.split(',').map(function(e){return '<span class="etiqueta-badge">#' + e.trim() + '</span>';}).join('') + '</div>' : ''}
         <p class="detalle-descripcion">${r.descripcion}</p>
-        ${categoriasHtml}
         ${videoHtml}
         ${socialEmbedHtml}
 
