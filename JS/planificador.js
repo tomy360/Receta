@@ -192,7 +192,7 @@ function renderizarSelectorLista() {
   }).join('');
 }
 
-document.addEventListener('click', function (e) {
+document.addEventListener('click', async function (e) {
   var btn = e.target.closest('.selector-item');
   if (!btn) return;
   var dia = btn.dataset.dia;
@@ -200,7 +200,8 @@ document.addEventListener('click', function (e) {
   var nombre = btn.dataset.titulo;
   var id = btn.dataset.id;
   if (dia && comida && nombre && id) {
-    planificarReceta(dia, comida, nombre, id);
+    await planificarReceta(dia, comida, nombre, id);
+    cerrarSelector();
   }
 });
 
