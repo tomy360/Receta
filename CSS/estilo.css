@@ -579,6 +579,19 @@ nav {
   border: 1px solid rgba(154,177,122,0.25);
 }
 
+.tarjeta-dieta {
+  position: absolute;
+  top: 2.8rem;
+  left: 0.875rem;
+  background: rgba(70,130,70,0.9);
+  padding: 0.15rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
 .tarjeta-info {
   padding: 1.25rem;
   display: flex;

@@ -244,6 +244,7 @@ function renderizarDetalle() {
             <span class="detalle-meta-valor">${r.categorias ? r.categorias.split(',').map(function(c){return c.trim();}).filter(function(c){return c;}).join(', ') : '—'}</span>
             <span class="detalle-meta-label">Categoría</span>
           </div>
+          ${r.dieta ? '<div class="detalle-meta-item"><div class="detalle-meta-icono dificultad">🥗</div><span class="detalle-meta-valor">' + r.dieta + '</span><span class="detalle-meta-label">Dieta</span></div>' : ''}
           <div class="detalle-meta-item">
             <div class="detalle-meta-icono dificultad">✍️</div>
             <span class="detalle-meta-valor">${r.autor || 'Anónimo'}</span>

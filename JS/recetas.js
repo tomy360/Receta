@@ -4,6 +4,7 @@ const tiempos = ['Cualquiera', '≤ 15 min', '≤ 30 min', '≤ 60 min', '> 60 m
 const porcionesOpts = ['Cualquiera', '1', '2', '4', '6', '8+'];
 const puntuaciones = ['Cualquiera', '4+ ★', '3+ ★', '2+ ★', '1+ ★'];
 const favoritosOpts = ['Todos', 'Favoritos'];
+const dietas = ['Todas', 'Ninguna', 'Diabéticos', 'Celíacos', 'Veganos', 'Vegetarianos'];
 
 let recetas = [];
 let filtroTipo = 'Todos';
@@ -15,6 +16,7 @@ let filtroFavorito = 'Todos';
 let filtroAutor = 'Todos';
 let busqueda = '';
 let filtroCategoria = 'Todas';
+let filtroDieta = 'Todas';
 var favoritosUsuario = [];
 
 function parseTiempoAMinutos(str) {
@@ -42,6 +44,7 @@ async function init() {
 
   const params = new URLSearchParams(window.location.search);
   filtroTipo = params.get('tipo') || 'Todos';
+  filtroDieta = params.get('dieta') || 'Todas';
 
   const buscador = document.getElementById('buscador');
   const panelFiltros = document.getElementById('panelFiltros');
@@ -87,6 +90,7 @@ async function init() {
   if (estaLogueado()) renderizarFiltrosFavorito();
   renderizarFiltrosAutor();
   renderizarFiltrosCategorias();
+  renderizarFiltrosDieta();
   renderizar();
 
   var filtroFavGrupo = document.querySelector('.panel-filtros .filtro-grupo:nth-child(6)');
@@ -228,6 +232,27 @@ function renderizarFiltrosCategorias() {
   });
 }
 
+function renderizarFiltrosDieta() {
+  const contenedor = document.getElementById('filtrosDieta');
+  if (!contenedor) return;
+  contenedor.innerHTML = '';
+  dietas.forEach(function (d) {
+    const btn = document.createElement('button');
+    btn.className = 'btn-categoria' + (filtroDieta === d ? ' activo' : '');
+    btn.textContent = d === 'Todas' ? d : (d === 'Ninguna' ? '🚫 Ninguna' : '🥗 ' + d);
+    btn.addEventListener('click', function () {
+      filtroDieta = d;
+      const url = new URL(window.location);
+      if (d === 'Todas') url.searchParams.delete('dieta');
+      else url.searchParams.set('dieta', d);
+      window.history.pushState({}, '', url);
+      renderizarFiltrosDieta();
+      renderizar();
+    });
+    contenedor.appendChild(btn);
+  });
+}
+
 function renderizarFiltrosAutor() {
   const contenedor = document.getElementById('filtrosAutor');
   if (!contenedor) return;
@@ -275,12 +300,13 @@ function recetasFiltradas() {
     var categoriasReceta = r.categorias ? r.categorias.split(',').map(function(c) { return c.trim(); }) : [];
     const porCategoria = filtroCategoria === 'Todas' || categoriasReceta.indexOf(filtroCategoria) !== -1;
     const porAutor = filtroAutor === 'Todos' || (r.autor || 'Anónimo') === filtroAutor;
+    const porDieta = filtroDieta === 'Todas' || (filtroDieta === 'Ninguna' ? !r.dieta : r.dieta === filtroDieta);
     const porBusqueda = busqueda === '' ||
       r.titulo.toLowerCase().includes(busqueda.toLowerCase()) ||
       r.preparaciones.some(p =>
         p.ingredientes.some(i => i.toLowerCase().includes(busqueda.toLowerCase()))
       );
-    return porTipo && porDificultad && porTiempo && porPorciones && porPuntuacion && porFavorito && porCategoria && porAutor && porBusqueda;
+    return porTipo && porDificultad && porTiempo && porPorciones && porPuntuacion && porFavorito && porCategoria && porDieta && porAutor && porBusqueda;
   });
 }
 
@@ -358,6 +384,7 @@ function crearTarjeta(r) {
       <a href="receta.html?id=${r.id}">
         <div class="tarjeta-imagen" style="background-image:url('${r.imagen}')">
           <span class="tarjeta-tipo">${r.tipo}</span>
+          ${r.dieta ? '<span class="tarjeta-dieta">🥗 ' + r.dieta + '</span>' : ''}
         </div>
         <div class="tarjeta-info">
           <div class="tarjeta-puntuacion">
@@ -389,11 +416,13 @@ function limpiarFiltros() {
   filtroFavorito = 'Todos';
   filtroAutor = 'Todos';
   filtroCategoria = 'Todas';
+  filtroDieta = 'Todas';
   filtroTipo = 'Todos';
   const buscador = document.getElementById('buscador');
   if (buscador) buscador.value = '';
   const url = new URL(window.location);
   url.searchParams.delete('tipo');
+  url.searchParams.delete('dieta');
   window.history.pushState({}, '', url);
   renderizarFiltrosTipo();
   renderizarFiltrosDificultad();
@@ -403,6 +432,7 @@ function limpiarFiltros() {
   renderizarFiltrosFavorito();
   renderizarFiltrosAutor();
   renderizarFiltrosCategorias();
+  renderizarFiltrosDieta();
   renderizar();
 }
 
