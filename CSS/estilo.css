@@ -936,7 +936,13 @@ nav {
 
 .detalle-social-embed { margin: 0 0 2rem; max-width: 400px; }
 .detalle-social-embed iframe { width: 100%; aspect-ratio: 9/16; border-radius: 0.75rem; border: none; }
-.detalle-video.detalle-social-embed { max-height: none; background: none; }
+.detalle-social-embed-youtube { margin: 0 0 2rem; max-width: 560px; }
+.detalle-social-embed-youtube iframe { width: 100%; aspect-ratio: 16/9; border-radius: 0.75rem; border: none; }
+.detalle-social-embed-facebook { margin: 0 0 2rem; max-width: 500px; }
+.detalle-social-embed-facebook iframe { width: 100%; border-radius: 0.75rem; border: none; min-height: 350px; }
+.detalle-video.detalle-social-embed,
+.detalle-video.detalle-social-embed-youtube,
+.detalle-video.detalle-social-embed-facebook { max-height: none; background: none; }
 
 /* ========== TABS ========== */
 .tabs {

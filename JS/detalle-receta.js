@@ -58,6 +58,23 @@ function generarVideoHtml(url) {
       </div>`;
   }
 
+  // TikTok: embed directo
+  const tkMatch = url.match(/tiktok\.com\/@[\w.]+\/video\/(\d+)/);
+  if (tkMatch) {
+    return `
+      <div class="detalle-video detalle-social-embed">
+        <iframe src="https://www.tiktok.com/embed/v2/${tkMatch[1]}" frameborder="0" allowfullscreen></iframe>
+      </div>`;
+  }
+
+  // Facebook video: embed directo
+  if (url.includes('facebook.com') || url.includes('fb.watch')) {
+    return `
+      <div class="detalle-video detalle-social-embed-facebook">
+        <iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+      </div>`;
+  }
+
   // Detectar red social
   let icono = '🔗';
   let nombre = 'Ver video';
@@ -119,6 +136,11 @@ function generarSocialEmbed(url) {
   if (igPost) return '<div class="detalle-social-embed"><iframe src="https://www.instagram.com/p/' + igPost[1] + '/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe></div>';
   var tiktok = url.match(/tiktok\.com\/@[\w.]+\/video\/(\d+)/);
   if (tiktok) return '<div class="detalle-social-embed"><iframe src="https://www.tiktok.com/embed/v2/' + tiktok[1] + '" frameborder="0" allowfullscreen></iframe></div>';
+  var yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
+  if (yt) return '<div class="detalle-social-embed-youtube"><iframe src="https://www.youtube.com/embed/' + yt[1] + '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+  if (url.includes('facebook.com') || url.includes('fb.watch')) {
+    return '<div class="detalle-social-embed-facebook"><iframe src="https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(url) + '&show_text=false" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe></div>';
+  }
   return '';
 }
 
