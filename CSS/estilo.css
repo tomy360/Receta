@@ -934,6 +934,10 @@ nav {
 
 .detalle-video video { width: 100%; max-height: 450px; display: block; object-fit: contain; background: #000; }
 
+.detalle-social-embed { margin: 0 0 2rem; max-width: 400px; }
+.detalle-social-embed iframe { width: 100%; aspect-ratio: 9/16; border-radius: 0.75rem; border: none; }
+.detalle-video.detalle-social-embed { max-height: none; background: none; }
+
 /* ========== TABS ========== */
 .tabs {
   background: var(--blanco);

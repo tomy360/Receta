@@ -41,6 +41,23 @@ function generarVideoHtml(url) {
       </div>`;
   }
 
+  // Instagram reel: embed directo
+  const igReel = url.match(/instagram\.com\/reel\/([^/?]+)/);
+  if (igReel) {
+    return `
+      <div class="detalle-video detalle-social-embed">
+        <iframe src="https://www.instagram.com/reel/${igReel[1]}/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+      </div>`;
+  }
+  // Instagram post: embed directo
+  const igPost = url.match(/instagram\.com\/p\/([^/?]+)/);
+  if (igPost) {
+    return `
+      <div class="detalle-video detalle-social-embed">
+        <iframe src="https://www.instagram.com/p/${igPost[1]}/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+      </div>`;
+  }
+
   // Detectar red social
   let icono = '🔗';
   let nombre = 'Ver video';
@@ -94,6 +111,17 @@ function generarVideoHtml(url) {
     </div>`;
 }
 
+function generarSocialEmbed(url) {
+  if (!url) return '';
+  var igReel = url.match(/instagram\.com\/reel\/([^/?]+)/);
+  if (igReel) return '<div class="detalle-social-embed"><iframe src="https://www.instagram.com/reel/' + igReel[1] + '/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe></div>';
+  var igPost = url.match(/instagram\.com\/p\/([^/?]+)/);
+  if (igPost) return '<div class="detalle-social-embed"><iframe src="https://www.instagram.com/p/' + igPost[1] + '/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe></div>';
+  var tiktok = url.match(/tiktok\.com\/@[\w.]+\/video\/(\d+)/);
+  if (tiktok) return '<div class="detalle-social-embed"><iframe src="https://www.tiktok.com/embed/v2/' + tiktok[1] + '" frameborder="0" allowfullscreen></iframe></div>';
+  return '';
+}
+
 async function init() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
@@ -132,6 +160,7 @@ function renderizarDetalle() {
   if (r.videoUrl) {
     videoHtml = generarVideoHtml(r.videoUrl);
   }
+  let socialEmbedHtml = generarSocialEmbed(r.socialUrl);
 
   let categoriasHtml = '';
   if (r.categorias) {
@@ -230,6 +259,7 @@ function renderizarDetalle() {
         <p class="detalle-descripcion">${r.descripcion}</p>
         ${categoriasHtml}
         ${videoHtml}
+        ${socialEmbedHtml}
 
         <div class="tabs">
           <div class="tabs-header">
