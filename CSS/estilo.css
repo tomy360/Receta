@@ -2279,6 +2279,19 @@ html.modo-noche .plan-slot-nombre { color: var(--verde-claro); }
 /* selector modal */
 .modal-selector-recetas { max-width: 28rem; max-height: 80vh; display: flex; flex-direction: column; }
 
+.selector-filtros { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
+.selector-input, .selector-select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--borde);
+  border-radius: 0.65rem;
+  font-size: 0.875rem;
+  outline: none;
+  background: var(--fondo);
+  color: var(--texto);
+  box-sizing: border-box;
+}
+
 .selector-lista {
   flex: 1;
   overflow-y: auto;
