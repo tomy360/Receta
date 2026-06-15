@@ -2292,6 +2292,23 @@ nav, .tarjeta, .form-card, .panel-filtros,
               border-color 0.35s ease, box-shadow 0.35s ease;
 }
 
+/* ========== ETIQUETAS ========== */
+.detalle-etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+.etiqueta-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--texto-med, #6b7280);
+  background: var(--crema-medio, #f3f4f6);
+}
+
 /* ========== CATEGORIA BADGES ========== */
 .detalle-categorias {
   display: flex;

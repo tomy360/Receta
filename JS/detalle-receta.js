@@ -226,6 +226,7 @@ function renderizarDetalle() {
 
       <div class="detalle-info">
         <h1>${r.titulo}</h1>
+        ${r.etiquetas ? '<div class="detalle-etiquetas">' + r.etiquetas.split(',').map(function(e){return '<span class="etiqueta-badge">#' + e.trim() + '</span>';}).join('') + '</div>' : ''}
         <p class="detalle-descripcion">${r.descripcion}</p>
         ${categoriasHtml}
         ${videoHtml}

@@ -6,6 +6,7 @@ function normalizarReceta(r) {
     ...r,
     videoUrl: r.videoUrl || r.videourl || '',
     socialUrl: r.socialUrl || r.socialurl || '',
+    etiquetas: r.etiquetas || '',
     notasPersonales: r.notasPersonales || r.notaspersonales || []
   };
 }
