@@ -22,10 +22,15 @@ async function obtenerPlan() {
     var res = await fetch(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN + '?select=plan_data&id=eq.' + encodeURIComponent(userId), {
       headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
     });
-    if (!res.ok) return {};
+    if (!res.ok) {
+      var texto = await res.text();
+      console.warn('obtenerPlan error ' + res.status + ': ' + texto.slice(0, 200));
+      return {};
+    }
     var data = await res.json();
     return (data && data[0]) ? data[0].plan_data : {};
   } catch (e) {
+    console.warn('obtenerPlan exception', e);
     return {};
   }
 }
@@ -34,7 +39,7 @@ async function guardarPlan(plan) {
   var userId = obtenerUserId();
   if (!userId) return;
   try {
-    await fetch(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN, {
+    var res = await fetch(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN, {
       method: 'POST',
       headers: {
         'apikey': SUPABASE_ANON_KEY,
@@ -44,8 +49,12 @@ async function guardarPlan(plan) {
       },
       body: JSON.stringify({ id: userId, plan_data: plan, updated_at: new Date().toISOString() })
     });
+    if (!res.ok) {
+      var texto = await res.text();
+      console.warn('guardarPlan error ' + res.status + ': ' + texto.slice(0, 200));
+    }
   } catch (e) {
-    console.warn('Error guardando plan', e);
+    console.warn('guardarPlan exception', e);
   }
 }
 
