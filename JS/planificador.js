@@ -34,19 +34,18 @@ async function guardarPlan(plan) {
   var userId = obtenerUserId();
   if (!userId) return;
   try {
-    await fetch(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN + '?id=eq.' + encodeURIComponent(userId), {
-      method: 'PATCH',
-      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ plan_data: plan, updated_at: new Date().toISOString() })
+    await fetch(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify({ id: userId, plan_data: plan, updated_at: new Date().toISOString() })
     });
   } catch (e) {
-    try {
-      await fetch(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN, {
-        method: 'POST',
-        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
-        body: JSON.stringify({ id: userId, plan_data: plan, updated_at: new Date().toISOString() })
-      });
-    } catch (e2) {}
+    console.warn('Error guardando plan', e);
   }
 }
 
@@ -177,12 +176,24 @@ function renderizarSelectorLista() {
     return;
   }
   contenedor.innerHTML = filtradas.map(function (r) {
-    return '<button class="selector-item" onclick="planificarReceta(\'' + selectorDia + '\',\'' + selectorComida + '\',\'' + r.titulo.replace(/'/g, "\\'") + '\',\'' + r.id + '\')">' +
+    return '<button class="selector-item" data-dia="' + selectorDia + '" data-comida="' + selectorComida + '" data-id="' + r.id + '" data-titulo="' + r.titulo.replace(/"/g, '&quot;') + '">' +
       '<span class="selector-item-nombre">' + r.titulo + '</span>' +
       '<span class="selector-item-tipo">' + r.tipo + '</span>' +
       '</button>';
   }).join('');
 }
+
+document.addEventListener('click', function (e) {
+  var btn = e.target.closest('.selector-item');
+  if (!btn) return;
+  var dia = btn.dataset.dia;
+  var comida = btn.dataset.comida;
+  var nombre = btn.dataset.titulo;
+  var id = btn.dataset.id;
+  if (dia && comida && nombre && id) {
+    planificarReceta(dia, comida, nombre, id);
+  }
+});
 
 function cerrarSelector() {
   var overlay = document.getElementById('selectorRecetas');

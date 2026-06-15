@@ -1178,6 +1178,11 @@ nav {
   box-shadow: 0 0 0 3px var(--sombra-v);
 }
 
+@media (max-width: 480px) {
+  .notas-input-grupo { flex-direction: column; }
+  .notas-form { padding: 1rem; }
+  .tab-contenido { padding: 1rem; }
+}
 .notas-lista {
   display: flex;
   flex-direction: column;
