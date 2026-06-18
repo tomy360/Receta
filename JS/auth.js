@@ -134,11 +134,6 @@ function actualizarUI() {
     }
   }
 
-  // Planificador: avisar si no logueado
-  if (window.location.pathname.indexOf('planificador') !== -1 && !logueado) {
-    alert('Debes iniciar sesión para usar el planificador.');
-    window.location.href = 'index.html';
-  }
 }
 
 var modalLoginAbierto = false;
