@@ -246,7 +246,6 @@ nav {
   .nav-cta { display: none; }
   .nav-hamburger { display: flex; }
   .nav-inner { padding: 0 1rem; }
-  .consejos-grid { grid-template-columns: 1fr; }
   .consejos-page { margin: 1rem auto; }
   .consejos-toolbar { margin-bottom: 1rem; }
 }
@@ -2390,6 +2389,7 @@ html.modo-noche .consejos-toggle-btn:hover { background: var(--verde); color: #f
 .consejos-form textarea { width: 100%; min-height: 100px; padding: 0.75rem; border: 1px solid var(--borde); border-radius: 0.75rem; font-size: 0.9rem; resize: vertical; box-sizing:border-box; font-family:inherit; }
 .consejos-form .form-acciones { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
 .consejos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 860px) { .consejos-grid { grid-template-columns: 1fr; } }
 .consejo-card { background: var(--blanco); border: 1px solid var(--crema-medio); border-radius: 1rem; padding: 1.25rem; }
 .consejo-card h3 { margin: 0 0 0.5rem; font-size: 1.1rem; }
 .consejo-card p { margin: 0; color: var(--texto-med); line-height: 1.6; white-space: pre-wrap; }
