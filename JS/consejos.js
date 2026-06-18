@@ -120,6 +120,20 @@ async function initConsejos() {
   document.getElementById('btnCancelarConsejo').addEventListener('click', ocultarFormularioConsejo);
 }
 
+function esLargo(texto) {
+  if (texto.length > 200) return true;
+  var saltos = texto.split('\n').length;
+  return saltos > 4;
+}
+
+function toggleVerMas(btn) {
+  var card = btn.closest('.consejo-card');
+  if (!card) return;
+  var expandido = card.classList.contains('expandido');
+  card.classList.toggle('expandido', !expandido);
+  btn.textContent = expandido ? 'Ver más' : 'Ver menos';
+}
+
 function renderizarConsejos(tips) {
   var grid = document.getElementById('consejosGrid');
   var sin = document.getElementById('sinConsejos');
@@ -140,15 +154,17 @@ function renderizarConsejos(tips) {
     var esPropio = sesion && t.user_id === sesion.userId;
     var avatarTip = t.user_id ? avatarHtmlFor(t.autor, t.avatar_url, 24) : '';
     var autor = (avatarTip ? avatarTip + ' ' : '') + '<span>' + (t.autor || 'Anónimo') + '</span>';
+    var largo = esLargo(t.contenido);
     var acciones = esPropio
       ? '<div class="consejo-acciones">' +
           '<button class="btn-accion" onclick="editarTip(\'' + t.id + '\')">✏️</button>' +
           '<button class="btn-eliminar-tip" onclick="eliminarTipClick(\'' + t.id + '\')">🗑️</button>' +
         '</div>'
       : '';
-    return '<div class="consejo-card">' +
+    return '<div class="consejo-card' + (largo ? ' truncado' : '') + '">' +
       '<h3>' + t.titulo + '</h3>' +
       '<p>' + t.contenido + '</p>' +
+      (largo ? '<button class="ver-mas-btn" onclick="toggleVerMas(this)">Ver más</button>' : '') +
       '<div class="consejo-meta">' +
         '<span>' + autor + ' · ' + fecha + '</span>' +
         acciones +

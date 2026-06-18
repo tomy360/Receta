@@ -631,7 +631,7 @@ function renderizarResenas(contenedor) {
               <div style="display:flex;align-items:center;gap:0.5rem;">
                 <span class="resena-fecha">${res.fecha}</span>
                 ${esPropia ? `<button class="resena-btn resena-btn-editar" data-id="${res.id}" title="Editar opinión">✏️</button>` : ''}
-                <button class="resena-btn resena-btn-eliminar" data-id="${res.id}" title="Eliminar opinión">🗑️</button>
+                ${esPropia ? `<button class="resena-btn resena-btn-eliminar" data-id="${res.id}" title="Eliminar opinión">🗑️</button>` : ''}
               </div>
             </div>
             <p class="resena-comentario">${res.comentario}</p>
@@ -805,10 +805,11 @@ function configurarResenasAcciones() {
 
 async function eliminarResena(id) {
   var sesionElim = obtenerSesion();
+  if (!sesionElim) return;
   var resenaElim = receta.resenas.find(function (r) { return r.id === id; });
-  if (resenaElim && resenaElim.user_id) {
-    if (!sesionElim || resenaElim.user_id !== sesionElim.userId) return;
-  }
+  if (!resenaElim) return;
+  if (resenaElim.user_id && resenaElim.user_id !== sesionElim.userId) return;
+  if (!resenaElim.user_id && resenaElim.usuario !== sesionElim.username) return;
   if (!confirm('¿Eliminar esta opinión?')) return;
   const actualizada = JSON.parse(JSON.stringify(receta));
   const nuevasResenas = actualizada.resenas.filter(function (r) { return r.id !== id; });
@@ -827,10 +828,15 @@ async function eliminarResena(id) {
 }
 
 async function guardarEditarResena(id) {
+  var sesionEditar = obtenerSesion();
+  if (!sesionEditar) return;
   const texto = document.getElementById('editResenaTexto');
   if (!texto || !texto.value.trim()) return;
   const actualizada = JSON.parse(JSON.stringify(receta));
   const resena = actualizada.resenas.find(function (r) { return r.id === id; });
+  if (!resena) return;
+  if (resena.user_id && resena.user_id !== sesionEditar.userId) return;
+  if (!resena.user_id && resena.usuario !== sesionEditar.username) return;
   if (resena) {
     const nombreEdit = document.getElementById('editNombreResena');
     const nombreEditVal = nombreEdit ? nombreEdit.value.trim() : '';
