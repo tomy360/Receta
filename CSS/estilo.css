@@ -2148,7 +2148,7 @@ html.modo-noche .cocina-ingredientes { background: var(--card-fondo); }
 
 /* ========== ESCALAR PORCIONES ========== */
 .porciones-control {
-  display: flex; align-items: center; gap: 0.35rem;
+  display: flex; align-items: center; justify-content: center; gap: 0.35rem;
 }
 
 .porciones-btn {
