@@ -246,12 +246,9 @@ nav {
   .nav-cta { display: none; }
   .nav-hamburger { display: flex; }
   .nav-inner { padding: 0 1rem; }
-  .consejos-layout { flex-direction: column; }
-  .consejos-list { max-height: none; overflow-y: visible; padding-right: 0; }
-  .consejos-sidebar { width: 100%; position: static; }
-}
-@media (max-width: 600px) {
   .consejos-grid { grid-template-columns: 1fr; }
+  .consejos-page { margin: 1rem auto; }
+  .consejos-toolbar { margin-bottom: 1rem; }
 }
 
 /* ========== CONTENEDOR PRINCIPAL ========== */
@@ -2377,16 +2374,22 @@ nav, .tarjeta, .form-card, .panel-filtros,
 
 /* ========== CONSEJOS ========== */
 .consejos-page { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
-.consejos-layout { display: flex; gap: 2rem; align-items: flex-start; }
-.consejos-list { flex: 1; min-width: 0; max-height: calc(100vh - 220px); overflow-y: auto; padding-right: 0.5rem; }
-.consejos-list::-webkit-scrollbar { width: 6px; }
-.consejos-list::-webkit-scrollbar-thumb { background: var(--crema-medio); border-radius: 3px; }
-.consejos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.consejos-sidebar { width: 340px; flex-shrink: 0; position: sticky; top: 6rem; display: none; }
-.consejos-sidebar.visible { display: block; }
+.consejos-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; }
+.consejos-toolbar h1 { margin: 0; }
+.consejos-toggle-btn {
+  width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--verde);
+  background: var(--blanco); color: var(--verde); font-size: 1.5rem; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all 0.2s; line-height: 1;
+}
+.consejos-toggle-btn:hover { background: var(--verde); color: #fff; }
+html.modo-noche .consejos-toggle-btn { background: var(--card-fondo); color: var(--verde-claro); border-color: var(--verde-claro); }
+html.modo-noche .consejos-toggle-btn:hover { background: var(--verde); color: #fff; }
+.consejos-form-wrapper { margin-bottom: 2rem; }
 .consejos-form { background: var(--blanco); border-radius: 1.25rem; border: 1px solid var(--crema-medio); padding: 1.5rem; }
 .consejos-form textarea { width: 100%; min-height: 100px; padding: 0.75rem; border: 1px solid var(--borde); border-radius: 0.75rem; font-size: 0.9rem; resize: vertical; box-sizing:border-box; font-family:inherit; }
 .consejos-form .form-acciones { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
+.consejos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .consejo-card { background: var(--blanco); border: 1px solid var(--crema-medio); border-radius: 1rem; padding: 1.25rem; }
 .consejo-card h3 { margin: 0 0 0.5rem; font-size: 1.1rem; }
 .consejo-card p { margin: 0; color: var(--texto-med); line-height: 1.6; white-space: pre-wrap; }
