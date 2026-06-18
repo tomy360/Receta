@@ -455,7 +455,7 @@ nav {
   border: none;
   color: var(--texto-muted);
   font-size: 1.5rem;
-  padding: 0.5rem;
+  padding: 0.5rem 0.5rem 0.5rem 0.75rem;
   cursor: pointer;
   border-radius: 0.5rem;
   transition: all 0.2s;
@@ -464,6 +464,9 @@ nav {
 .btn-limpiar-header:hover {
   color: var(--verde-claro);
   background: var(--crema-medio);
+}
+@media (max-width: 480px) {
+  .btn-limpiar-header { font-size: 1.7rem; }
 }
 
 .filtros-grid {
