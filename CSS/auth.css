@@ -125,6 +125,13 @@
   text-decoration: underline;
 }
 
+html.modo-noche .modal-login h2 { color: var(--texto-claro); }
+html.modo-noche .login-campo label { color: var(--texto-med); }
+html.modo-noche .login-recordar { color: var(--texto-med); }
+html.modo-noche .login-admin-link a { color: var(--texto-muted); }
+html.modo-noche .modal-login-cerrar { color: var(--texto-muted); }
+html.modo-noche .modal-login-cerrar:hover { background: var(--crema-medio); }
+
 /* Nav auth */
 .nav-auth {
   display: flex;

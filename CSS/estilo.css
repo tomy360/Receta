@@ -1900,6 +1900,7 @@ html.modo-noche {
   --crema:       #1a1f12;
   --fondo:       #14180e;
   --card-fondo:  #1e2615;
+  --fondo-tarjeta:#222b18;
   --texto:       #e8eddf;
   --texto-med:   #b8c8a2;
   --texto-muted: #7a9068;
@@ -2377,9 +2378,9 @@ nav, .tarjeta, .form-card, .panel-filtros,
 .consejos-toolbar h1 { margin: 0; }
 .consejos-toggle-btn {
   width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--verde);
-  background: var(--blanco); color: var(--verde); font-size: 1.5rem; font-weight: 700;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; transition: all 0.2s; line-height: 1;
+  background: var(--blanco); color: var(--verde); font-size: 1.375rem; font-weight: 400;
+  cursor: pointer; display: grid; place-items: center;
+  flex-shrink: 0; transition: all 0.2s; padding: 0; line-height: 1;
 }
 .consejos-toggle-btn:hover { background: var(--verde); color: #fff; }
 html.modo-noche .consejos-toggle-btn { background: var(--card-fondo); color: var(--verde-claro); border-color: var(--verde-claro); }
