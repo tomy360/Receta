@@ -78,53 +78,72 @@
 <div class="nav-overlay" id="navOverlay"></div>
 
 <div class="admin-page">
-  <h1>🔧 Administrar usuarios</h1>
-  <p style="text-align:center;font-size:0.875rem;color:var(--texto-suave,#6b7280);margin-bottom:1.5rem;">Usá el código secreto para crear nuevos usuarios.</p>
 
-  <div class="admin-campo">
-    <label for="adminCodigo">Código secreto</label>
-    <input type="password" id="adminCodigo" placeholder="Código de administrador">
+  <!-- Gate: solo código -->
+  <div id="adminGate">
+    <h1>🔧 Administrar</h1>
+    <p style="text-align:center;font-size:0.875rem;color:var(--texto-suave,#6b7280);margin-bottom:1.5rem;">Ingresá el código secreto para administrar usuarios.</p>
+    <div class="admin-campo">
+      <input type="password" id="gateCodigo" placeholder="Código de administrador">
+    </div>
+    <div class="admin-error" id="gateError"></div>
+    <button class="login-btn" id="gateBtn">Confirmar código</button>
+    <p style="text-align:center;margin-top:1.25rem;"><a href="index.html" style="font-size:0.813rem;color:var(--texto-suave,#6b7280);">← Volver al inicio</a></p>
   </div>
 
-  <hr style="border:none;border-top:1px solid var(--borde,#e5e7eb);margin:1.5rem 0;">
+  <!-- Contenido admin (oculto hasta ingresar código) -->
+  <div id="adminContent" class="oculto">
+    <h1>🔧 Administrar usuarios</h1>
 
-  <div class="admin-campo">
-    <label for="adminUsername">Nombre de usuario</label>
-    <input type="text" id="adminUsername" placeholder="Ej: tomy">
-  </div>
-  <div class="admin-campo">
-    <label for="adminPassword">Contraseña</label>
-    <input type="password" id="adminPassword" placeholder="Contraseña">
-  </div>
-  <div class="admin-campo">
-    <label for="adminAvatar">URL del avatar (opcional)</label>
-    <input type="text" id="adminAvatar" placeholder="./Imagenes/avatar/usuario.jpg">
-  </div>
-  <div class="admin-error" id="adminError"></div>
-  <div class="admin-success" id="adminSuccess"></div>
-  <button class="login-btn" id="adminBtn">Crear usuario</button>
+    <div class="admin-campo">
+      <label for="adminUsername">Nombre de usuario</label>
+      <input type="text" id="adminUsername" placeholder="Ej: tomy">
+    </div>
+    <div class="admin-campo">
+      <label for="adminPassword">Contraseña</label>
+      <input type="password" id="adminPassword" placeholder="Contraseña">
+    </div>
+    <div class="admin-campo">
+      <label for="adminAvatar">URL del avatar (opcional)</label>
+      <input type="text" id="adminAvatar" placeholder="./Imagenes/avatar/usuario.jpg">
+    </div>
+    <div class="admin-error" id="adminError"></div>
+    <div class="admin-success" id="adminSuccess"></div>
+    <button class="login-btn" id="adminBtn">Crear usuario</button>
 
-  <hr style="border:none;border-top:1px solid var(--borde,#e5e7eb);margin:1.5rem 0;">
+    <hr style="border:none;border-top:1px solid var(--borde,#e5e7eb);margin:1.5rem 0;">
 
-  <h3 style="font-size:1rem;margin:0 0 1rem;">Usuarios existentes</h3>
-  <div id="adminUserList">
-    <p style="text-align:center;color:var(--texto-suave,#6b7280);font-size:0.875rem;">Ingresá el código secreto y hace clic en "Cargar usuarios"</p>
+    <h3 style="font-size:1rem;margin:0 0 1rem;">Usuarios existentes</h3>
+    <div id="adminUserList">
+      <p style="text-align:center;color:var(--texto-suave,#6b7280);font-size:0.875rem;">Usá el botón "Cargar usuarios" para ver la lista.</p>
+    </div>
+    <button class="login-btn" id="adminCargarUsuarios" style="margin-top:0.5rem;background:#6b7280;">Cargar usuarios</button>
+
+    <p style="text-align:center;margin-top:1rem;"><a href="index.html" style="font-size:0.813rem;color:var(--texto-suave,#6b7280);">← Volver al inicio</a></p>
   </div>
-  <button class="login-btn" id="adminCargarUsuarios" style="margin-top:0.5rem;background:#6b7280;">Cargar usuarios</button>
-
-  <p style="text-align:center;margin-top:1rem;"><a href="index.html" style="font-size:0.813rem;color:var(--texto-suave,#6b7280);">← Volver al inicio</a></p>
 </div>
 
 <script>
 const ADMIN_SECRET = 'bocalomas1B*';
 
-async function cargarUsuarios() {
-  var codigo = document.getElementById('adminCodigo').value.trim();
-  var listEl = document.getElementById('adminUserList');
-  if (codigo !== ADMIN_SECRET) {
-    listEl.innerHTML = '<p style="text-align:center;color:#ef4444;font-size:0.875rem;">Código secreto incorrecto</p>';
-    return;
+document.getElementById('gateBtn').addEventListener('click', function () {
+  var codigo = document.getElementById('gateCodigo').value.trim();
+  var errorEl = document.getElementById('gateError');
+  if (codigo === ADMIN_SECRET) {
+    document.getElementById('adminGate').classList.add('oculto');
+    document.getElementById('adminContent').classList.remove('oculto');
+    cargarUsuarios();
+  } else {
+    errorEl.textContent = 'Código incorrecto';
   }
+});
+
+document.getElementById('gateCodigo').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') document.getElementById('gateBtn').click();
+});
+
+async function cargarUsuarios() {
+  var listEl = document.getElementById('adminUserList');
   try {
     var data = await peticionAuth(SUPABASE_URL + '/rest/v1/usuarios?select=id,username,avatar_url,created_at&order=created_at.asc');
     if (!data || !data.length) {
@@ -163,7 +182,6 @@ async function cargarUsuarios() {
 document.getElementById('adminCargarUsuarios').addEventListener('click', cargarUsuarios);
 
 document.getElementById('adminBtn').addEventListener('click', async function () {
-  var codigo = document.getElementById('adminCodigo').value.trim();
   var username = document.getElementById('adminUsername').value.trim();
   var password = document.getElementById('adminPassword').value.trim();
   var avatar = document.getElementById('adminAvatar').value.trim();
@@ -173,10 +191,6 @@ document.getElementById('adminBtn').addEventListener('click', async function () 
   errorEl.textContent = '';
   successEl.textContent = '';
 
-  if (codigo !== ADMIN_SECRET) {
-    errorEl.textContent = 'Código secreto incorrecto';
-    return;
-  }
   if (!username || !password) {
     errorEl.textContent = 'Completa usuario y contraseña';
     return;
