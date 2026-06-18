@@ -77,6 +77,15 @@ async function init() {
     });
   }
 
+  var btnLimpiarFiltros = document.getElementById('btnLimpiarFiltros');
+  if (btnLimpiarFiltros) {
+    btnLimpiarFiltros.addEventListener('click', function () {
+      limpiarFiltros();
+      panelFiltros.classList.remove('visible');
+      btnFiltros.classList.remove('activo');
+    });
+  }
+
   panelFiltros.addEventListener('click', function (e) {
     var header = e.target.closest('.filtro-header');
     if (header) header.parentElement.classList.toggle('plegado');

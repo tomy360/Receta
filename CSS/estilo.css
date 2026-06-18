@@ -445,6 +445,27 @@ nav {
   background: var(--crema-medio);
 }
 
+.panel-filtros-acciones {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.btn-limpiar-header {
+  background: none;
+  border: none;
+  color: var(--texto-muted);
+  font-size: 1.1rem;
+  padding: 0.25rem;
+  cursor: pointer;
+  border-radius: 0.375rem;
+  transition: all 0.2s;
+  line-height: 1;
+}
+.btn-limpiar-header:hover {
+  color: var(--verde-claro);
+  background: var(--crema-medio);
+}
+
 .filtros-grid {
   display: grid;
   grid-template-columns: 1fr;
