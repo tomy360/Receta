@@ -369,7 +369,14 @@ async function toggleFavorito(id) {
     await actualizarReceta(r);
   }
   recetas = await obtenerRecetas();
-  renderizar();
+  var r = recetas.find(function (r) { return r.id === id; });
+  var esFav = r ? (r.favorito || favoritosUsuario.indexOf(id) !== -1) : false;
+  var btn = document.querySelector('.card-fav-btn[data-id="' + id + '"]');
+  if (btn) {
+    btn.classList.toggle('card-fav-activo', esFav);
+    btn.title = esFav ? 'Quitar de favoritos' : 'Añadir a favoritos';
+    btn.textContent = esFav ? '❤️' : '🤍';
+  }
 }
 
 function crearTarjeta(r) {
