@@ -10,51 +10,60 @@ var SLOTS = [
 ];
 var CLAVE_PLAN = 'recetario-plan-semanal';
 
-function obtenerUserId() {
-  var sesion = obtenerSesion();
-  return sesion ? sesion.userId : null;
-}
-
 async function obtenerPlan() {
-  var userId = obtenerUserId();
-  if (!userId) return {};
-  try {
-    var res = await fetch(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN + '?select=plan_data&id=eq.' + encodeURIComponent(userId), {
-      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
-    });
-    if (!res.ok) {
-      var texto = await res.text();
-      console.warn('obtenerPlan error ' + res.status + ': ' + texto.slice(0, 200));
+  var sesion = obtenerSesion();
+  if (sesion) {
+    try {
+      var res = await fetch(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN + '?select=plan_data&id=eq.' + encodeURIComponent(sesion.userId), {
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+      });
+      if (!res.ok) {
+        var texto = await res.text();
+        console.warn('obtenerPlan error ' + res.status + ': ' + texto.slice(0, 200));
+        return {};
+      }
+      var data = await res.json();
+      return (data && data[0]) ? data[0].plan_data : {};
+    } catch (e) {
+      console.warn('obtenerPlan exception', e);
       return {};
     }
-    var data = await res.json();
-    return (data && data[0]) ? data[0].plan_data : {};
+  }
+  try {
+    var raw = localStorage.getItem(CLAVE_PLAN);
+    return raw ? JSON.parse(raw) : {};
   } catch (e) {
-    console.warn('obtenerPlan exception', e);
     return {};
   }
 }
 
 async function guardarPlan(plan) {
-  var userId = obtenerUserId();
-  if (!userId) return;
-  try {
-    var res = await fetch(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN, {
-      method: 'POST',
-      headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-        'Content-Type': 'application/json',
-        'Prefer': 'resolution=merge-duplicates'
-      },
-      body: JSON.stringify({ id: userId, plan_data: plan, updated_at: new Date().toISOString() })
-    });
-    if (!res.ok) {
-      var texto = await res.text();
-      console.warn('guardarPlan error ' + res.status + ': ' + texto.slice(0, 200));
+  var sesion = obtenerSesion();
+  if (sesion) {
+    try {
+      var res = await fetch(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates'
+        },
+        body: JSON.stringify({ id: sesion.userId, plan_data: plan, updated_at: new Date().toISOString() })
+      });
+      if (!res.ok) {
+        var texto = await res.text();
+        console.warn('guardarPlan error ' + res.status + ': ' + texto.slice(0, 200));
+      }
+    } catch (e) {
+      console.warn('guardarPlan exception', e);
     }
-  } catch (e) {
-    console.warn('guardarPlan exception', e);
+  } else {
+    try {
+      localStorage.setItem(CLAVE_PLAN, JSON.stringify(plan));
+    } catch (e) {
+      console.warn('guardarPlan local exception', e);
+    }
   }
 }
 
