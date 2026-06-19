@@ -167,8 +167,6 @@ async function init() {
 
   renderizarDetalle();
   configurarTabs();
-  configurarNotas();
-  configurarResenas();
 }
 
 function renderizarDetalle() {
@@ -472,9 +470,6 @@ function renderizarNotas(contenedor) {
   configurarNotasAcciones();
 }
 
-function configurarNotas() {
-  // delegado
-}
 
 function configurarNotasInput() {
   const input = document.getElementById('inputNota');
@@ -680,9 +675,6 @@ function renderizarResenas(contenedor) {
   configurarResenasAcciones();
 }
 
-function configurarResenas() {
-  // delegado
-}
 
 function configurarResenasInteractivo() {
   const btnMostrar = document.getElementById('btnMostrarResena');
@@ -886,7 +878,6 @@ function abrirModoCocina(r) {
     var ingredientes = (p.ingredientes || []).map(function (ing) { return escalarIngrediente(ing, porcionesEscala); });
     cocinaPasos.push({ titulo: p.nombre || 'Preparación ' + (idx + 1), texto: texto, ingredientes: ingredientes });
   });
-  if (r.notasExtra) cocinaPasos.push({ titulo: 'Notas finales', texto: r.notasExtra, ingredientes: [] });
   if (!cocinaPasos.length) return;
   cocinaPaso = 0;
   var overlay = document.getElementById('cocinaOverlay');

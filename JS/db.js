@@ -154,32 +154,3 @@ async function quitarFavorito(userId, recipeId) {
     console.warn('Error al quitar favorito', e);
   }
 }
-
-async function obtenerPlan(userId) {
-  if (!userId) return {};
-  try {
-    var data = await peticion(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN + '?select=plan_data&id=eq.' + encodeURIComponent(userId));
-    return (data && data[0]) ? data[0].plan_data : {};
-  } catch (e) {
-    return {};
-  }
-}
-
-async function guardarPlan(plan, userId) {
-  if (!userId) return;
-  try {
-    await peticion(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN + '?id=eq.' + encodeURIComponent(userId), {
-      method: 'PATCH',
-      body: JSON.stringify({ plan_data: plan, updated_at: new Date().toISOString() })
-    });
-  } catch (e) {
-    if (e.message.indexOf('404') !== -1 || e.message.indexOf('200') !== -1) {
-      try {
-        await peticion(SUPABASE_URL + '/rest/v1/' + TABLA_PLAN, {
-          method: 'POST',
-          body: JSON.stringify({ id: userId, plan_data: plan, updated_at: new Date().toISOString() })
-        });
-      } catch (e2) {}
-    }
-  }
-}
