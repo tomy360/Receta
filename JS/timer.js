@@ -36,6 +36,35 @@ function toggleTimer() {
   }
 }
 
+function sonarCampana() {
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === 'suspended') ctx.resume();
+
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = 880;
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.5);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 1.5);
+
+    var osc2 = ctx.createOscillator();
+    var gain2 = ctx.createGain();
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.frequency.value = 1320;
+    osc2.type = 'sine';
+    gain2.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1);
+    osc2.start(ctx.currentTime);
+    osc2.stop(ctx.currentTime + 1);
+  } catch (e) {}
+}
+
 function iniciarTimer() {
   if (timerSegundos <= 0) return;
   timerCorriendo = true;
@@ -46,6 +75,7 @@ function iniciarTimer() {
       timerSegundos = 0;
       pausarTimer();
       document.getElementById('timerAlarma').style.display = 'block';
+      sonarCampana();
     }
     actualizarTimerUI();
   }, 1000);
