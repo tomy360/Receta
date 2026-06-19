@@ -452,6 +452,16 @@ function limpiarFiltros() {
   renderizar();
 }
 
+window.aplicarDietaNavFilter = function (dieta) {
+  filtroDieta = dieta;
+  var url = new URL(window.location);
+  if (dieta === 'Todas') url.searchParams.delete('dieta');
+  else url.searchParams.set('dieta', dieta);
+  window.history.pushState({}, '', url);
+  renderizarFiltrosDieta();
+  renderizar();
+};
+
 function recetaAleatoria() {
   var disponibles = recetasFiltradas();
   if (!disponibles.length) return;

@@ -223,6 +223,19 @@ function cerrarModalLogin() {
   modalLoginAbierto = false;
 }
 
+document.addEventListener('click', function (e) {
+  var link = e.target.closest('[data-nav-dieta]');
+  if (link) {
+    e.preventDefault();
+    var dieta = link.dataset.navDieta;
+    if (typeof window.aplicarDietaNavFilter === 'function') {
+      window.aplicarDietaNavFilter(dieta);
+    } else {
+      window.location.href = './index.html?dieta=' + encodeURIComponent(dieta);
+    }
+  }
+});
+
 document.addEventListener('DOMContentLoaded', function () {
   actualizarUI();
 });
