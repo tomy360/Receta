@@ -971,6 +971,26 @@ nav {
 .detalle-social-embed-facebook iframe { width: 100%; min-height: 400px; border: none; }
 .detalle-video-externo { margin: 2.5rem auto; }
 
+.detalle-video-solapa {
+  background: var(--fondo-tarjeta);
+  border: 2px solid var(--crema-medio);
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  margin: 2rem 0;
+}
+.detalle-video-solapa summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--texto);
+  user-select: none;
+}
+.detalle-video-solapa[open] summary {
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--crema-medio);
+  padding-bottom: 0.75rem;
+}
+
 /* ========== TABS ========== */
 .tabs {
   background: var(--blanco);

@@ -281,8 +281,12 @@ function renderizarDetalle() {
           </div>
           <div class="tab-contenido" id="tabContenido"></div>
         </div>
-        ${videoHtml}
-        ${socialEmbedHtml}
+        ${videoHtml || socialEmbedHtml ? `
+        <details class="detalle-video-solapa">
+          <summary>📺 Video explicativo</summary>
+          ${videoHtml}
+          ${socialEmbedHtml}
+        </details>` : ''}
       </div>
     </div>
   `;
