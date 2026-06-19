@@ -964,7 +964,7 @@ nav {
 .detalle-video { margin: 2.5rem auto; }
 .detalle-video video { width: 100%; display: block; object-fit: contain; background: #000; }
 .detalle-social-embed { max-width: 500px; margin: 2.5rem auto; }
-.detalle-social-embed iframe { width: 100%; min-height: 600px; border: none; }
+.detalle-social-embed iframe { width: 100%; min-height: 700px; border: none; }
 .detalle-social-embed-youtube { max-width: 560px; margin: 2.5rem auto; }
 .detalle-social-embed-youtube iframe { width: 100%; aspect-ratio: auto; border: none; }
 .detalle-social-embed-facebook { max-width: 500px; margin: 2.5rem auto; }
