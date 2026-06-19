@@ -4,7 +4,7 @@ const tiempos = ['Cualquiera', '≤ 15 min', '≤ 30 min', '≤ 60 min', '> 60 m
 const porcionesOpts = ['Cualquiera', '1', '2', '4', '6', '8+'];
 const puntuaciones = ['Cualquiera', '4+ ★', '3+ ★', '2+ ★', '1+ ★'];
 const favoritosOpts = ['Todos', 'Favoritos'];
-const dietas = ['Todas', 'Ninguna', 'ConDieta', 'Diabéticos', 'Celíacos', 'Veganos', 'Vegetarianos'];
+const dietas = ['Todas', 'Ninguna', 'Diabéticos', 'Celíacos', 'Veganos', 'Vegetarianos'];
 
 let recetas = [];
 let filtroTipo = 'Todos';
@@ -248,7 +248,7 @@ function renderizarFiltrosDieta() {
   dietas.forEach(function (d) {
     const btn = document.createElement('button');
     btn.className = 'btn-categoria' + (filtroDieta === d ? ' activo' : '');
-    btn.textContent = d === 'Todas' ? d : (d === 'Ninguna' ? '🚫 Ninguna' : d === 'ConDieta' ? '🥗 Con dieta' : '🥗 ' + d);
+    btn.textContent = d === 'Todas' ? d : (d === 'Ninguna' ? '🚫 Ninguna' : '🥗 ' + d);
     btn.addEventListener('click', function () {
       filtroDieta = d;
       const url = new URL(window.location);
@@ -309,7 +309,7 @@ function recetasFiltradas() {
     var categoriasReceta = r.categorias ? r.categorias.split(',').map(function(c) { return c.trim(); }) : [];
     const porCategoria = filtroCategoria === 'Todas' || categoriasReceta.indexOf(filtroCategoria) !== -1;
     const porAutor = filtroAutor === 'Todos' || (r.autor || 'Anónimo') === filtroAutor;
-    const porDieta = filtroDieta === 'Todas' || (filtroDieta === 'Ninguna' ? !r.dieta : filtroDieta === 'ConDieta' ? r.dieta : r.dieta === filtroDieta);
+    const porDieta = filtroDieta === 'Todas' || (filtroDieta === 'Ninguna' ? !r.dieta : r.dieta === filtroDieta);
     const porBusqueda = busqueda === '' ||
       r.titulo.toLowerCase().includes(busqueda.toLowerCase()) ||
       r.preparaciones.some(p =>

@@ -1068,7 +1068,7 @@ nav {
 }
 
 .prep-summary-arrow {
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   color: var(--texto-med);
   transition: transform 0.2s ease;
 }
