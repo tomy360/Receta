@@ -243,7 +243,7 @@ nav {
 
 @media (max-width: 860px) {
   .menu-botones { display: none; }
-  .nav-cta { display: none; }
+  .nav-cta { display: none !important; }
   .nav-hamburger { display: flex; }
   .nav-inner { padding: 0 1rem; }
   .consejos-page { margin: 1rem auto; }
