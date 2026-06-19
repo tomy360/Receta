@@ -19,6 +19,16 @@
 </head>
 <body>
 
+<!-- SPINNER DE CARGA -->
+<div id="spinner-global">
+  <span class="spinner-icono">🍳</span>
+  <span class="spinner-texto">Cargando receta...</span>
+  <div class="spinner-barra-track">
+    <div class="spinner-barra-fill"></div>
+  </div>
+</div>
+<!-- FIN SPINNER -->
+
 <nav>
   <div class="nav-inner">
 
@@ -124,9 +134,7 @@
 
 <div class="nav-overlay" id="navOverlay"></div>
 
-<div class="detalle-contenedor" id="detalleContenido">
-  <p style="text-align:center;padding:3rem;color:#6b7280;">Cargando receta...</p>
-</div>
+<div class="detalle-contenedor" id="detalleContenido"></div>
 
   <!-- TIMER MODAL -->
   <div class="modal oculto" id="modalTimer" onclick="if(event.target===this)cerrarTimer()">

@@ -144,6 +144,38 @@ function generarSocialEmbed(url) {
   return '';
 }
 
+function mostrarSkeletonDetalle() {
+  var contenedor = document.getElementById('detalleContenido');
+  if (!contenedor) return;
+  contenedor.innerHTML = `
+    <div class="skeleton-detalle">
+      <div class="sk-base skeleton-detalle-volver"></div>
+      <div class="sk-base skeleton-detalle-hero"></div>
+      <div class="sk-base skeleton-detalle-titulo"></div>
+      <div class="skeleton-detalle-badges">
+        <div class="sk-base skeleton-detalle-badge"></div>
+        <div class="sk-base skeleton-detalle-badge"></div>
+        <div class="sk-base skeleton-detalle-badge"></div>
+      </div>
+      <div class="skeleton-detalle-cols">
+        <div class="skeleton-detalle-col">
+          <div class="sk-base skeleton-detalle-label"></div>
+          <div class="sk-base skeleton-detalle-line w90"></div>
+          <div class="sk-base skeleton-detalle-line w80"></div>
+          <div class="sk-base skeleton-detalle-line w70"></div>
+          <div class="sk-base skeleton-detalle-line w90"></div>
+          <div class="sk-base skeleton-detalle-line w60"></div>
+        </div>
+        <div class="skeleton-detalle-col">
+          <div class="sk-base skeleton-detalle-label"></div>
+          <div class="sk-base skeleton-detalle-line w90"></div>
+          <div class="sk-base skeleton-detalle-line w80"></div>
+          <div class="sk-base skeleton-detalle-line w70"></div>
+        </div>
+      </div>
+    </div>`;
+}
+
 async function init() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
@@ -152,21 +184,30 @@ async function init() {
     return;
   }
 
+  mostrarSkeletonDetalle();
+
   try {
     var todas = await obtenerRecetas();
     receta = todas.find(function (r) { return r.id === id; });
   } catch (e) {
+    var sp = document.getElementById('spinner-global');
+    if (sp) sp.classList.add('ocultar');
     document.getElementById('detalleContenido').innerHTML = '<p style="text-align:center;padding:3rem;color:#6b7280;">Error al cargar la receta.</p>';
     return;
   }
 
   if (!receta) {
+    var sp = document.getElementById('spinner-global');
+    if (sp) sp.classList.add('ocultar');
     document.getElementById('detalleContenido').innerHTML = '<p style="text-align:center;padding:3rem;color:#6b7280;">Receta no encontrada.</p>';
     return;
   }
 
   renderizarDetalle();
   configurarTabs();
+
+  var spinner = document.getElementById('spinner-global');
+  if (spinner) spinner.classList.add('ocultar');
 }
 
 function renderizarDetalle() {

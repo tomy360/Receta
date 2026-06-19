@@ -2595,51 +2595,6 @@ html.modo-noche .tarjeta-imagen img, html.modo-noche .detalle-imagen img {
   animation: slideUp 0.4s ease-out both;
 }
 
-.skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: pulse 2s infinite;
-  border-radius: 8px;
-}
-
-.skeleton-tarjeta {
-  background: white;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.skeleton-tarjeta-imagen {
-  width: 100%;
-  height: 192px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: pulse 2s infinite;
-  border-radius: 8px;
-  margin-bottom: 12px;
-}
-
-.skeleton-tarjeta-titulo {
-  width: 60%;
-  height: 20px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: pulse 2s infinite;
-  border-radius: 4px;
-  margin-bottom: 8px;
-}
-
-.skeleton-tarjeta-desc {
-  width: 100%;
-  height: 16px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: pulse 2s infinite;
-  border-radius: 4px;
-  margin-bottom: 8px;
-}
-
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -2650,16 +2605,180 @@ html.modo-noche .tarjeta-imagen img, html.modo-noche .detalle-imagen img {
   pointer-events: none;
 }
 
-html.modo-noche .skeleton-tarjeta {
+/* ========== SKELETON LOADER ========== */
+@keyframes shimmer {
+  0%   { background-position: -700px 0; }
+  100% { background-position: 700px 0; }
+}
+
+.sk-base {
+  background: linear-gradient(
+    90deg,
+    var(--crema-medio, #e8e0d0) 25%,
+    var(--crema, #f5efe3) 50%,
+    var(--crema-medio, #e8e0d0) 75%
+  );
+  background-size: 700px 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 6px;
+}
+
+/* Skeleton tarjeta (index) */
+.skeleton-card {
+  background: var(--blanco, #fff);
+  border-radius: 1rem;
+  border: 1.5px solid var(--crema-medio, #e8e0d0);
+  overflow: hidden;
+  animation: slideUp 0.35s ease both;
+}
+
+.skeleton-card-img {
+  width: 100%;
+  height: 176px;
+  border-radius: 0;
+}
+
+.skeleton-card-body {
+  padding: 0.875rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-card-titulo  { height: 18px; width: 70%; }
+.skeleton-card-desc    { height: 13px; width: 90%; }
+.skeleton-card-desc2   { height: 13px; width: 60%; }
+.skeleton-card-footer  { display: flex; gap: 8px; margin-top: 4px; }
+.skeleton-card-badge   { height: 22px; width: 64px; border-radius: 20px; }
+
+/* Skeleton detalle (receta.html) */
+.skeleton-detalle {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  animation: slideUp 0.35s ease both;
+}
+
+.skeleton-detalle-volver { height: 18px; width: 80px; }
+.skeleton-detalle-hero   { height: 260px; border-radius: 1rem; }
+.skeleton-detalle-titulo { height: 28px; width: 55%; }
+.skeleton-detalle-badges { display: flex; gap: 10px; }
+.skeleton-detalle-badge  { height: 26px; width: 80px; border-radius: 20px; }
+.skeleton-detalle-cols   {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+.skeleton-detalle-col    { display: flex; flex-direction: column; gap: 10px; }
+.skeleton-detalle-label  { height: 14px; width: 50%; }
+.skeleton-detalle-line   { height: 12px; }
+.skeleton-detalle-line.w90 { width: 90%; }
+.skeleton-detalle-line.w80 { width: 80%; }
+.skeleton-detalle-line.w70 { width: 70%; }
+.skeleton-detalle-line.w60 { width: 60%; }
+
+/* Modo noche */
+html.modo-noche .sk-base,
+html.modo-noche .skeleton-card-img,
+html.modo-noche .skeleton-card-titulo,
+html.modo-noche .skeleton-card-desc,
+html.modo-noche .skeleton-card-desc2,
+html.modo-noche .skeleton-card-badge,
+html.modo-noche .skeleton-detalle-volver,
+html.modo-noche .skeleton-detalle-hero,
+html.modo-noche .skeleton-detalle-titulo,
+html.modo-noche .skeleton-detalle-badge,
+html.modo-noche .skeleton-detalle-label,
+html.modo-noche .skeleton-detalle-line {
+  background: linear-gradient(
+    90deg,
+    #2a3220 25%,
+    #3a4a28 50%,
+    #2a3220 75%
+  );
+  background-size: 700px 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+html.modo-noche .skeleton-card {
   background: #1e2615;
+  border-color: #2a3220;
 }
-html.modo-noche .skeleton-tarjeta-imagen,
-html.modo-noche .skeleton-tarjeta-titulo,
-html.modo-noche .skeleton-tarjeta-desc,
-html.modo-noche .skeleton {
-  background: linear-gradient(90deg, #2a3220 25%, #3a4a28 50%, #2a3220 75%);
-  background-size: 200% 100%;
-}
+/* ========== FIN SKELETON LOADER ========== */
 
 /* ========== UTILIDADES ========== */
 .oculto { display: none !important; }
+
+/* ========== SPINNER SARTÉN ========== */
+@keyframes girar-sarten {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes fade-out-spinner {
+  from { opacity: 1; }
+  to   { opacity: 0; visibility: hidden; }
+}
+
+#spinner-global {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: var(--fondo, #FDF8F0);
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+html.modo-noche #spinner-global {
+  background: #1a1f12;
+}
+
+#spinner-global.ocultar {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.spinner-icono {
+  font-size: 3rem;
+  display: inline-block;
+  animation: girar-sarten 0.9s linear infinite;
+  line-height: 1;
+}
+
+.spinner-texto {
+  font-size: 0.9rem;
+  color: var(--texto-med, #4f5e38);
+  letter-spacing: 0.03em;
+}
+
+.spinner-barra-track {
+  width: 100px;
+  height: 3px;
+  background: var(--crema-medio, #E4DFB5);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.spinner-barra-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--verde, #9AB17A);
+  border-radius: 99px;
+  animation: crecer-barra 1.8s ease-in-out infinite;
+}
+
+@keyframes crecer-barra {
+  0%   { width: 0%; }
+  60%  { width: 85%; }
+  100% { width: 100%; }
+}
+/* ========== FIN SPINNER SARTÉN ========== */

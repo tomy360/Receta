@@ -29,7 +29,32 @@ function parseTiempoAMinutos(str) {
   return total || Infinity;
 }
 
+function mostrarSkeletonGrid(n) {
+  n = n || 8;
+  var grid = document.getElementById('gridRecetas');
+  if (!grid) return;
+  var html = '';
+  for (var i = 0; i < n; i++) {
+    html += `
+      <div class="skeleton-card" style="animation-delay:${i * 40}ms">
+        <div class="sk-base skeleton-card-img"></div>
+        <div class="skeleton-card-body">
+          <div class="sk-base skeleton-card-titulo"></div>
+          <div class="sk-base skeleton-card-desc"></div>
+          <div class="sk-base skeleton-card-desc2"></div>
+          <div class="skeleton-card-footer">
+            <div class="sk-base skeleton-card-badge"></div>
+            <div class="sk-base skeleton-card-badge"></div>
+            <div class="sk-base skeleton-card-badge"></div>
+          </div>
+        </div>
+      </div>`;
+  }
+  grid.innerHTML = html;
+}
+
 async function init() {
+  mostrarSkeletonGrid(8);
   try {
     recetas = await obtenerRecetas();
   } catch (e) {
@@ -104,6 +129,9 @@ async function init() {
 
   var filtroFavGrupo = document.querySelector('.panel-filtros .filtro-grupo:nth-child(6)');
   if (filtroFavGrupo) filtroFavGrupo.style.display = estaLogueado() ? '' : 'none';
+
+  var spinner = document.getElementById('spinner-global');
+  if (spinner) spinner.classList.add('ocultar');
 }
 
 function renderizarFiltrosTipo() {
