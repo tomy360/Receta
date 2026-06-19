@@ -155,6 +155,7 @@ async function cargarUsuarios() {
       html += '<div style="display:flex;align-items:center;gap:0.75rem;padding:0.5rem 0.75rem;background:var(--fondo,#f9fafb);border-radius:0.5rem;border:1px solid var(--borde,#e5e7eb);">' +
         '<span style="width:28px;height:28px;border-radius:50%;background:var(--verde,#4caf50);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:0.75rem;flex-shrink:0;">' + u.username.charAt(0).toUpperCase() + '</span>' +
         '<span style="flex:1;font-size:0.875rem;">' + u.username + '</span>' +
+        '<button class="btn-editar-usuario" data-id="' + u.id + '" data-username="' + u.username.replace(/"/g, '&quot;') + '" data-avatar="' + (u.avatar_url || '').replace(/"/g, '&quot;') + '" style="background:var(--verde-claro,#4d7a36);color:#fff;border:none;padding:0.25rem 0.6rem;border-radius:0.375rem;font-size:0.75rem;cursor:pointer;">✏️</button>' +
         '<button class="btn-eliminar-usuario" data-id="' + u.id + '" data-username="' + u.username.replace(/"/g, '&quot;') + '" style="background:#ef4444;color:#fff;border:none;padding:0.25rem 0.6rem;border-radius:0.375rem;font-size:0.75rem;cursor:pointer;">🗑️</button>' +
         '</div>';
     });
@@ -172,6 +173,11 @@ async function cargarUsuarios() {
         } catch (e) {
           alert('Error al eliminar: ' + e.message);
         }
+      });
+    });
+    listEl.querySelectorAll('.btn-editar-usuario').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        abrirModalEditar(btn.dataset.id, btn.dataset.username, btn.dataset.avatar);
       });
     });
   } catch (e) {
@@ -211,6 +217,44 @@ document.getElementById('adminBtn').addEventListener('click', async function () 
     errorEl.textContent = 'Error al crear usuario: ' + e.message;
   }
 });
+
+var modalEditar = document.getElementById('modalEditarUsuario');
+
+function abrirModalEditar(id, username, avatarUrl) {
+  modalEditar.dataset.editId = id;
+  document.getElementById('editUsuarioNombre').textContent = username;
+  document.getElementById('editUsername').value = username;
+  document.getElementById('editPassword').value = '';
+  document.getElementById('editAvatar').value = avatarUrl || '';
+  document.getElementById('editError').textContent = '';
+  modalEditar.classList.remove('oculto');
+}
+
+function cerrarModalEditar() {
+  modalEditar.classList.add('oculto');
+}
+
+document.getElementById('editGuardarBtn').addEventListener('click', async function () {
+  var id = modalEditar.dataset.editId;
+  var username = document.getElementById('editUsername').value.trim();
+  var password = document.getElementById('editPassword').value.trim();
+  var avatar = document.getElementById('editAvatar').value.trim();
+  var errorEl = document.getElementById('editError');
+  errorEl.textContent = '';
+  if (!username) { errorEl.textContent = 'El nombre no puede estar vacío'; return; }
+  var body = { username: username, avatar_url: avatar || '' };
+  if (password) body.password = await sha256(password);
+  try {
+    await peticionAuth(SUPABASE_URL + '/rest/v1/usuarios?id=eq.' + encodeURIComponent(id), {
+      method: 'PATCH',
+      body: JSON.stringify(body)
+    });
+    cerrarModalEditar();
+    cargarUsuarios();
+  } catch (e) {
+    errorEl.textContent = 'Error al guardar: ' + e.message;
+  }
+});
 </script>
 
 <script>
@@ -243,5 +287,28 @@ document.getElementById('adminBtn').addEventListener('click', async function () 
   document.querySelectorAll('.nav-mobile-submenu-trigger').forEach(function (trigger) { trigger.addEventListener('click', function () { var items = this.nextElementSibling; if (items) { items.classList.toggle('visible'); this.classList.toggle('abierto'); } }); });
 })();
 </script>
+<div class="modal oculto" id="modalEditarUsuario" onclick="if(event.target===this)cerrarModalEditar()">
+  <div class="modal-contenido" style="max-width:420px;">
+    <button class="modal-cerrar" onclick="cerrarModalEditar()">✕</button>
+    <h3 style="margin:0 0 1rem;">✏️ Editar usuario <span id="editUsuarioNombre" style="color:var(--verde)"></span></h3>
+    <div class="admin-campo">
+      <label for="editUsername">Nombre de usuario</label>
+      <input type="text" id="editUsername">
+    </div>
+    <div class="admin-campo">
+      <label for="editPassword">Contraseña <small style="font-weight:400;color:var(--texto-muted);">(vacío = no cambiar)</small></label>
+      <input type="password" id="editPassword" placeholder="Nueva contraseña">
+    </div>
+    <div class="admin-campo">
+      <label for="editAvatar">URL del avatar</label>
+      <input type="text" id="editAvatar">
+    </div>
+    <div class="admin-error" id="editError"></div>
+    <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+      <button class="login-btn" id="editGuardarBtn">Guardar cambios</button>
+      <button class="login-btn" onclick="cerrarModalEditar()" style="background:#6b7280;">Cancelar</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
