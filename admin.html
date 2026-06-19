@@ -152,12 +152,12 @@
 </div>
 
 <script>
-const ADMIN_SECRET = 'bocalomas1B*';
+const ADMIN_SECRET_HASH = '1c74734469133e2bf2182a4c7fb9103fd737fe0e8637e995016d963fe6d6d038';
 
-document.getElementById('gateBtn').addEventListener('click', function () {
+document.getElementById('gateBtn').addEventListener('click', async function () {
   var codigo = document.getElementById('gateCodigo').value.trim();
   var errorEl = document.getElementById('gateError');
-  if (codigo === ADMIN_SECRET) {
+  if (await sha256(codigo) === ADMIN_SECRET_HASH) {
     document.getElementById('adminGate').classList.add('oculto');
     document.getElementById('adminContent').classList.remove('oculto');
     cargarUsuarios();
