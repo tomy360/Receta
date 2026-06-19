@@ -123,6 +123,30 @@
   </div>
 </div>
 
+<div class="modal oculto" id="modalEditarUsuario" onclick="if(event.target===this)cerrarModalEditar()">
+  <div class="modal-contenido" style="max-width:420px;">
+    <button class="modal-cerrar" onclick="cerrarModalEditar()">✕</button>
+    <h3 style="margin:0 0 1rem;">✏️ Editar usuario <span id="editUsuarioNombre" style="color:var(--verde)"></span></h3>
+    <div class="admin-campo">
+      <label for="editUsername">Nombre de usuario</label>
+      <input type="text" id="editUsername">
+    </div>
+    <div class="admin-campo">
+      <label for="editPassword">Contraseña <small style="font-weight:400;color:var(--texto-muted);">(vacío = no cambiar)</small></label>
+      <input type="password" id="editPassword" placeholder="Nueva contraseña">
+    </div>
+    <div class="admin-campo">
+      <label for="editAvatar">URL del avatar</label>
+      <input type="text" id="editAvatar">
+    </div>
+    <div class="admin-error" id="editError"></div>
+    <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+      <button class="login-btn" id="editGuardarBtn">Guardar cambios</button>
+      <button class="login-btn" onclick="cerrarModalEditar()" style="background:#6b7280;">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const ADMIN_SECRET = 'bocalomas1B*';
 
@@ -287,28 +311,5 @@ document.getElementById('editGuardarBtn').addEventListener('click', async functi
   document.querySelectorAll('.nav-mobile-submenu-trigger').forEach(function (trigger) { trigger.addEventListener('click', function () { var items = this.nextElementSibling; if (items) { items.classList.toggle('visible'); this.classList.toggle('abierto'); } }); });
 })();
 </script>
-<div class="modal oculto" id="modalEditarUsuario" onclick="if(event.target===this)cerrarModalEditar()">
-  <div class="modal-contenido" style="max-width:420px;">
-    <button class="modal-cerrar" onclick="cerrarModalEditar()">✕</button>
-    <h3 style="margin:0 0 1rem;">✏️ Editar usuario <span id="editUsuarioNombre" style="color:var(--verde)"></span></h3>
-    <div class="admin-campo">
-      <label for="editUsername">Nombre de usuario</label>
-      <input type="text" id="editUsername">
-    </div>
-    <div class="admin-campo">
-      <label for="editPassword">Contraseña <small style="font-weight:400;color:var(--texto-muted);">(vacío = no cambiar)</small></label>
-      <input type="password" id="editPassword" placeholder="Nueva contraseña">
-    </div>
-    <div class="admin-campo">
-      <label for="editAvatar">URL del avatar</label>
-      <input type="text" id="editAvatar">
-    </div>
-    <div class="admin-error" id="editError"></div>
-    <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
-      <button class="login-btn" id="editGuardarBtn">Guardar cambios</button>
-      <button class="login-btn" onclick="cerrarModalEditar()" style="background:#6b7280;">Cancelar</button>
-    </div>
-  </div>
-</div>
 </body>
 </html>
