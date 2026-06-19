@@ -334,20 +334,10 @@ function renderizar() {
 
   sinResultados.classList.add('oculto');
 
-  // Mostrar skeletons mientras se renderiza
-  const skeletons = Array(3).fill('').map(() => `
-    <div class="skeleton-tarjeta">
-      <div class="skeleton-tarjeta-imagen"></div>
-      <div class="skeleton-tarjeta-titulo"></div>
-      <div class="skeleton-tarjeta-desc"></div>
-      <div class="skeleton-tarjeta-desc" style="width:80%"></div>
-    </div>
-  `).join('');
-  grid.innerHTML = skeletons;
-
-  setTimeout(() => {
-    grid.innerHTML = filtradas.map(r => crearTarjeta(r)).join('');
-  }, 200);
+  grid.innerHTML = filtradas.map(r => crearTarjeta(r)).join('');
+  grid.querySelectorAll('.tarjeta').forEach(function (el, i) {
+    el.style.animationDelay = (i * 50) + 'ms';
+  });
 }
 
 document.addEventListener('click', async function (e) {
