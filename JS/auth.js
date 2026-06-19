@@ -111,6 +111,11 @@ function actualizarUI() {
     el.style.display = logueado ? 'flex' : 'none';
   });
 
+  var btnAgregarMobile = document.getElementById('btnAgregarMobile');
+  if (btnAgregarMobile) {
+    btnAgregarMobile.style.display = (logueado && window.innerWidth <= 860) ? 'inline-flex' : 'none';
+  }
+
   document.querySelectorAll('.nav-auth').forEach(function (el) { el.remove(); });
 
   var navInner = document.querySelector('.nav-inner');
