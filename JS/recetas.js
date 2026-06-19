@@ -400,7 +400,6 @@ function crearTarjeta(r) {
       <a href="receta.html?id=${r.id}">
         <div class="tarjeta-imagen" style="background-image:url('${r.imagen}')">
           <span class="tarjeta-tipo">${r.tipo}</span>
-          ${r.dieta ? '<span class="tarjeta-dieta">🥗 ' + r.dieta + '</span>' : ''}
         </div>
         <div class="tarjeta-info">
           <div class="tarjeta-puntuacion">
@@ -417,6 +416,7 @@ function crearTarjeta(r) {
             <span><span class="icono">👥</span> ${r.personas > 0 ? r.personas : '—'} pers.</span>
           </div>
           ${r.categorias ? '<div class="tarjeta-categorias">' + r.categorias.split(',').map(function(c) { return '<span class="mini-categoria">' + c.trim() + '</span>'; }).join('') + '</div>' : ''}
+          ${r.dieta ? '<div class="tarjeta-dieta">🥗 ' + r.dieta + '</div>' : ''}
         </div>
       </a>
     </div>

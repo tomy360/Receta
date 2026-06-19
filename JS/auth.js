@@ -230,8 +230,8 @@ document.addEventListener('click', function (e) {
     var dieta = link.dataset.navDieta;
     if (typeof window.aplicarDietaNavFilter === 'function') {
       window.aplicarDietaNavFilter(dieta);
-    } else {
-      window.location.href = './index.html?dieta=' + encodeURIComponent(dieta);
+    } else if (link.dataset.href) {
+      window.location.href = link.dataset.href;
     }
   }
 });
