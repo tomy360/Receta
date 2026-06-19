@@ -75,7 +75,7 @@ function agregarSeccion(nombre, ingredientesTexto, pasosTexto) {
     <div class="prep-seccion-header">
       <div style="flex:1;margin-right:2rem;">
         <label style="display:block;font-size:0.875rem;font-weight:500;color:#374151;margin-bottom:0.25rem;">Nombre de la sección</label>
-        <input type="text" class="seccion-nombre" value="${nombre || ''}" placeholder="Ej: La Masa, La Salsa... (déjalo en blanco si es simple)" style="width:100%;padding:0.5rem 1rem;border:1px solid #e5e7eb;border-radius:0.75rem;font-size:0.875rem;outline:none;background:#fff;">
+        <input type="text" class="seccion-nombre" spellcheck="true" lang="es" value="${nombre || ''}" placeholder="Ej: La Masa, La Salsa... (déjalo en blanco si es simple)" style="width:100%;padding:0.5rem 1rem;border:1px solid #e5e7eb;border-radius:0.75rem;font-size:0.875rem;outline:none;background:#fff;">
       </div>
       ${btnEliminarHtml}
     </div>
@@ -83,12 +83,12 @@ function agregarSeccion(nombre, ingredientesTexto, pasosTexto) {
       <div>
         <label>Ingredientes</label>
         <p class="ayuda">Escribe un ingrediente por línea.</p>
-        <textarea class="seccion-ingredientes" placeholder="Ej:&#10;500g harina&#10;1 pizca de sal&#10;Agua tibia">${ingredientesTexto || ''}</textarea>
+        <textarea class="seccion-ingredientes" spellcheck="true" lang="es" placeholder="Ej:&#10;500g harina&#10;1 pizca de sal&#10;Agua tibia">${ingredientesTexto || ''}</textarea>
       </div>
       <div>
         <label>Pasos de Preparación</label>
         <p class="ayuda">Escribe un paso por línea.</p>
-        <textarea class="seccion-pasos" placeholder="Ej:&#10;Mezclar los ingredientes.&#10;Amasar por 10 minutos.&#10;Dejar reposar.">${pasosTexto || ''}</textarea>
+        <textarea class="seccion-pasos" spellcheck="true" lang="es" placeholder="Ej:&#10;Mezclar los ingredientes.&#10;Amasar por 10 minutos.&#10;Dejar reposar.">${pasosTexto || ''}</textarea>
       </div>
     </div>
   `;
