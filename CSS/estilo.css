@@ -962,10 +962,10 @@ nav {
 }
 
 .detalle-video { margin: 2.5rem auto; }
-.detalle-video video { width: 100%; display: block; object-fit: contain; background: #000; border-radius: 0.75rem; }
+.detalle-video video { width: 100%; display: block; object-fit: contain; background: #000; }
 .detalle-social-embed iframe,
-.detalle-social-embed-facebook iframe { width: 100%; min-height: 350px; border: none; }
-.detalle-social-embed-youtube iframe { width: 100%; aspect-ratio: 16/9; border: none; }
+.detalle-social-embed-youtube iframe,
+.detalle-social-embed-facebook iframe { width: 100%; aspect-ratio: auto; border: none; }
 .detalle-video-externo { margin: 2.5rem auto; }
 
 /* ========== TABS ========== */
