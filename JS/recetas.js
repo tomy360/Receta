@@ -363,8 +363,34 @@ function renderizar() {
   sinResultados.classList.add('oculto');
 
   grid.innerHTML = filtradas.map(r => crearTarjeta(r)).join('');
-  grid.querySelectorAll('.tarjeta').forEach(function (el, i) {
-    el.style.animationDelay = (i * 50) + 'ms';
+  animarTarjetas();
+}
+
+function animarTarjetas() {
+  var tarjetas = document.querySelectorAll('#gridRecetas .tarjeta');
+  if (!tarjetas.length) return;
+
+  if (!('IntersectionObserver' in window)) {
+    tarjetas.forEach(function(el) { el.classList.add('visible'); });
+    return;
+  }
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        var el = entry.target;
+        var idx = parseInt(el.dataset.idx || 0, 10);
+        setTimeout(function() {
+          el.classList.add('visible');
+        }, idx * 40);
+        observer.unobserve(el);
+      }
+    });
+  }, { threshold: 0.05 });
+
+  tarjetas.forEach(function(el, i) {
+    el.dataset.idx = i;
+    observer.observe(el);
   });
 }
 
