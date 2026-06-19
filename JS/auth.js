@@ -173,6 +173,7 @@ function abrirModalLogin() {
   document.body.appendChild(overlay);
   modalLoginElement = overlay;
   modalLoginAbierto = true;
+  overlay.querySelector('.modal-login').addEventListener('mouseleave', cerrarModalLogin);
 
   document.getElementById('loginBtn').addEventListener('click', async function () {
     var username = document.getElementById('loginUsername').value.trim();
