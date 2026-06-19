@@ -1220,9 +1220,11 @@ nav {
 .notas-input-grupo {
   display: flex;
   gap: 0.75rem;
+  align-items: flex-start;
 }
 
-.notas-input-grupo input {
+.notas-input-grupo input,
+.notas-input-grupo textarea {
   flex: 1;
   padding: 0.625rem 1rem;
   border: 1.5px solid var(--verde-claro);
@@ -1232,9 +1234,12 @@ nav {
   transition: all 0.2s;
   background: var(--blanco);
   color: var(--texto);
+  resize: vertical;
+  min-height: 70px;
 }
 
-.notas-input-grupo input:focus {
+.notas-input-grupo input:focus,
+.notas-input-grupo textarea:focus {
   border-color: var(--verde);
   box-shadow: 0 0 0 3px var(--sombra-v);
 }

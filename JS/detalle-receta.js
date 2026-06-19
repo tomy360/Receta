@@ -276,8 +276,8 @@ function renderizarDetalle() {
         <div class="tabs">
           <div class="tabs-header">
             <button class="tab-btn activo" data-tab="ingredientes">✅ Ingredientes</button>
-            <button class="tab-btn" data-tab="notas">📝 Notas</button>
-            <button class="tab-btn" data-tab="resenas">💬 Opiniones</button>
+            <button class="tab-btn" data-tab="notas">📝 Notas${r.notasPersonales && r.notasPersonales.length ? ` (${r.notasPersonales.length})` : ''}</button>
+            <button class="tab-btn" data-tab="resenas">💬 Opiniones${r.resenas && r.resenas.length ? ` (${r.resenas.length})` : ''}</button>
           </div>
           <div class="tab-contenido" id="tabContenido"></div>
         </div>
@@ -424,7 +424,7 @@ function renderizarNotas(contenedor) {
       <div class="notas-form">
         <h4>Añadir una nota personal</h4>
         <div class="notas-input-grupo">
-          <input type="text" id="inputNota" placeholder="Ej: Usé leche de almendras en vez de vaca...">
+          <textarea id="inputNota" rows="3" placeholder="Ej: Usé leche de almendras en vez de vaca..." style="resize:vertical;"></textarea>
           <button class="BotonP" id="btnGuardarNota" style="padding:0.5rem 1rem;font-size:0.875rem;">💾 Guardar</button>
         </div>
       </div>`;
@@ -440,7 +440,7 @@ function renderizarNotas(contenedor) {
         html += `
           <div class="nota-item">
             <div class="nota-editar-input">
-              <input type="text" id="editNotaInput" value="${nota.texto}">
+              <textarea id="editNotaInput" rows="2" style="width:100%;padding:0.625rem 1rem;border:1.5px solid var(--verde-claro);border-radius:0.75rem;font-size:0.875rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;">${nota.texto}</textarea>
               <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
                 <button class="BotonP" id="btnSaveEditNota" data-id="${nota.id}" style="padding:0.375rem 0.875rem;font-size:0.813rem;">💾 Guardar</button>
                 <button class="btn-cancelar" id="btnCancelEditNota" style="padding:0.375rem 0.875rem;font-size:0.813rem;">Cancelar</button>
