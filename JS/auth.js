@@ -77,10 +77,15 @@ function avatarHtml(size) {
   if (!sesion) return '';
   var url = sesion.avatarUrl;
   var inicial = sesion.username.charAt(0).toUpperCase();
+  var fontSize = Math.round(size * 0.45);
+  var estiloBase = 'width:' + size + 'px;height:' + size + 'px;border-radius:50%;';
   if (url) {
-    return '<img src="' + url + '" class="avatar-img" style="width:' + size + 'px;height:' + size + 'px;border-radius:50%;object-fit:cover;" alt="Avatar" onerror="this.remove()">';
+    return '<span style="display:inline-block;position:relative;' + estiloBase + '">' +
+      '<span class="avatar-inicial" style="position:absolute;inset:0;display:inline-flex;align-items:center;justify-content:center;background:var(--verde);color:#fff;font-weight:600;font-size:' + fontSize + 'px;">' + inicial + '</span>' +
+      '<img src="' + url + '" class="avatar-img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" alt="Avatar" onerror="this.style.display=\'none\'">' +
+      '</span>';
   }
-  return '<span class="avatar-inicial" style="width:' + size + 'px;height:' + size + 'px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--verde);color:#fff;font-weight:600;font-size:' + (size * 0.45) + 'px;flex-shrink:0;">' + inicial + '</span>';
+  return '<span class="avatar-inicial" style="' + estiloBase + 'display:inline-flex;align-items:center;justify-content:center;background:var(--verde);color:#fff;font-weight:600;font-size:' + fontSize + 'px;flex-shrink:0;">' + inicial + '</span>';
 }
 
 function avatarHtmlFor(username, avatarUrl, size) {
