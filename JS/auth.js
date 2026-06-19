@@ -119,7 +119,7 @@ function actualizarUI() {
     var authBtn = document.createElement('div');
     authBtn.className = 'nav-auth';
     if (logueado) {
-      authBtn.innerHTML = '<span class="nav-auth-usuario">' + avatarHtml(28) + '<span class="nav-auth-username">' + sesion.username + '</span><button class="nav-auth-logout" onclick="cerrarSesion()" title="Cerrar sesión">🚪</button></span>';
+      authBtn.innerHTML = '<span class="nav-auth-usuario">' + avatarHtml(28) + '<span class="nav-auth-username">' + sesion.username + '</span><button class="nav-auth-logout" onclick="cerrarSesion()" title="Cerrar sesión">Cerrar sesión</button></span>';
     } else {
       authBtn.innerHTML = '<button class="nav-auth-login" onclick="abrirModalLogin()">🔑 Iniciar sesión</button>';
     }
@@ -134,7 +134,7 @@ function actualizarUI() {
       var mobileAuth = document.createElement('div');
       mobileAuth.className = 'nav-mobile-auth';
       if (logueado) {
-        mobileAuth.innerHTML = '<div style="padding:0.75rem 1rem;display:flex;align-items:center;gap:0.75rem;">' + avatarHtml(36) + '<span style="flex:1;font-weight:600;">' + sesion.username + '</span><button class="nav-auth-logout" onclick="cerrarSesion()" title="Cerrar sesión" style="background:none;border:none;font-size:1.25rem;cursor:pointer;">🚪</button></div>';
+        mobileAuth.innerHTML = '<div style="padding:0.75rem 1rem;display:flex;align-items:center;gap:0.75rem;">' + avatarHtml(36) + '<span style="flex:1;font-weight:600;">' + sesion.username + '</span><button class="nav-auth-logout" onclick="cerrarSesion()" title="Cerrar sesión" style="background:none;border:none;font-size:1.25rem;cursor:pointer;">🚪 Cerrar sesión</button></div>';
       } else {
         mobileAuth.innerHTML = '<div style="padding:0.75rem 1rem;"><button class="nav-auth-login" onclick="abrirModalLogin()" style="width:100%;padding:0.5rem;background:var(--verde);color:#fff;border:none;border-radius:0.5rem;cursor:pointer;">🔑 Iniciar sesión</button></div>';
       }
