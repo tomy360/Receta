@@ -46,7 +46,7 @@ function generarVideoHtml(url) {
   if (igReel) {
     return `
       <div class="detalle-video detalle-social-embed">
-        <iframe src="https://www.instagram.com/reel/${igReel[1]}/embed" width="400" height="480" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+        <iframe src="https://www.instagram.com/reel/${igReel[1]}/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
       </div>`;
   }
   // Instagram post: embed directo
@@ -54,7 +54,7 @@ function generarVideoHtml(url) {
   if (igPost) {
     return `
       <div class="detalle-video detalle-social-embed">
-        <iframe src="https://www.instagram.com/p/${igPost[1]}/embed" width="400" height="480" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+        <iframe src="https://www.instagram.com/p/${igPost[1]}/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
       </div>`;
   }
 
@@ -63,7 +63,7 @@ function generarVideoHtml(url) {
   if (tkMatch) {
     return `
       <div class="detalle-video detalle-social-embed">
-        <iframe src="https://www.tiktok.com/embed/v2/${tkMatch[1]}" width="325" height="575" frameborder="0" allowfullscreen></iframe>
+        <iframe src="https://www.tiktok.com/embed/v2/${tkMatch[1]}" frameborder="0" allowfullscreen></iframe>
       </div>`;
   }
 
@@ -71,7 +71,7 @@ function generarVideoHtml(url) {
   if (url.includes('facebook.com') || url.includes('fb.watch')) {
     return `
       <div class="detalle-video detalle-social-embed-facebook">
-        <iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false" width="500" height="280" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+        <iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
       </div>`;
   }
 
@@ -131,15 +131,15 @@ function generarVideoHtml(url) {
 function generarSocialEmbed(url) {
   if (!url) return '';
   var igReel = url.match(/instagram\.com\/reel\/([^/?]+)/);
-  if (igReel) return '<div class="detalle-social-embed"><iframe src="https://www.instagram.com/reel/' + igReel[1] + '/embed" width="400" height="480" frameborder="0" scrolling="no" allowtransparency="true"></iframe></div>';
+  if (igReel) return '<div class="detalle-social-embed"><iframe src="https://www.instagram.com/reel/' + igReel[1] + '/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe></div>';
   var igPost = url.match(/instagram\.com\/p\/([^/?]+)/);
-  if (igPost) return '<div class="detalle-social-embed"><iframe src="https://www.instagram.com/p/' + igPost[1] + '/embed" width="400" height="480" frameborder="0" scrolling="no" allowtransparency="true"></iframe></div>';
+  if (igPost) return '<div class="detalle-social-embed"><iframe src="https://www.instagram.com/p/' + igPost[1] + '/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe></div>';
   var tiktok = url.match(/tiktok\.com\/@[\w.]+\/video\/(\d+)/);
-  if (tiktok) return '<div class="detalle-social-embed"><iframe src="https://www.tiktok.com/embed/v2/' + tiktok[1] + '" width="325" height="575" frameborder="0" allowfullscreen></iframe></div>';
+  if (tiktok) return '<div class="detalle-social-embed"><iframe src="https://www.tiktok.com/embed/v2/' + tiktok[1] + '" frameborder="0" allowfullscreen></iframe></div>';
   var yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
   if (yt) return '<div class="detalle-social-embed-youtube"><iframe src="https://www.youtube.com/embed/' + yt[1] + '" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
   if (url.includes('facebook.com') || url.includes('fb.watch')) {
-    return '<div class="detalle-social-embed-facebook"><iframe src="https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(url) + '&show_text=false" width="500" height="280" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe></div>';
+    return '<div class="detalle-social-embed-facebook"><iframe src="https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(url) + '&show_text=false" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe></div>';
   }
   return '';
 }
