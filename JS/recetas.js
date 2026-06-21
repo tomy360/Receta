@@ -1,4 +1,4 @@
-const tipos = ['Todos', 'Desayuno', 'Almuerzo', 'Cena', 'Media Tarde', 'Indefinido'];
+const tipos = ['Todos', 'Desayuno', 'Almuerzo', 'Cena', 'Media Tarde', 'Indefinido', 'Postre', 'Acompañamiento'];
 const dificultades = ['Todas', 'Fácil', 'Media', 'Difícil'];
 const tiempos = ['Cualquiera', '≤ 15 min', '≤ 30 min', '≤ 60 min', '> 60 min'];
 const porcionesOpts = ['Cualquiera', '1', '2', '4', '6', '8+'];
@@ -18,6 +18,11 @@ let busqueda = '';
 let filtroCategoria = 'Todas';
 let filtroDieta = 'Todas';
 var favoritosUsuario = [];
+const ORDEN_MOMENTO = ['Desayuno', 'Almuerzo', 'Media Tarde', 'Cena', 'Indefinido', 'Postre', 'Acompañamiento'];
+let ordenActual = 'none';
+let ordenMomentoRotacion = 0;
+let ordenDificultadAsc = true;
+let ordenTiempoAsc = true;
 
 function parseTiempoAMinutos(str) {
   if (!str) return Infinity;
@@ -51,6 +56,56 @@ function mostrarSkeletonGrid(n) {
       </div>`;
   }
   grid.innerHTML = html;
+}
+
+function ordenarRecetas(lista) {
+  if (ordenActual === 'none') return lista;
+  var copia = lista.slice();
+  if (ordenActual === 'momento') {
+    var rot = ordenMomentoRotacion;
+    copia.sort(function(a, b) {
+      var ia = (ORDEN_MOMENTO.indexOf(a.tipo) - rot + ORDEN_MOMENTO.length) % ORDEN_MOMENTO.length;
+      var ib = (ORDEN_MOMENTO.indexOf(b.tipo) - rot + ORDEN_MOMENTO.length) % ORDEN_MOMENTO.length;
+      return ia - ib;
+    });
+  } else if (ordenActual === 'dificultad') {
+    var ORD = ['Fácil', 'Media', 'Difícil'];
+    copia.sort(function(a, b) {
+      var ia = ORD.indexOf(a.dificultad);
+      var ib = ORD.indexOf(b.dificultad);
+      return ordenDificultadAsc ? ia - ib : ib - ia;
+    });
+  } else if (ordenActual === 'tiempo') {
+    copia.sort(function(a, b) {
+      var ta = parseTiempoAMinutos(a.tiempo);
+      var tb = parseTiempoAMinutos(b.tiempo);
+      return ordenTiempoAsc ? ta - tb : tb - ta;
+    });
+  }
+  return copia;
+}
+
+function actualizarBotonOrdenar() {
+  var btn = document.getElementById('btnOrdenar');
+  if (!btn) return;
+  var textos = { 'none': '🔽 Ordenar', 'momento': '📋 Momento 🔽', 'dificultad': '📊 Dificultad 🔽', 'tiempo': '⏱️ Tiempo 🔽' };
+  btn.textContent = textos[ordenActual] || textos['none'];
+}
+
+function actualizarDropdownOrden() {
+  document.querySelectorAll('.ordenar-opcion').forEach(function(el) {
+    var texto = el.dataset.texto;
+    if (el.dataset.orden === ordenActual) {
+      el.textContent = '✓ ' + texto;
+    } else {
+      el.textContent = texto;
+    }
+  });
+}
+
+function cerrarDropdownOrden() {
+  var dd = document.getElementById('ordenarDropdown');
+  if (dd) dd.classList.add('oculto');
 }
 
 async function init() {
@@ -114,6 +169,44 @@ async function init() {
   panelFiltros.addEventListener('click', function (e) {
     var header = e.target.closest('.filtro-header');
     if (header) header.parentElement.classList.toggle('plegado');
+  });
+
+  var btnOrdenar = document.getElementById('btnOrdenar');
+  var ordenarDropdown = document.getElementById('ordenarDropdown');
+  if (btnOrdenar && ordenarDropdown) {
+    btnOrdenar.addEventListener('click', function (e) {
+      e.stopPropagation();
+      ordenarDropdown.classList.toggle('oculto');
+    });
+    ordenarDropdown.addEventListener('click', function (e) {
+      var opcion = e.target.closest('.ordenar-opcion');
+      if (!opcion) return;
+      var criterio = opcion.dataset.orden;
+      if (criterio === ordenActual) {
+        if (criterio === 'momento') {
+          ordenMomentoRotacion = (ordenMomentoRotacion + 1) % ORDEN_MOMENTO.length;
+        } else if (criterio === 'dificultad') {
+          ordenDificultadAsc = !ordenDificultadAsc;
+        } else if (criterio === 'tiempo') {
+          ordenTiempoAsc = !ordenTiempoAsc;
+        }
+      } else {
+        ordenActual = criterio;
+        if (criterio === 'momento') ordenMomentoRotacion = 0;
+        else if (criterio === 'dificultad') ordenDificultadAsc = true;
+        else if (criterio === 'tiempo') ordenTiempoAsc = true;
+      }
+      actualizarBotonOrdenar();
+      actualizarDropdownOrden();
+      cerrarDropdownOrden();
+      renderizar();
+    });
+  }
+
+  document.addEventListener('click', function (e) {
+    if (ordenarDropdown && !e.target.closest('#btnOrdenar') && !e.target.closest('#ordenarDropdown')) {
+      cerrarDropdownOrden();
+    }
   });
 
   renderizarFiltrosTipo();
@@ -352,7 +445,8 @@ function renderizar() {
   const sinResultados = document.getElementById('sinResultados');
   if (!grid) return;
 
-  const filtradas = recetasFiltradas();
+  var filtradas = recetasFiltradas();
+  filtradas = ordenarRecetas(filtradas);
 
   if (filtradas.length === 0) {
     grid.innerHTML = '';
@@ -496,6 +590,12 @@ function limpiarFiltros() {
   renderizarFiltrosAutor();
   renderizarFiltrosCategorias();
   renderizarFiltrosDieta();
+  ordenActual = 'none';
+  ordenMomentoRotacion = 0;
+  ordenDificultadAsc = true;
+  ordenTiempoAsc = true;
+  actualizarBotonOrdenar();
+  actualizarDropdownOrden();
   renderizar();
 }
 

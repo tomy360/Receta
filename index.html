@@ -47,6 +47,8 @@
           <a class="BotonBa" href="./index.html?tipo=Cena">Cena</a>
           <a class="BotonBa" href="./index.html?tipo=Media Tarde">Media Tarde</a>
           <a class="BotonBa" href="./index.html?tipo=Indefinido">Indefinido</a>
+          <a class="BotonBa" href="./index.html?tipo=Postre">Postre</a>
+          <a class="BotonBa" href="./index.html?tipo=Acompa%C3%B1amiento">Acompañamiento</a>
         </div>
       </div>
       <div class="nav-dropdown">
@@ -98,6 +100,12 @@
         <a class="nav-mobile-link" href="./index.html?tipo=Indefinido">
           <span class="nav-mobile-icon">❓</span> Indefinido
         </a>
+        <a class="nav-mobile-link" href="./index.html?tipo=Postre">
+          <span class="nav-mobile-icon">🍰</span> Postre
+        </a>
+        <a class="nav-mobile-link" href="./index.html?tipo=Acompa%C3%B1amiento">
+          <span class="nav-mobile-icon">🥬</span> Acompañamiento
+        </a>
       </div>
     </div>
     <div class="nav-mobile-submenu">
@@ -147,6 +155,14 @@
         <input type="text" id="buscador" placeholder="Buscar por nombre o ingrediente...">
       </div>
       <button class="btn-filtro" id="btnAleatorio">🎲 ¿Qué cocino hoy?</button>
+      <div class="ordenar-wrapper">
+        <button class="btn-filtro" id="btnOrdenar">🔽 Ordenar</button>
+        <div class="ordenar-dropdown oculto" id="ordenarDropdown">
+          <button class="ordenar-opcion" data-orden="momento" data-texto="📋 Momento">📋 Momento</button>
+          <button class="ordenar-opcion" data-orden="dificultad" data-texto="📊 Dificultad">📊 Dificultad</button>
+          <button class="ordenar-opcion" data-orden="tiempo" data-texto="⏱️ Tiempo">⏱️ Tiempo</button>
+        </div>
+      </div>
       <button class="btn-filtro" id="btnFiltros">📊 Filtros</button>
       <a class="btn-filtro btn-agregar-mobile" id="btnAgregarMobile" href="agregar.html">+ Añadir Receta</a>
     </div>

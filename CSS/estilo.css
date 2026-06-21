@@ -378,6 +378,54 @@ nav {
   font-weight: 600;
 }
 
+.ordenar-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.ordenar-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--blanco);
+  border: 1.5px solid var(--borde);
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  z-index: 100;
+  min-width: 160px;
+  overflow: hidden;
+}
+
+.ordenar-opcion {
+  display: block;
+  width: 100%;
+  padding: 0.625rem 1rem;
+  background: none;
+  border: none;
+  font-size: 0.875rem;
+  color: var(--texto-med);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.ordenar-opcion:hover {
+  background: var(--crema-medio);
+}
+
+html.modo-noche .ordenar-dropdown {
+  background: var(--fondo-tarjeta);
+  border-color: #444;
+}
+
+html.modo-noche .ordenar-opcion {
+  color: var(--texto-claro);
+}
+
+html.modo-noche .ordenar-opcion:hover {
+  background: #3a4a2a;
+}
+
 @media (min-width: 861px) {
   .btn-agregar-mobile { display: none !important; }
 }
