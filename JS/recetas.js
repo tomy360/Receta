@@ -62,12 +62,23 @@ function ordenarRecetas(lista) {
   if (ordenActual === 'none') return lista;
   var copia = lista.slice();
   if (ordenActual === 'momento') {
-    var rot = ordenMomentoRotacion;
-    copia.sort(function(a, b) {
-      var ia = (ORDEN_MOMENTO.indexOf(a.tipo) - rot + ORDEN_MOMENTO.length) % ORDEN_MOMENTO.length;
-      var ib = (ORDEN_MOMENTO.indexOf(b.tipo) - rot + ORDEN_MOMENTO.length) % ORDEN_MOMENTO.length;
-      return ia - ib;
-    });
+    if (ORDEN_MOMENTO.indexOf('Indefinido') !== -1) {
+      var indefIdx = (ORDEN_MOMENTO.indexOf('Indefinido') - ordenMomentoRotacion + ORDEN_MOMENTO.length) % ORDEN_MOMENTO.length;
+      copia.sort(function(a, b) {
+        if (a.tipo === 'Indefinido' && b.tipo !== 'Indefinido') return 1;
+        if (b.tipo === 'Indefinido' && a.tipo !== 'Indefinido') return -1;
+        var ia = (ORDEN_MOMENTO.indexOf(a.tipo) - ordenMomentoRotacion + ORDEN_MOMENTO.length) % ORDEN_MOMENTO.length;
+        var ib = (ORDEN_MOMENTO.indexOf(b.tipo) - ordenMomentoRotacion + ORDEN_MOMENTO.length) % ORDEN_MOMENTO.length;
+        return ia - ib;
+      });
+    } else {
+      var rot = ordenMomentoRotacion;
+      copia.sort(function(a, b) {
+        var ia = (ORDEN_MOMENTO.indexOf(a.tipo) - rot + ORDEN_MOMENTO.length) % ORDEN_MOMENTO.length;
+        var ib = (ORDEN_MOMENTO.indexOf(b.tipo) - rot + ORDEN_MOMENTO.length) % ORDEN_MOMENTO.length;
+        return ia - ib;
+      });
+    }
   } else if (ordenActual === 'dificultad') {
     var ORD = ['Fácil', 'Media', 'Difícil'];
     copia.sort(function(a, b) {
