@@ -426,6 +426,13 @@ html.modo-noche .ordenar-opcion:hover {
   background: #3a4a2a;
 }
 
+@media (max-width: 480px) {
+  .ordenar-dropdown {
+    left: 0;
+    right: auto;
+  }
+}
+
 @media (min-width: 861px) {
   .btn-agregar-mobile { display: none !important; }
 }
