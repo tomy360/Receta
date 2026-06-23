@@ -91,6 +91,15 @@ async function initConsejos() {
     }
   });
 
+  document.getElementById('consejosForm').addEventListener('click', function (e) {
+    var btn = e.target.closest('.tf-btn');
+    if (!btn) return;
+    var ta = document.getElementById('campoContenidoConsejo');
+    if (!ta) return;
+    if (btn.dataset.tag === 'bold') formatearTexto(ta, '**', '**');
+    else if (btn.dataset.tag === 'underline') formatearTexto(ta, '__', '__');
+  });
+
   document.getElementById('btnGuardarConsejo').addEventListener('click', async function () {
     var sesionTips = obtenerSesion();
     if (!sesionTips) return;
@@ -162,8 +171,8 @@ function renderizarConsejos(tips) {
         '</div>'
       : '';
     return '<div class="consejo-card' + (largo ? ' truncado' : '') + '">' +
-      '<h3>' + t.titulo + '</h3>' +
-      '<p>' + t.contenido + '</p>' +
+      '<h3>' + convertirMarkdown(t.titulo) + '</h3>' +
+      '<p>' + convertirMarkdown(t.contenido) + '</p>' +
       (largo ? '<button class="ver-mas-btn" onclick="toggleVerMas(this)">Ver más</button>' : '') +
       '<div class="consejo-meta">' +
         '<span>' + autor + ' · ' + fecha + '</span>' +

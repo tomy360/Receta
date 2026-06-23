@@ -1333,6 +1333,7 @@ html.modo-noche .ordenar-opcion:hover {
   font-size: 0.875rem;
   color: var(--texto);
   margin-bottom: 0.5rem;
+  white-space: pre-wrap;
 }
 
 .nota-item .fecha {
@@ -2516,6 +2517,13 @@ html.modo-noche .consejos-toggle-btn:hover { background: var(--verde); color: #f
 .consejos-form-wrapper { margin-bottom: 2rem; }
 .consejos-form { background: var(--blanco); border-radius: 1.25rem; border: 1px solid var(--crema-medio); padding: 1.5rem; }
 .consejos-form textarea { width: 100%; min-height: 100px; padding: 0.75rem; border: 1px solid var(--borde); border-radius: 0.75rem; font-size: 0.9rem; resize: vertical; box-sizing:border-box; font-family:inherit; }
+
+.toolbar-formato { display: flex; gap: 0.25rem; padding-bottom: 0.35rem; }
+.tf-btn { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--borde); background: var(--blanco); color: var(--texto-med); cursor: pointer; font-size: 0.85rem; display: grid; place-items: center; transition: all 0.15s; padding: 0; line-height: 1; }
+.tf-btn:hover { background: var(--crema-medio); border-color: var(--verde-claro); }
+html.modo-noche .tf-btn { background: var(--fondo-tarjeta); border-color: #555; color: var(--texto-claro); }
+html.modo-noche .tf-btn:hover { background: #3a4a2a; border-color: var(--verde-claro); }
+
 .consejos-form .form-acciones { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
 .consejos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: start; }
 @media (max-width: 860px) { .consejos-grid { grid-template-columns: 1fr; } }

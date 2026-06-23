@@ -463,7 +463,13 @@ function renderizarNotas(contenedor) {
       <div class="notas-form">
         <h4>Añadir una nota personal</h4>
         <div class="notas-input-grupo">
-          <textarea id="inputNota" rows="3" spellcheck="true" lang="es" autocorrect="on" placeholder="Ej: Usé leche de almendras en vez de vaca..." style="resize:vertical;"></textarea>
+          <div style="flex:1;display:flex;flex-direction:column;gap:0.25rem;">
+            <div class="toolbar-formato">
+              <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('inputNota'),'**','**')" title="Negrita (**)"><b>B</b></button>
+              <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('inputNota'),'__','__')" title="Subrayado (__)"><u>U</u></button>
+            </div>
+            <textarea id="inputNota" rows="3" spellcheck="true" lang="es" autocorrect="on" placeholder="Ej: Usé leche de almendras en vez de vaca..." style="resize:vertical;"></textarea>
+          </div>
           <button class="BotonP" id="btnGuardarNota" style="padding:0.5rem 1rem;font-size:0.875rem;">💾 Guardar</button>
         </div>
       </div>`;
@@ -479,6 +485,10 @@ function renderizarNotas(contenedor) {
         html += `
           <div class="nota-item">
             <div class="nota-editar-input">
+              <div class="toolbar-formato">
+                <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('editNotaInput'),'**','**')" title="Negrita (**)"><b>B</b></button>
+                <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('editNotaInput'),'__','__')" title="Subrayado (__)"><u>U</u></button>
+              </div>
               <textarea id="editNotaInput" rows="2" spellcheck="true" lang="es" autocorrect="on" style="width:100%;padding:0.625rem 1rem;border:1.5px solid var(--verde-claro);border-radius:0.75rem;font-size:0.875rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;">${nota.texto}</textarea>
               <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
                 <button class="BotonP" id="btnSaveEditNota" data-id="${nota.id}" style="padding:0.375rem 0.875rem;font-size:0.813rem;">💾 Guardar</button>
@@ -491,7 +501,7 @@ function renderizarNotas(contenedor) {
         var avatarNota = nota.user_id ? avatarHtmlFor(nota.nombre || 'Anónimo', nota.avatar_url, 24) : '';
         html += `
           <div class="nota-item">
-            <p>${nota.texto}</p>
+            <p>${convertirMarkdown(nota.texto)}</p>
             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.25rem;">
               <span class="nota-autor">${avatarNota ? avatarNota + ' ' : ''}${nota.nombre || 'Anónimo'} · ${nota.fecha}</span>
               ${esPropiaNota ? `<div class="nota-acciones">

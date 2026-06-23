@@ -1,4 +1,27 @@
 const TABLA_RECETAS = 'recipes';
+
+function convertirMarkdown(texto) {
+  if (!texto) return '';
+  var escapado = texto.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return escapado.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/__(.+?)__/g, '<u>$1</u>').replace(/\n/g, '<br>');
+}
+
+function formatearTexto(textarea, antes, despues) {
+  var inicio = textarea.selectionStart;
+  var fin = textarea.selectionEnd;
+  var val = textarea.value;
+  var sel = val.substring(inicio, fin);
+  textarea.value = val.substring(0, inicio) + antes + sel + despues + val.substring(fin);
+  if (sel.length === 0) {
+    textarea.selectionStart = inicio + antes.length;
+    textarea.selectionEnd = inicio + antes.length;
+  } else {
+    textarea.selectionStart = inicio;
+    textarea.selectionEnd = fin + antes.length + despues.length;
+  }
+  textarea.focus();
+}
+
 const TABLA_PLAN = 'meal_plans';
 
 function normalizarReceta(r) {
