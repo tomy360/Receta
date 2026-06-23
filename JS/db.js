@@ -20,17 +20,6 @@ function formatearTexto(textarea, antes, despues) {
     textarea.selectionEnd = fin + antes.length + despues.length;
   }
   textarea.focus();
-  var evt = document.createEvent ? document.createEvent('HTMLEvents') : null;
-  if (evt) { evt.initEvent('input', true, false); textarea.dispatchEvent(evt); }
-}
-
-function actualizarPreview(inputId, previewId) {
-  var input = document.getElementById(inputId);
-  var preview = document.getElementById(previewId);
-  if (!input || !preview) return;
-  var val = input.value;
-  preview.innerHTML = val ? convertirMarkdown(val) : '';
-  preview.style.display = val ? 'block' : 'none';
 }
 
 const TABLA_PLAN = 'meal_plans';
