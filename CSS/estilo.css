@@ -2524,6 +2524,9 @@ html.modo-noche .consejos-toggle-btn:hover { background: var(--verde); color: #f
 html.modo-noche .tf-btn { background: var(--fondo-tarjeta); border-color: #555; color: var(--texto-claro); }
 html.modo-noche .tf-btn:hover { background: #3a4a2a; border-color: var(--verde-claro); }
 
+.preview-markdown { margin-top: 0.5rem; padding: 0.75rem 1rem; background: var(--crema-medio); border-radius: 0.75rem; font-size: 0.875rem; line-height: 1.6; min-height: 1.5rem; color: var(--texto); white-space: pre-wrap; word-wrap: break-word; display: none; }
+html.modo-noche .preview-markdown { background: var(--fondo-tarjeta); color: var(--texto-claro); }
+
 .consejos-form .form-acciones { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
 .consejos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: start; }
 @media (max-width: 860px) { .consejos-grid { grid-template-columns: 1fr; } }

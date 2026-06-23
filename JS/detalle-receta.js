@@ -468,7 +468,8 @@ function renderizarNotas(contenedor) {
               <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('inputNota'),'**','**')" title="Negrita (**)"><b>B</b></button>
               <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('inputNota'),'__','__')" title="Subrayado (__)"><u>U</u></button>
             </div>
-            <textarea id="inputNota" rows="3" spellcheck="true" lang="es" autocorrect="on" placeholder="Ej: Usé leche de almendras en vez de vaca..." style="resize:vertical;"></textarea>
+            <textarea id="inputNota" rows="3" spellcheck="true" lang="es" autocorrect="on" placeholder="Ej: Usé leche de almendras en vez de vaca..." style="resize:vertical;" oninput="actualizarPreview('inputNota','previewNota')"></textarea>
+            <div class="preview-markdown" id="previewNota"></div>
           </div>
           <button class="BotonP" id="btnGuardarNota" style="padding:0.5rem 1rem;font-size:0.875rem;">💾 Guardar</button>
         </div>
@@ -489,7 +490,8 @@ function renderizarNotas(contenedor) {
                 <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('editNotaInput'),'**','**')" title="Negrita (**)"><b>B</b></button>
                 <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('editNotaInput'),'__','__')" title="Subrayado (__)"><u>U</u></button>
               </div>
-              <textarea id="editNotaInput" rows="2" spellcheck="true" lang="es" autocorrect="on" style="width:100%;padding:0.625rem 1rem;border:1.5px solid var(--verde-claro);border-radius:0.75rem;font-size:0.875rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;">${nota.texto}</textarea>
+              <textarea id="editNotaInput" rows="2" spellcheck="true" lang="es" autocorrect="on" oninput="actualizarPreview('editNotaInput','previewEditNota')" style="width:100%;padding:0.625rem 1rem;border:1.5px solid var(--verde-claro);border-radius:0.75rem;font-size:0.875rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;">${nota.texto}</textarea>
+              <div class="preview-markdown" id="previewEditNota"></div>
               <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
                 <button class="BotonP" id="btnSaveEditNota" data-id="${nota.id}" style="padding:0.375rem 0.875rem;font-size:0.813rem;">💾 Guardar</button>
                 <button class="btn-cancelar" id="btnCancelEditNota" style="padding:0.375rem 0.875rem;font-size:0.813rem;">Cancelar</button>
