@@ -141,12 +141,26 @@
     <button class="consejos-toggle-btn oculto" id="btnToggleConsejo" title="Agregar consejo">+</button>
   </div>
 
+  <div class="consejos-encabezado-filtros">
+    <div class="consejos-buscador">
+      <span class="consejos-buscador-icono">🔍</span>
+      <input type="text" id="buscadorConsejos" placeholder="Buscar consejos por título o contenido...">
+    </div>
+    <div class="consejos-filtros-categoria" id="filtrosCategoriaConsejo"></div>
+  </div>
+
   <div class="consejos-form-wrapper oculto" id="consejosFormWrapper">
     <div class="consejos-form" id="consejosForm">
       <h4 style="margin:0 0 1rem;">✏️ Nuevo consejo</h4>
       <div class="form-campo">
         <label for="campoTituloConsejo">Título</label>
         <input type="text" id="campoTituloConsejo" spellcheck="true" lang="es" autocorrect="on" placeholder="Ej: Cómo pelar ajos fácilmente" style="width:100%;padding:0.65rem 1rem;border:1px solid var(--borde);border-radius:0.75rem;font-size:0.9rem;outline:none;box-sizing:border-box;">
+      </div>
+      <div class="form-campo">
+        <label for="campoCategoriaConsejo">Categoría</label>
+        <select id="campoCategoriaConsejo" style="width:100%;padding:0.65rem 1rem;border:1px solid var(--borde);border-radius:0.75rem;font-size:0.9rem;outline:none;box-sizing:border-box;background:var(--blanco);color:var(--texto);">
+          <option value="">Sin categoría</option>
+        </select>
       </div>
       <div class="form-campo oculto">
         <label for="campoNombreConsejo">Tu nombre</label>

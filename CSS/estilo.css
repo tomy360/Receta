@@ -2514,6 +2514,21 @@ nav, .tarjeta, .form-card, .panel-filtros,
 .consejos-toggle-btn:hover { background: var(--verde); color: #fff; }
 html.modo-noche .consejos-toggle-btn { background: var(--card-fondo); color: var(--verde-claro); border-color: var(--verde-claro); }
 html.modo-noche .consejos-toggle-btn:hover { background: var(--verde); color: #fff; }
+
+.consejos-encabezado-filtros { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.25rem; }
+.consejos-buscador { position: relative; flex: 1; min-width: 200px; }
+.consejos-buscador-icono { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--verde-claro); font-size: 1rem; pointer-events: none; }
+.consejos-buscador input { width: 100%; padding: 0.6rem 0.75rem 0.6rem 2.25rem; background: var(--blanco); border: 1.5px solid var(--borde); border-radius: 0.875rem; font-size: 0.875rem; outline: none; transition: all 0.2s; color: var(--texto); box-sizing: border-box; }
+.consejos-buscador input:focus { border-color: var(--verde); box-shadow: 0 0 0 3px var(--sombra-v); }
+.consejos-buscador input::placeholder { color: var(--texto-muted); }
+.consejos-filtros-categoria { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.consejo-badge-categoria { display: inline-block; font-size: 0.72rem; font-weight: 600; color: var(--verde-hover); background: var(--crema-medio); padding: 0.15rem 0.6rem; border-radius: 999px; margin-bottom: 0.5rem; letter-spacing: 0.02em; }
+html.modo-noche .consejo-badge-categoria { background: #2a3a1a; color: var(--verde-claro); }
+@media (max-width: 480px) {
+  .consejos-encabezado-filtros { gap: 0.5rem; }
+  .consejos-buscador input { font-size: 0.813rem; padding: 0.5rem 0.75rem 0.5rem 2rem; }
+}
+
 .consejos-form-wrapper { margin-bottom: 2rem; }
 .consejos-form { background: var(--blanco); border-radius: 1.25rem; border: 1px solid var(--crema-medio); padding: 1.5rem; }
 .consejos-form textarea { width: 100%; min-height: 100px; padding: 0.75rem; border: 1px solid var(--borde); border-radius: 0.75rem; font-size: 0.9rem; resize: vertical; box-sizing:border-box; font-family:inherit; }
