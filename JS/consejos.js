@@ -219,7 +219,7 @@ function renderizarFiltrosCategoriaConsejo() {
     return '<button class="btn-categoria' + activo + '" data-categoria="' + c + '">' + c + '</button>';
   }).join('');
   var btn = document.getElementById('btnToggleCategorias');
-  if (btn) btn.textContent = '📂 ' + filtroCategoriaConsejo;
+  if (btn) btn.innerHTML = '📂 Categorías de consejos' + (filtroCategoriaConsejo !== 'Todas' ? ': <strong>' + filtroCategoriaConsejo + '</strong>' : '');
 }
 
 function renderizarConsejos(tips) {

@@ -2515,9 +2515,9 @@ nav, .tarjeta, .form-card, .panel-filtros,
 html.modo-noche .consejos-toggle-btn { background: var(--card-fondo); color: var(--verde-claro); border-color: var(--verde-claro); }
 html.modo-noche .consejos-toggle-btn:hover { background: var(--verde); color: #fff; }
 
-.consejos-encabezado-filtros { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; }
-.consejos-filtros-categoria { display: flex; flex-wrap: wrap; gap: 0.5rem; flex: 1 1 100%; }
-.consejos-buscador { position: relative; flex: 1; min-width: 200px; }
+.consejos-encabezado-filtros { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.25rem; }
+.consejos-filtros-categoria { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.consejos-buscador { position: relative; width: 100%; max-width: 500px; }
 .consejos-buscador-icono { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--verde-claro); font-size: 1rem; pointer-events: none; }
 .consejos-buscador input { width: 100%; padding: 0.6rem 0.75rem 0.6rem 2.25rem; background: var(--blanco); border: 1.5px solid var(--borde); border-radius: 0.875rem; font-size: 0.875rem; outline: none; transition: all 0.2s; color: var(--texto); box-sizing: border-box; }
 .consejos-buscador input:focus { border-color: var(--verde); box-shadow: 0 0 0 3px var(--sombra-v); }
