@@ -2516,6 +2516,7 @@ html.modo-noche .consejos-toggle-btn { background: var(--card-fondo); color: var
 html.modo-noche .consejos-toggle-btn:hover { background: var(--verde); color: #fff; }
 
 .consejos-encabezado-filtros { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.25rem; }
+.consejos-encabezado-filtros .btn-filtro { align-self: flex-start; }
 .consejos-filtros-categoria { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .consejos-buscador { position: relative; width: 100%; max-width: 500px; }
 .consejos-buscador-icono { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--verde-claro); font-size: 1rem; pointer-events: none; }
