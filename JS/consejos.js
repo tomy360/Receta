@@ -2,7 +2,7 @@ var TABLA_TIPS = 'tips';
 var editandoTipId = null;
 var filtroCategoriaConsejo = 'Todas';
 var busquedaConsejo = '';
-var CATEGORIAS_CONSEJOS = ['Todas', 'Técnicas de cocina', 'Ingredientes', 'Utensilios', 'Organización', 'Seguridad e higiene', 'Condimentos y especias', 'Panadería y masas', 'Métodos de cocción', 'Conservación de alimentos', 'Ahorro en la cocina', 'Nutrición', 'Trucos rápidos', 'Repostería', 'Carnes y aves', 'Arroces y pastas', 'Ensaladas y aderezos', 'Cocinas del mundo'];
+var CATEGORIAS_CONSEJOS = ['Todas', 'Ahorro en la cocina', 'Arroces y pastas', 'Carnes y aves', 'Cocinas del mundo', 'Condimentos y especias', 'Conservación de alimentos', 'Ensaladas y aderezos', 'Ingredientes', 'Métodos de cocción', 'Nutrición', 'Organización', 'Panadería y masas', 'Repostería', 'Seguridad e higiene', 'Trucos rápidos', 'Técnicas de cocina', 'Utensilios'];
 
 async function peticionTips(url, opts) {
   var res = await fetch(url, {
@@ -126,18 +126,31 @@ async function initConsejos() {
       var self = this;
       timeoutBusqueda = setTimeout(function () {
         busquedaConsejo = self.value.trim();
-        renderizarFiltrosCategoriaConsejo();
         renderizarConsejos(tips);
       }, 200);
     });
   }
 
+  document.getElementById('btnToggleCategorias').addEventListener('click', function (e) {
+    e.stopPropagation();
+    document.getElementById('filtrosCategoriaConsejo').classList.toggle('oculto');
+  });
+
   document.getElementById('filtrosCategoriaConsejo').addEventListener('click', function (e) {
     var btn = e.target.closest('.btn-categoria');
     if (!btn) return;
     filtroCategoriaConsejo = btn.dataset.categoria;
+    this.classList.add('oculto');
     renderizarFiltrosCategoriaConsejo();
     renderizarConsejos(tips);
+  });
+
+  document.addEventListener('click', function (e) {
+    var cont = document.getElementById('filtrosCategoriaConsejo');
+    var toggle = document.getElementById('btnToggleCategorias');
+    if (cont && !cont.classList.contains('oculto') && !cont.contains(e.target) && !toggle.contains(e.target)) {
+      cont.classList.add('oculto');
+    }
   });
 
   document.getElementById('btnGuardarConsejo').addEventListener('click', async function () {
@@ -205,6 +218,8 @@ function renderizarFiltrosCategoriaConsejo() {
     var activo = c === filtroCategoriaConsejo ? ' activo' : '';
     return '<button class="btn-categoria' + activo + '" data-categoria="' + c + '">' + c + '</button>';
   }).join('');
+  var btn = document.getElementById('btnToggleCategorias');
+  if (btn) btn.textContent = '📂 ' + filtroCategoriaConsejo;
 }
 
 function renderizarConsejos(tips) {
