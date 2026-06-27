@@ -1305,6 +1305,7 @@ html.modo-noche .ordenar-opcion:hover {
 @media (max-width: 480px) {
   .notas-input-grupo { flex-direction: column; }
   .notas-form { padding: 1rem; }
+  .notas-input-grupo textarea { min-height: 120px; font-size: 1rem; }
   .tab-contenido { padding: 1rem; }
 }
 .notas-lista {
