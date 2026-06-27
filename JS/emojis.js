@@ -2,7 +2,23 @@ var MAPA_EMOJIS = {
   'alimento': { src: 'alimento.png' },
   'flan': { src: 'flan.png' },
   'panadero': { src: 'panadero.png' },
-  'unicornio': { src: 'unicornio.png' }
+  'unicornio': { src: 'unicornio.png' },
+  'aceite': { src: 'Aceite.png' },
+  'batidora': { src: 'Batidora.png' },
+  'cafe': { src: 'Cafe.png' },
+  'caserola': { src: 'Caserola.png' },
+  'cubiertos': { src: 'Cubiertos.png' },
+  'cuchillo': { src: 'Cuchillo.png' },
+  'espatula': { src: 'Espatula.png' },
+  'heladera': { src: 'Heladera.png' },
+  'licuadora': { src: 'Licuadora.png' },
+  'microondas': { src: 'Microondas.png' },
+  'pava': { src: 'Pava.png' },
+  'rayador': { src: 'Rayador.png' },
+  'sarten': { src: 'Sarten.png' },
+  'tabla': { src: 'Tabla.png' },
+  'te': { src: 'Te.png' },
+  'tostador': { src: 'Tostador.png' }
 };
 
 var LISTA_EMOJIS_CLASICOS = [
@@ -19,7 +35,7 @@ var LISTA_EMOJIS_CLASICOS = [
   '🥢','🍽️','🍴','🥄','🔪','🫙'
 ];
 
-var LISTA_EMOJIS_MODERNOS = ['alimento','flan','panadero','unicornio'];
+var LISTA_EMOJIS_MODERNOS = ['alimento','flan','panadero','unicornio','aceite','batidora','cafe','caserola','cubiertos','cuchillo','espatula','heladera','licuadora','microondas','pava','rayador','sarten','tabla','te','tostador'];
 
 function abrirEmojiPopup(textareaId) {
   cerrarEmojiPopup();
