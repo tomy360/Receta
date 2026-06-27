@@ -1303,9 +1303,10 @@ html.modo-noche .ordenar-opcion:hover {
 }
 
 @media (max-width: 480px) {
-  .notas-input-grupo { flex-direction: column; }
-  .notas-form { padding: 1rem; }
-  .notas-input-grupo textarea { min-height: 120px; font-size: 1rem; }
+  .notas-input-grupo { flex-direction: column; width: 100%; }
+  .notas-input-grupo > div { width: 100%; }
+  .notas-input-grupo textarea { min-height: 120px; font-size: 1rem; width: 100%; box-sizing: border-box; }
+  .notas-form { padding: 1rem; width: 100%; box-sizing: border-box; }
   .tab-contenido { padding: 1rem; }
 }
 .notas-lista {
