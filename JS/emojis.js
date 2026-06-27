@@ -5,7 +5,7 @@ var MAPA_EMOJIS = {
   'unicornio': { src: 'unicornio.png' }
 };
 
-var LISTA_EMOJIS = [
+var LISTA_EMOJIS_CLASICOS = [
   '😀','😂','🥰','😍','🥲','😋','😥','😢','😭','😱','😡',
   '🍇','🍈','🍉','🍊','🍋','🍋‍🟩','🍌','🍍','🥭','🍎','🍏','🍐','🍑','🍒','🍓','🫐','🥝',
   '🍅','🫒','🥥','🥑','🍆','🥔','🥕','🌽','🌶️','🫑','🥒',
@@ -16,9 +16,10 @@ var LISTA_EMOJIS = [
   '☕','🥛','🍼','🍯','🍮','🍭','🍬','🍫','🥧','🧁','🍰','🎂','🍪','🍩','🍨','🍧','🍦',
   '🦪','🦑','🦐','🦞','🦀','🥡','🥠','🥟','🍡','🥮','🍥',
   '🫖','🍵','🍾','🍶','🍷','🍸','🍹','🍺','🍻','🥂','🥃','🫗','🥤','🧋','🧃','🧉','🧊',
-  '🥢','🍽️','🍴','🥄','🔪','🫙',
-  'alimento','flan','panadero','unicornio'
+  '🥢','🍽️','🍴','🥄','🔪','🫙'
 ];
+
+var LISTA_EMOJIS_MODERNOS = ['alimento','flan','panadero','unicornio'];
 
 function abrirEmojiPopup(textareaId) {
   cerrarEmojiPopup();
@@ -26,18 +27,27 @@ function abrirEmojiPopup(textareaId) {
   popup.className = 'emoji-popup';
   popup.id = 'emojiPopup';
   popup.dataset.textarea = textareaId;
-  var html = '<div style="display:flex;flex-wrap:wrap;gap:2px;">';
-  for (var i = 0; i < LISTA_EMOJIS.length; i++) {
-    var item = LISTA_EMOJIS[i];
-    if (MAPA_EMOJIS[item]) {
-      html += '<button class="emoji-opcion" data-emoji="' + item + '">' +
-        '<img src="Imagenes/Emojis/' + MAPA_EMOJIS[item].src + '" class="emoji-img">' +
-      '</button>';
-    } else {
-      html += '<button class="emoji-opcion" data-emoji="' + item + '">' + item + '</button>';
-    }
+
+  var html = '';
+  html += '<div class="emoji-popup-seccion">';
+  html += '<div class="emoji-popup-titulo">Clásicos</div>';
+  html += '<div style="display:flex;flex-wrap:wrap;gap:2px;">';
+  for (var i = 0; i < LISTA_EMOJIS_CLASICOS.length; i++) {
+    html += '<button class="emoji-opcion" data-emoji="' + LISTA_EMOJIS_CLASICOS[i] + '">' + LISTA_EMOJIS_CLASICOS[i] + '</button>';
   }
-  html += '</div>';
+  html += '</div></div>';
+
+  html += '<div class="emoji-popup-seccion">';
+  html += '<div class="emoji-popup-titulo">Modernos</div>';
+  html += '<div style="display:flex;flex-wrap:wrap;gap:2px;">';
+  for (var j = 0; j < LISTA_EMOJIS_MODERNOS.length; j++) {
+    var cod = LISTA_EMOJIS_MODERNOS[j];
+    html += '<button class="emoji-opcion" data-emoji="' + cod + '">' +
+      '<img src="Imagenes/Emojis/' + MAPA_EMOJIS[cod].src + '" class="emoji-img">' +
+    '</button>';
+  }
+  html += '</div></div>';
+
   popup.innerHTML = html;
   document.body.appendChild(popup);
   popup.addEventListener('click', function (e) {
