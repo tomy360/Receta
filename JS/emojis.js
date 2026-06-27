@@ -1,11 +1,11 @@
 var MAPA_EMOJIS = {
-  'feliz': 'feliz.png',
-  'cocina': 'cocina.png',
-  'chef': 'chef.png',
-  'fuego': 'fuego.png',
-  'corazon': 'corazon.png',
-  'ok': 'ok.png',
-  'estrella': 'estrella.png'
+  'feliz': 'feliz.svg',
+  'cocina': 'cocina.svg',
+  'chef': 'chef.svg',
+  'fuego': 'fuego.svg',
+  'corazon': 'corazon.svg',
+  'ok': 'ok.svg',
+  'estrella': 'estrella.svg'
 };
 
 var LISTA_EMOJIS = Object.keys(MAPA_EMOJIS);
