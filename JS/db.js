@@ -7,7 +7,7 @@ function convertirMarkdown(texto) {
   if (typeof MAPA_EMOJIS !== 'undefined') {
     conFormato = conFormato.replace(/:(\w+):/g, function (match, codigo) {
       if (MAPA_EMOJIS[codigo]) {
-        return '<img src="Imagenes/Emojis/' + MAPA_EMOJIS[codigo] + '" class="emoji-propio" alt=":' + codigo + ':" title=":' + codigo + ':">';
+        return '<img src="Imagenes/Emojis/' + MAPA_EMOJIS[codigo].src + '" class="emoji-img" alt=":' + codigo + ':" title=":' + codigo + ':">';
       }
       return match;
     });
