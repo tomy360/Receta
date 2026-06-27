@@ -15,6 +15,7 @@
   <script defer src="./JS/db.js?v=2"></script>
   <script defer src="./JS/timer.js?v=2"></script>
   <script defer src="./JS/auth.js?v=2"></script>
+  <script defer src="./JS/emojis.js?v=2"></script>
   <script defer src="./JS/consejos.js?v=2"></script>
 </head>
 <body>
@@ -172,6 +173,7 @@
         <div class="toolbar-formato">
           <button type="button" class="tf-btn" data-tag="bold" title="Negrita (**)"><b>B</b></button>
           <button type="button" class="tf-btn" data-tag="underline" title="Subrayado (__)"><u>U</u></button>
+          <button type="button" class="tf-btn" onclick="abrirEmojiPopup('campoContenidoConsejo')" title="Emojis">😀</button>
         </div>
         <textarea id="campoContenidoConsejo" spellcheck="true" lang="es" autocorrect="on" placeholder="Escribe tu consejo aquí..."></textarea>
       </div>

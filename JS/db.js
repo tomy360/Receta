@@ -3,7 +3,16 @@ const TABLA_RECETAS = 'recipes';
 function convertirMarkdown(texto) {
   if (!texto) return '';
   var escapado = texto.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  return escapado.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/__(.+?)__/g, '<u>$1</u>').replace(/\n/g, '<br>');
+  var conFormato = escapado.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/__(.+?)__/g, '<u>$1</u>');
+  if (typeof MAPA_EMOJIS !== 'undefined') {
+    conFormato = conFormato.replace(/:(\w+):/g, function (match, codigo) {
+      if (MAPA_EMOJIS[codigo]) {
+        return '<img src="Imagenes/Emojis/' + MAPA_EMOJIS[codigo] + '" class="emoji-propio" alt=":' + codigo + ':" title=":' + codigo + ':">';
+      }
+      return match;
+    });
+  }
+  return conFormato.replace(/\n/g, '<br>');
 }
 
 function formatearTexto(textarea, antes, despues) {

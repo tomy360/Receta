@@ -467,6 +467,7 @@ function renderizarNotas(contenedor) {
             <div class="toolbar-formato">
               <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('inputNota'),'**','**')" title="Negrita (**)"><b>B</b></button>
               <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('inputNota'),'__','__')" title="Subrayado (__)"><u>U</u></button>
+              <button type="button" class="tf-btn" onclick="abrirEmojiPopup('inputNota')" title="Emojis">😀</button>
             </div>
             <textarea id="inputNota" rows="3" spellcheck="true" lang="es" autocorrect="on" placeholder="Ej: Usé leche de almendras en vez de vaca..." style="resize:vertical;"></textarea>
           </div>
@@ -488,6 +489,7 @@ function renderizarNotas(contenedor) {
               <div class="toolbar-formato">
                 <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('editNotaInput'),'**','**')" title="Negrita (**)"><b>B</b></button>
                 <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('editNotaInput'),'__','__')" title="Subrayado (__)"><u>U</u></button>
+                <button type="button" class="tf-btn" onclick="abrirEmojiPopup('editNotaInput')" title="Emojis">😀</button>
               </div>
               <textarea id="editNotaInput" rows="2" spellcheck="true" lang="es" autocorrect="on" style="width:100%;padding:0.625rem 1rem;border:1.5px solid var(--verde-claro);border-radius:0.75rem;font-size:0.875rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;">${nota.texto}</textarea>
               <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
@@ -656,6 +658,11 @@ function renderizarResenas(contenedor) {
                 </div>
               </div>
               <input type="text" id="editNombreResena" value="${res.usuario === 'Anónimo' ? '' : res.usuario}" placeholder="Tu nombre (opcional)" style="width:100%;padding:0.65rem 1rem;border:1px solid var(--borde);border-radius:0.75rem;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:0.75rem;">
+              <div class="toolbar-formato" style="margin-bottom:0.25rem;">
+                <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('editResenaTexto'),'**','**')" title="Negrita (**)"><b>B</b></button>
+                <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('editResenaTexto'),'__','__')" title="Subrayado (__)"><u>U</u></button>
+                <button type="button" class="tf-btn" onclick="abrirEmojiPopup('editResenaTexto')" title="Emojis">😀</button>
+              </div>
               <textarea id="editResenaTexto" placeholder="¿Qué te pareció la receta?" style="margin-bottom:1rem;">${res.comentario}</textarea>
               <div class="resena-acciones">
                 <button class="btn-cancelar" id="btnCancelEditResena">Cancelar</button>
@@ -712,6 +719,11 @@ function renderizarResenas(contenedor) {
           </div>
         </div>
         <input type="text" id="nombreResena" value="${sesion ? sesion.username : nombreUsuario}" placeholder="${sesion ? '' : 'Tu nombre (opcional)'}" style="width:100%;padding:0.65rem 1rem;border:1px solid var(--borde);border-radius:0.75rem;font-size:0.9rem;outline:none;box-sizing:border-box;margin-bottom:0.75rem;" ${sesion ? 'readonly' : ''}>
+        <div class="toolbar-formato" style="margin-bottom:0.25rem;">
+          <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('textoResena'),'**','**')" title="Negrita (**)"><b>B</b></button>
+          <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('textoResena'),'__','__')" title="Subrayado (__)"><u>U</u></button>
+          <button type="button" class="tf-btn" onclick="abrirEmojiPopup('textoResena')" title="Emojis">😀</button>
+        </div>
         <textarea id="textoResena" placeholder="¿Qué te pareció la receta?" style="margin-bottom:1rem;"></textarea>
         <div class="resena-acciones">
           <button class="btn-cancelar" id="btnCancelarResena">Cancelar</button>
