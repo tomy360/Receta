@@ -21,19 +21,14 @@ var MAPA_EMOJIS = {
   'tostador': { src: 'Tostador.png' }
 };
 
-var LISTA_EMOJIS_CLASICOS = [
-  '😀','😂','🥰','😍','🥲','😋','😥','😢','😭','😱','😡',
-  '🍇','🍈','🍉','🍊','🍋','🍌','🍍','🥭','🍎','🍏','🍐','🍑','🍒','🍓','🫐','🥝',
-  '🍅','🫒','🥥','🥑','🍆','🥔','🥕','🌽','🌶️','🫑','🥒',
-  '🌭','🍕','🍟','🍔','🥓','🥩','🍗','🍖','🧀','🧇','🥞','🥯','🥨','🫓','🥖','🥐','🍞',
-  '🫜','🍄','🫛','🫚','🌰','🫘','🥜','🧅','🧄','🥦','🥬',
-  '🥪','🌮','🌯','🫔','🥙','🧆','🥚','🍳','🥘','🍲','🫕','🥣','🥗','🍿','🧈','🧂','🥫',
-  '🍱','🍘','🍙','🍚','🍛','🍜','🍝','🍠','🍢','🍣','🍤',
-  '☕','🥛','🍼','🍯','🍮','🍭','🍬','🍫','🥧','🧁','🍰','🎂','🍪','🍩','🍨','🍧','🍦',
-  '🦪','🦑','🦐','🦞','🦀','🥡','🥠','🥟','🍡','🥮','🍥',
-  '🫖','🍵','🍾','🍶','🍷','🍸','🍹','🍺','🍻','🥂','🥃','🫗','🥤','🧋','🧃','🧉','🧊',
-  '🥢','🍽️','🍴','🥄','🔪','🫙',
-  '👨‍🍳','👩‍🍳','🧑‍🍳','🦴','🔥','💧','❄️','🌡️','⏲️','⌛','⏳','⚖️','🛒','🛍️','👌','✨'
+var CATEGORIAS_EMOJIS = [
+  { icono: '😀', nombre: 'Caras', emojis: ['😀','😂','🥰','😍','🥲','😋','😥','😢','😭','😱','😡','👨‍🍳','👩‍🍳','🧑‍🍳','👌','✨'] },
+  { icono: '🍎', nombre: 'Frutas', emojis: ['🍇','🍈','🍉','🍊','🍋','🍌','🍍','🥭','🍎','🍏','🍐','🍑','🍒','🍓','🫐','🥝','🥥'] },
+  { icono: '🥕', nombre: 'Verduras', emojis: ['🍅','🫒','🥑','🍆','🥔','🥕','🌽','🌶️','🫑','🥒','🫜','🍄','🫛','🫚','🌰','🫘','🥜','🧅','🧄','🥦','🥬'] },
+  { icono: '🍕', nombre: 'Comidas', emojis: ['🌭','🍕','🍟','🍔','🥓','🥩','🍗','🍖','🧀','🧇','🥞','🥯','🥨','🫓','🥖','🥐','🍞','🥪','🌮','🌯','🫔','🥙','🧆','🥚','🍳','🥘','🍲','🫕','🥣','🥗','🍿','🧈','🧂','🥫','🍱','🍘','🍙','🍚','🍛','🍜','🍝','🍠','🍢','🍣','🍤','🍡','🥟','🥠','🥮','🍥','🦪','🦑','🦐','🦞','🦀','🦴'] },
+  { icono: '🧁', nombre: 'Postres', emojis: ['🍧','🍨','🍦','🍯','🍮','🍭','🍬','🍫','🥧','🧁','🍰','🎂','🍪','🍩'] },
+  { icono: '☕', nombre: 'Bebidas', emojis: ['☕','🫖','🍵','🍾','🍶','🍷','🍸','🍹','🍺','🍻','🥂','🥃','🫗','🥤','🧋','🧃','🧉','🧊','🥛','🍼'] },
+  { icono: '🔪', nombre: 'Cocina', emojis: ['🥄','🍴','🍽️','🔪','🥢','🫙','🔥','💧','❄️','🌡️','⏲️','⌛','⏳','⚖️','🛒','🛍️'] }
 ];
 
 var LISTA_EMOJIS_MODERNOS = ['alimento','flan','panadero','unicornio','aceite','batidora','cafe','caserola','cubiertos','cuchillo','espatula','heladera','licuadora','microondas','pava','rayador','sarten','tabla','te','tostador'];
@@ -45,14 +40,24 @@ function abrirEmojiPopup(textareaId) {
   popup.id = 'emojiPopup';
   popup.dataset.textarea = textareaId;
 
-  var html = '';
-  html += '<div class="emoji-popup-seccion">';
+  var html = '<div class="emoji-popup-seccion">';
   html += '<div class="emoji-popup-titulo">Clásicos</div>';
-  html += '<div style="display:flex;flex-wrap:wrap;gap:2px;">';
-  for (var i = 0; i < LISTA_EMOJIS_CLASICOS.length; i++) {
-    html += '<button class="emoji-opcion" data-emoji="' + LISTA_EMOJIS_CLASICOS[i] + '">' + LISTA_EMOJIS_CLASICOS[i] + '</button>';
+  html += '<div class="emoji-tabs">';
+  for (var t = 0; t < CATEGORIAS_EMOJIS.length; t++) {
+    var cat = CATEGORIAS_EMOJIS[t];
+    html += '<button class="emoji-tab' + (t === 0 ? ' activo' : '') + '" data-tab="' + t + '">' + cat.icono + ' ' + cat.nombre + '</button>';
   }
-  html += '</div></div>';
+  html += '</div>';
+
+  for (var t2 = 0; t2 < CATEGORIAS_EMOJIS.length; t2++) {
+    var cat2 = CATEGORIAS_EMOJIS[t2];
+    html += '<div class="emoji-grid' + (t2 === 0 ? ' activo' : '') + '" data-grid="' + t2 + '">';
+    for (var e = 0; e < cat2.emojis.length; e++) {
+      html += '<button class="emoji-opcion" data-emoji="' + cat2.emojis[e] + '">' + cat2.emojis[e] + '</button>';
+    }
+    html += '</div>';
+  }
+  html += '</div>';
 
   html += '<div class="emoji-popup-seccion">';
   html += '<div class="emoji-popup-titulo">Modernos</div>';
@@ -67,11 +72,25 @@ function abrirEmojiPopup(textareaId) {
 
   popup.innerHTML = html;
   document.body.appendChild(popup);
+
   popup.addEventListener('click', function (e) {
-    var btn = e.target.closest('.emoji-opcion');
-    if (!btn) return;
-    insertarEmoji(textareaId, btn.dataset.emoji);
+    var btn = e.target.closest('.emoji-tab');
+    if (btn) {
+      var idx = btn.dataset.tab;
+      var tabs = popup.querySelectorAll('.emoji-tab');
+      for (var ti = 0; ti < tabs.length; ti++) tabs[ti].classList.remove('activo');
+      btn.classList.add('activo');
+      var grids = popup.querySelectorAll('.emoji-grid');
+      for (var gi = 0; gi < grids.length; gi++) grids[gi].classList.remove('activo');
+      var target = popup.querySelector('.emoji-grid[data-grid="' + idx + '"]');
+      if (target) target.classList.add('activo');
+      return;
+    }
+    var op = e.target.closest('.emoji-opcion');
+    if (!op) return;
+    insertarEmoji(textareaId, op.dataset.emoji);
   });
+
   setTimeout(function () {
     document.addEventListener('click', cerrarEmojiPopup);
   }, 0);
