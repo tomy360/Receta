@@ -156,6 +156,11 @@
       <h4 style="margin:0 0 1rem;">✏️ Nuevo consejo</h4>
       <div class="form-campo">
         <label for="campoTituloConsejo">Título</label>
+        <div class="toolbar-formato">
+          <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('campoTituloConsejo'),'**','**')" title="Negrita (**)"><b>B</b></button>
+          <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('campoTituloConsejo'),'__','__')" title="Subrayado (__)"><u>U</u></button>
+          <button type="button" class="tf-btn" onclick="abrirEmojiPopup('campoTituloConsejo')" title="Emojis">😀</button>
+        </div>
         <input type="text" id="campoTituloConsejo" spellcheck="true" lang="es" autocorrect="on" placeholder="Ej: Cómo pelar ajos fácilmente" style="width:100%;padding:0.65rem 1rem;border:1px solid var(--borde);border-radius:0.75rem;font-size:0.9rem;outline:none;box-sizing:border-box;">
       </div>
       <div class="form-campo">

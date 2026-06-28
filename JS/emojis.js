@@ -92,14 +92,22 @@ function abrirEmojiPopup(textareaId) {
   });
 
   setTimeout(function () {
-    document.addEventListener('click', cerrarEmojiPopup);
+    document.addEventListener('click', cerrarSiFuera);
   }, 0);
 }
 
+function cerrarSiFuera(e) {
+  var p = document.getElementById('emojiPopup');
+  if (p && !p.contains(e.target)) {
+    p.remove();
+    document.removeEventListener('click', cerrarSiFuera);
+  }
+}
+
 function cerrarEmojiPopup() {
-  var popup = document.getElementById('emojiPopup');
-  if (popup) popup.remove();
-  document.removeEventListener('click', cerrarEmojiPopup);
+  var p = document.getElementById('emojiPopup');
+  if (p) p.remove();
+  document.removeEventListener('click', cerrarSiFuera);
 }
 
 function insertarEmoji(textareaId, valor) {
