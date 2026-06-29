@@ -6,6 +6,10 @@ const puntuaciones = ['Cualquiera', '4+ ★', '3+ ★', '2+ ★', '1+ ★'];
 const favoritosOpts = ['Todos', 'Favoritos'];
 const dietas = ['Todas', 'Ninguna', 'Diabéticos', 'Celíacos', 'Veganos', 'Vegetarianos'];
 
+function normalizarTexto(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
 let recetas = [];
 let filtroTipo = 'Todos';
 let filtroDificultad = 'Todas';
@@ -442,11 +446,12 @@ function recetasFiltradas() {
     const porCategoria = filtroCategoria === 'Todas' || categoriasReceta.indexOf(filtroCategoria) !== -1;
     const porAutor = filtroAutor === 'Todos' || (r.autor || 'Anónimo') === filtroAutor;
     const porDieta = filtroDieta === 'Todas' || (filtroDieta === 'Ninguna' ? !r.dieta : r.dieta === filtroDieta);
-    const porBusqueda = busqueda === '' ||
-      r.titulo.toLowerCase().includes(busqueda.toLowerCase()) ||
-      r.preparaciones.some(p =>
-        p.ingredientes.some(i => i.toLowerCase().includes(busqueda.toLowerCase()))
-      );
+    var porBusqueda = busqueda === '';
+    if (!porBusqueda) {
+      var bNorm = normalizarTexto(busqueda);
+      porBusqueda = normalizarTexto(r.titulo).includes(bNorm) ||
+        r.preparaciones.some(p => p.ingredientes.some(i => normalizarTexto(i).includes(bNorm)));
+    }
     return porTipo && porDificultad && porTiempo && porPorciones && porPuntuacion && porFavorito && porCategoria && porDieta && porAutor && porBusqueda;
   });
 }
