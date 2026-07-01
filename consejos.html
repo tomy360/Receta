@@ -159,6 +159,7 @@
         <div class="toolbar-formato">
           <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('campoTituloConsejo'),'**','**')" title="Negrita (**)"><b>B</b></button>
           <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('campoTituloConsejo'),'__','__')" title="Subrayado (__)"><u>U</u></button>
+          <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('campoTituloConsejo'),'• ','')" title="Lista">•</button>
           <button type="button" class="tf-btn" onclick="abrirEmojiPopup('campoTituloConsejo')" title="Emojis">😀</button>
         </div>
         <input type="text" id="campoTituloConsejo" spellcheck="true" lang="es" autocorrect="on" placeholder="Ej: Cómo pelar ajos fácilmente" style="width:100%;padding:0.65rem 1rem;border:1px solid var(--borde);border-radius:0.75rem;font-size:0.9rem;outline:none;box-sizing:border-box;">
@@ -178,6 +179,7 @@
         <div class="toolbar-formato">
           <button type="button" class="tf-btn" data-tag="bold" title="Negrita (**)"><b>B</b></button>
           <button type="button" class="tf-btn" data-tag="underline" title="Subrayado (__)"><u>U</u></button>
+          <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('campoContenidoConsejo'),'• ','')" title="Lista">•</button>
           <button type="button" class="tf-btn" onclick="abrirEmojiPopup('campoContenidoConsejo')" title="Emojis">😀</button>
         </div>
         <textarea id="campoContenidoConsejo" spellcheck="true" lang="es" autocorrect="on" placeholder="Escribe tu consejo aquí..."></textarea>

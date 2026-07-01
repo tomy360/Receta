@@ -467,6 +467,7 @@ function renderizarNotas(contenedor) {
             <div class="toolbar-formato">
               <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('inputNota'),'**','**')" title="Negrita (**)"><b>B</b></button>
               <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('inputNota'),'__','__')" title="Subrayado (__)"><u>U</u></button>
+              <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('inputNota'),'• ','')" title="Lista">•</button>
               <button type="button" class="tf-btn" onclick="abrirEmojiPopup('inputNota')" title="Emojis">😀</button>
             </div>
             <textarea id="inputNota" rows="3" spellcheck="true" lang="es" autocorrect="on" placeholder="Ej: Usé leche de almendras en vez de vaca..." style="resize:vertical;"></textarea>
@@ -489,6 +490,7 @@ function renderizarNotas(contenedor) {
               <div class="toolbar-formato">
                 <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('editNotaInput'),'**','**')" title="Negrita (**)"><b>B</b></button>
                 <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('editNotaInput'),'__','__')" title="Subrayado (__)"><u>U</u></button>
+                <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('editNotaInput'),'• ','')" title="Lista">•</button>
                 <button type="button" class="tf-btn" onclick="abrirEmojiPopup('editNotaInput')" title="Emojis">😀</button>
               </div>
               <textarea id="editNotaInput" rows="2" spellcheck="true" lang="es" autocorrect="on" style="width:100%;padding:0.625rem 1rem;border:1.5px solid var(--verde-claro);border-radius:0.75rem;font-size:0.875rem;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;">${nota.texto}</textarea>
@@ -559,7 +561,7 @@ function configurarNotasInput() {
 
     btn.addEventListener('click', guardar);
     input.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') { e.preventDefault(); guardar(); }
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); guardar(); }
     });
 }
 
@@ -597,7 +599,7 @@ function configurarNotasAcciones() {
   const editInput = document.getElementById('editNotaInput');
   if (editInput) {
     editInput.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') {
+      if (e.key === 'Enter' && !e.shiftKey) {
         const btn = document.getElementById('btnSaveEditNota');
         if (btn) guardarEditarNota(btn.dataset.id);
       }
@@ -661,6 +663,7 @@ function renderizarResenas(contenedor) {
               <div class="toolbar-formato" style="margin-bottom:0.25rem;">
                 <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('editResenaTexto'),'**','**')" title="Negrita (**)"><b>B</b></button>
                 <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('editResenaTexto'),'__','__')" title="Subrayado (__)"><u>U</u></button>
+                <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('editResenaTexto'),'• ','')" title="Lista">•</button>
                 <button type="button" class="tf-btn" onclick="abrirEmojiPopup('editResenaTexto')" title="Emojis">😀</button>
               </div>
               <textarea id="editResenaTexto" placeholder="¿Qué te pareció la receta?" style="margin-bottom:1rem;">${res.comentario}</textarea>
@@ -722,6 +725,7 @@ function renderizarResenas(contenedor) {
         <div class="toolbar-formato" style="margin-bottom:0.25rem;">
           <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('textoResena'),'**','**')" title="Negrita (**)"><b>B</b></button>
           <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('textoResena'),'__','__')" title="Subrayado (__)"><u>U</u></button>
+          <button type="button" class="tf-btn" onclick="formatearTexto(document.getElementById('textoResena'),'• ','')" title="Lista">•</button>
           <button type="button" class="tf-btn" onclick="abrirEmojiPopup('textoResena')" title="Emojis">😀</button>
         </div>
         <textarea id="textoResena" placeholder="¿Qué te pareció la receta?" style="margin-bottom:1rem;"></textarea>
