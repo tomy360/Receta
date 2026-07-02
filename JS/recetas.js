@@ -27,6 +27,7 @@ let ordenActual = 'none';
 let ordenMomentoRotacion = 0;
 let ordenDificultadAsc = true;
 let ordenTiempoAsc = true;
+let ordenFavoritosAsc = true;
 
 function parseTiempoAMinutos(str) {
   if (!str) return Infinity;
@@ -96,6 +97,12 @@ function ordenarRecetas(lista) {
       var tb = parseTiempoAMinutos(b.tiempo);
       return ordenTiempoAsc ? ta - tb : tb - ta;
     });
+  } else if (ordenActual === 'favoritos') {
+    copia.sort(function(a, b) {
+      var fa = a.favorito || favoritosUsuario.indexOf(a.id) !== -1;
+      var fb = b.favorito || favoritosUsuario.indexOf(b.id) !== -1;
+      return ordenFavoritosAsc ? (fa ? -1 : 1) : (fa ? 1 : -1);
+    });
   }
   return copia;
 }
@@ -103,7 +110,7 @@ function ordenarRecetas(lista) {
 function actualizarBotonOrdenar() {
   var btn = document.getElementById('btnOrdenar');
   if (!btn) return;
-  var textos = { 'none': '🔽 Ordenar', 'momento': '📋 Momento 🔽', 'dificultad': '📊 Dificultad 🔽', 'tiempo': '⏱️ Tiempo 🔽' };
+  var textos = { 'none': '🔽 Ordenar', 'momento': '📋 Momento 🔽', 'dificultad': '📊 Dificultad 🔽', 'tiempo': '⏱️ Tiempo 🔽', 'favoritos': '❤️ Favoritos 🔽' };
   btn.textContent = textos[ordenActual] || textos['none'];
 }
 
@@ -204,12 +211,15 @@ async function init() {
           ordenDificultadAsc = !ordenDificultadAsc;
         } else if (criterio === 'tiempo') {
           ordenTiempoAsc = !ordenTiempoAsc;
+        } else if (criterio === 'favoritos') {
+          ordenFavoritosAsc = !ordenFavoritosAsc;
         }
       } else {
         ordenActual = criterio;
         if (criterio === 'momento') ordenMomentoRotacion = 0;
         else if (criterio === 'dificultad') ordenDificultadAsc = true;
         else if (criterio === 'tiempo') ordenTiempoAsc = true;
+        else if (criterio === 'favoritos') ordenFavoritosAsc = true;
       }
       actualizarBotonOrdenar();
       actualizarDropdownOrden();
