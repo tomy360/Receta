@@ -299,19 +299,40 @@ document.getElementById('editGuardarBtn').addEventListener('click', async functi
 </script>
 
 <script>
+async function upsertTabla(endpoint, datos) {
+  if (!datos || !datos.length) return 0;
+  var res = await fetch(SUPABASE_URL + '/rest/v1/' + endpoint + '?on_conflict=id', {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'resolution=merge-duplicates'
+    },
+    body: JSON.stringify(datos)
+  });
+  if (!res.ok) throw new Error('Error ' + res.status + ' en ' + endpoint);
+  return datos.length;
+}
+
 document.getElementById('btnBackup').addEventListener('click', async function () {
   var s = document.getElementById('backupStatus');
   s.textContent = 'Descargando...';
   try {
-    var data = await peticionAuth(SUPABASE_URL + '/rest/v1/recipes?select=*&order=id.asc');
-    var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    var [recetas, consejos, usuarios] = await Promise.all([
+      peticionAuth(SUPABASE_URL + '/rest/v1/recipes?select=*&order=id.asc'),
+      peticionAuth(SUPABASE_URL + '/rest/v1/tips?select=*&order=id.asc'),
+      peticionAuth(SUPABASE_URL + '/rest/v1/usuarios?select=*&order=id.asc')
+    ]);
+    var backup = { recetas: recetas, consejos: consejos, usuarios: usuarios };
+    var blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
-    a.download = 'recetas-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+    a.download = 'backup-' + new Date().toISOString().slice(0, 10) + '.json';
     a.click();
     URL.revokeObjectURL(url);
-    s.textContent = '✅ ' + data.length + ' recetas descargadas';
+    s.textContent = '✅ ' + recetas.length + ' recetas, ' + consejos.length + ' consejos, ' + usuarios.length + ' usuarios';
   } catch (e) { s.textContent = '❌ ' + e.message; }
 });
 
@@ -322,20 +343,20 @@ document.getElementById('btnRestore').addEventListener('click', async function (
   s.textContent = 'Restaurando...';
   try {
     var text = await fileInput.files[0].text();
-    var recetas = JSON.parse(text);
-    if (!Array.isArray(recetas)) throw new Error('Formato inválido');
-    var res = await fetch(SUPABASE_URL + '/rest/v1/recipes?on_conflict=id', {
-      method: 'POST',
-      headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-        'Content-Type': 'application/json',
-        'Prefer': 'resolution=merge-duplicates'
-      },
-      body: JSON.stringify(recetas)
-    });
-    if (!res.ok) throw new Error('Error ' + res.status);
-    s.textContent = '✅ ' + recetas.length + ' recetas restauradas';
+    var data = JSON.parse(text);
+    var rRecetas = 0, rConsejos = 0, rUsuarios = 0;
+    if (Array.isArray(data)) {
+      rRecetas = await upsertTabla('recipes', data);
+    } else if (data.recetas || data.consejos || data.usuarios) {
+      var tareas = [];
+      if (data.recetas) tareas.push(upsertTabla('recipes', data.recetas).then(function (n) { rRecetas = n; }));
+      if (data.consejos) tareas.push(upsertTabla('tips', data.consejos).then(function (n) { rConsejos = n; }));
+      if (data.usuarios) tareas.push(upsertTabla('usuarios', data.usuarios).then(function (n) { rUsuarios = n; }));
+      await Promise.all(tareas);
+    } else {
+      throw new Error('Formato inválido');
+    }
+    s.textContent = '✅ ' + rRecetas + ' recetas, ' + rConsejos + ' consejos, ' + rUsuarios + ' usuarios';
   } catch (e) { s.textContent = '❌ ' + e.message; }
 });
 </script>
