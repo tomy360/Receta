@@ -126,6 +126,16 @@
     </div>
     <button class="login-btn" id="adminCargarUsuarios" style="margin-top:0.5rem;background:#6b7280;">Cargar usuarios</button>
 
+    <hr style="border:none;border-top:1px solid var(--borde,#e5e7eb);margin:1.5rem 0;">
+    <h3 style="font-size:1rem;margin:0 0 1rem;">💾 Backup de recetas</h3>
+    <button class="login-btn" id="btnBackup" style="background:#4CAF50;">⬇️ Descargar backup</button>
+    <div style="margin-top:1rem;">
+      <label style="display:block;font-size:0.875rem;font-weight:600;margin-bottom:0.4rem;">Restaurar backup</label>
+      <input type="file" id="fileRestore" accept=".json" style="margin-bottom:0.5rem;">
+      <button class="login-btn" id="btnRestore" style="background:#f59e0b;">📤 Restaurar</button>
+    </div>
+    <div id="backupStatus" style="margin-top:0.75rem;font-size:0.813rem;"></div>
+
     <p style="text-align:center;margin-top:1rem;"><a href="index.html" style="font-size:0.813rem;color:var(--texto-suave,#6b7280);">← Volver al inicio</a></p>
   </div>
 </div>
@@ -285,6 +295,48 @@ document.getElementById('editGuardarBtn').addEventListener('click', async functi
   } catch (e) {
     errorEl.textContent = 'Error al guardar: ' + e.message;
   }
+});
+</script>
+
+<script>
+document.getElementById('btnBackup').addEventListener('click', async function () {
+  var s = document.getElementById('backupStatus');
+  s.textContent = 'Descargando...';
+  try {
+    var data = await peticionAuth(SUPABASE_URL + '/rest/v1/recipes?select=*&order=id.asc');
+    var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'recetas-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    s.textContent = '✅ ' + data.length + ' recetas descargadas';
+  } catch (e) { s.textContent = '❌ ' + e.message; }
+});
+
+document.getElementById('btnRestore').addEventListener('click', async function () {
+  var fileInput = document.getElementById('fileRestore');
+  var s = document.getElementById('backupStatus');
+  if (!fileInput.files.length) { s.textContent = '⚠️ Seleccioná un archivo'; return; }
+  s.textContent = 'Restaurando...';
+  try {
+    var text = await fileInput.files[0].text();
+    var recetas = JSON.parse(text);
+    if (!Array.isArray(recetas)) throw new Error('Formato inválido');
+    var res = await fetch(SUPABASE_URL + '/rest/v1/recipes?on_conflict=id', {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify(recetas)
+    });
+    if (!res.ok) throw new Error('Error ' + res.status);
+    s.textContent = '✅ ' + recetas.length + ' recetas restauradas';
+  } catch (e) { s.textContent = '❌ ' + e.message; }
 });
 </script>
 
