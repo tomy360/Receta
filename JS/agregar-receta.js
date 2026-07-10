@@ -234,4 +234,52 @@ async function enviarFormulario() {
   window.location.href = 'index.html';
 }
 
-document.addEventListener('DOMContentLoaded', init);
+function configurarDropdownSugerencias() {
+  document.querySelectorAll('.drop-btn').forEach(function (btn) {
+    btn.addEventListener('click', async function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var targetId = btn.dataset.target;
+      var lista = document.getElementById('drop' + targetId.charAt(0).toUpperCase() + targetId.slice(1));
+      if (!lista.dataset.cargado) {
+        try {
+          var res = await peticion(SUPABASE_URL + '/rest/v1/recipes?select=autor,categorias');
+          var vals = new Set();
+          res.forEach(function (r) {
+            if (r.autor && r.autor.trim()) vals.add(r.autor.trim());
+            if (r.categorias) {
+              r.categorias.split(',').forEach(function (c) { if (c.trim()) vals.add(c.trim()); });
+            }
+          });
+          var ordenados = Array.from(vals).sort();
+          ordenados.forEach(function (v) {
+            var opt = document.createElement('button');
+            opt.textContent = v;
+            opt.type = 'button';
+            opt.addEventListener('click', function (ev) {
+              ev.stopPropagation();
+              var input = document.getElementById(targetId);
+              if (targetId === 'campoAutor') {
+                input.value = v;
+              } else {
+                var actuales = input.value ? input.value.split(',').map(function (s) { return s.trim(); }).filter(Boolean) : [];
+                if (actuales.indexOf(v) === -1) actuales.push(v);
+                input.value = actuales.join(', ');
+              }
+              lista.classList.add('oculto');
+            });
+            lista.appendChild(opt);
+          });
+        } catch (e) { return; }
+        lista.dataset.cargado = '1';
+      }
+      document.querySelectorAll('.drop-lista').forEach(function (l) { if (l !== lista) l.classList.add('oculto'); });
+      lista.classList.toggle('oculto');
+    });
+  });
+  document.addEventListener('click', function () {
+    document.querySelectorAll('.drop-lista').forEach(function (l) { l.classList.add('oculto'); });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function () { init(); configurarDropdownSugerencias(); });

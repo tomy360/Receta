@@ -161,9 +161,13 @@
             <textarea id="campoDescripcion" spellcheck="true" lang="es" autocorrect="on" placeholder="Una breve descripción de por qué te gusta esta receta..."></textarea>
           </div>
 
-          <div class="form-campo">
+          <div class="form-campo pos-rel">
             <label for="campoAutor">Autor</label>
-            <input type="text" id="campoAutor" placeholder="Ej: Tu nombre">
+            <div class="input-con-drop">
+              <input type="text" id="campoAutor" placeholder="Ej: Tu nombre">
+              <button type="button" class="drop-btn" data-target="campoAutor" title="Autores existentes">▼</button>
+            </div>
+            <div class="drop-lista oculto" id="dropAutor"></div>
           </div>
 
           <div class="form-fila">
@@ -200,9 +204,13 @@
               <label for="campoPersonas">Cantidad de personas</label>
               <input type="number" id="campoPersonas" placeholder="Ej: 4" min="0" step="1">
             </div>
-            <div class="form-campo campo-ancho2">
+            <div class="form-campo campo-ancho2 pos-rel">
               <label for="campoCategorias">Categorías (Opcional)</label>
-              <input type="text" id="campoCategorias" spellcheck="true" lang="es" autocorrect="on" placeholder="Ej: tartas, guisos, pastas, ensaladas">
+              <div class="input-con-drop">
+                <input type="text" id="campoCategorias" spellcheck="true" lang="es" autocorrect="on" placeholder="Ej: tartas, guisos, pastas, ensaladas">
+                <button type="button" class="drop-btn" data-target="campoCategorias" title="Categorías existentes">▼</button>
+              </div>
+              <div class="drop-lista oculto" id="dropCategorias"></div>
               <p class="ayuda">Separa con comas para poder filtrar. Ej: <strong>tartas, pastas, guisos</strong></p>
             </div>
             <div class="form-campo campo-ancho2">

@@ -1601,7 +1601,25 @@ html.modo-noche .ordenar-opcion:hover {
   box-shadow: 0 0 0 3px var(--sombra-v);
 }
 
+.form-campo.pos-rel { position: relative; }
+
 .form-campo textarea { min-height: 80px; resize: vertical; }
+
+.input-con-drop { display: flex; gap: 0.25rem; }
+.input-con-drop input { flex: 1; }
+
+.drop-btn { width: 36px; height: 36px; border: 1px solid var(--borde); border-radius: 0.5rem; background: var(--blanco); cursor: pointer; font-size: 0.65rem; display: grid; place-items: center; padding: 0; flex-shrink: 0; align-self: flex-start; transition: background 0.15s; user-select: none; }
+.drop-btn:hover { background: var(--crema-medio); }
+
+.drop-lista { position: absolute; z-index: 20; top: 100%; left: 0; right: 0; background: var(--blanco); border: 1px solid var(--borde); border-radius: 0.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.1); max-height: 160px; overflow-y: auto; margin-top: -0.5rem; }
+.drop-lista button { display: block; width: 100%; padding: 0.4rem 0.75rem; border: none; background: transparent; text-align: left; cursor: pointer; font-size: 0.813rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.drop-lista button:hover { background: var(--crema-medio); }
+
+html.modo-noche .drop-btn { background: var(--fondo-tarjeta); border-color: #555; color: var(--texto-claro); }
+html.modo-noche .drop-btn:hover { background: #2a3220; }
+html.modo-noche .drop-lista { background: var(--fondo-tarjeta); border-color: #555; }
+html.modo-noche .drop-lista button { color: var(--texto); }
+html.modo-noche .drop-lista button:hover { background: #3a4a2a; }
 
 .form-error {
   color: #dc2626;
