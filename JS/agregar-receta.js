@@ -246,9 +246,12 @@ function configurarDropdownSugerencias() {
           var res = await peticion(SUPABASE_URL + '/rest/v1/recipes?select=autor,categorias');
           var vals = new Set();
           res.forEach(function (r) {
-            if (r.autor && r.autor.trim()) vals.add(r.autor.trim());
-            if (r.categorias) {
-              r.categorias.split(',').forEach(function (c) { if (c.trim()) vals.add(c.trim()); });
+            if (targetId === 'campoAutor') {
+              if (r.autor && r.autor.trim()) vals.add(r.autor.trim());
+            } else {
+              if (r.categorias) {
+                r.categorias.split(',').forEach(function (c) { if (c.trim()) vals.add(c.trim()); });
+              }
             }
           });
           var ordenados = Array.from(vals).sort();
