@@ -240,7 +240,7 @@ function configurarDropdownSugerencias() {
       e.preventDefault();
       e.stopPropagation();
       var targetId = btn.dataset.target;
-      var lista = document.getElementById('drop' + targetId.charAt(0).toUpperCase() + targetId.slice(1));
+      var lista = document.getElementById(btn.dataset.drop);
       if (!lista.dataset.cargado) {
         try {
           var res = await peticion(SUPABASE_URL + '/rest/v1/recipes?select=autor,categorias');
