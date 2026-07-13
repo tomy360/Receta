@@ -29,6 +29,7 @@ let ordenDificultadAsc = true;
 let ordenTiempoAsc = true;
 let ordenFavoritosAsc = true;
 let ordenSubidaAsc = false;
+let ordenPuntuacionAsc = false;
 
 function parseTiempoAMinutos(str) {
   if (!str) return Infinity;
@@ -110,6 +111,10 @@ function ordenarRecetas(lista) {
       var tb = new Date(b.created_at).getTime();
       return ordenSubidaAsc ? ta - tb : tb - ta;
     });
+  } else if (ordenActual === 'puntuacion') {
+    copia.sort(function(a, b) {
+      return ordenPuntuacionAsc ? a.puntuacion - b.puntuacion : b.puntuacion - a.puntuacion;
+    });
   }
   return copia;
 }
@@ -117,7 +122,7 @@ function ordenarRecetas(lista) {
 function actualizarBotonOrdenar() {
   var btn = document.getElementById('btnOrdenar');
   if (!btn) return;
-  var textos = { 'none': '🔽 Ordenar', 'momento': '📋 Momento 🔽', 'dificultad': '📊 Dificultad 🔽', 'tiempo': '⏱️ Tiempo 🔽', 'favoritos': '❤️ Favoritos 🔽', 'subida': '📅 Subida 🔽' };
+  var textos = { 'none': '🔽 Ordenar', 'momento': '📋 Momento 🔽', 'dificultad': '📊 Dificultad 🔽', 'tiempo': '⏱️ Tiempo 🔽', 'favoritos': '❤️ Favoritos 🔽', 'subida': '📅 Subida 🔽', 'puntuacion': '★ Puntuación 🔽' };
   btn.textContent = textos[ordenActual] || textos['none'];
 }
 
@@ -222,6 +227,8 @@ async function init() {
           ordenFavoritosAsc = !ordenFavoritosAsc;
         } else if (criterio === 'subida') {
           ordenSubidaAsc = !ordenSubidaAsc;
+        } else if (criterio === 'puntuacion') {
+          ordenPuntuacionAsc = !ordenPuntuacionAsc;
         }
       } else {
         ordenActual = criterio;
@@ -230,6 +237,7 @@ async function init() {
         else if (criterio === 'tiempo') ordenTiempoAsc = true;
         else if (criterio === 'favoritos') ordenFavoritosAsc = true;
         else if (criterio === 'subida') ordenSubidaAsc = false;
+        else if (criterio === 'puntuacion') ordenPuntuacionAsc = false;
       }
       actualizarBotonOrdenar();
       actualizarDropdownOrden();
@@ -257,6 +265,9 @@ async function init() {
 
   var filtroFavGrupo = document.querySelector('.panel-filtros .filtro-grupo:nth-child(6)');
   if (filtroFavGrupo) filtroFavGrupo.style.display = estaLogueado() ? '' : 'none';
+  document.querySelectorAll('.ordenar-opcion.solo-login').forEach(function(el) {
+    el.style.display = estaLogueado() ? '' : 'none';
+  });
 
   var spinner = document.getElementById('spinner-global');
   if (spinner) spinner.classList.add('ocultar');
