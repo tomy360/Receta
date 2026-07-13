@@ -2319,6 +2319,41 @@ html.modo-noche .porciones-btn:hover { background: var(--verde-oscuro); color: v
 /* ========== PLANIFICADOR ========== */
 .planificador-page { padding-bottom: 3rem; }
 
+.calendario-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  width: 48px;
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+.cal-mes {
+  background: #e74c3c;
+  color: #fff;
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  width: 100%;
+  text-align: center;
+  padding: 3px 0;
+  line-height: 1.2;
+}
+.cal-dia {
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1.3;
+  padding: 1px 0;
+  color: #333;
+}
+html.modo-noche .calendario-badge { background: var(--fondo-tarjeta); border-color: #555; }
+html.modo-noche .cal-dia { color: var(--texto-claro); }
+
 .plan-dias {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));

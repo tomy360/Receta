@@ -220,7 +220,20 @@ function cerrarSelector() {
   selectorVisible = false;
 }
 
+function actualizarCalendario() {
+  var hoy = new Date();
+  var meses = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+  var badge = document.getElementById('calendarioBadge');
+  if (badge) {
+    badge.querySelector('.cal-mes').textContent = meses[hoy.getMonth()];
+    badge.querySelector('.cal-dia').textContent = hoy.getDate();
+  }
+  var maniana = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + 1);
+  setTimeout(actualizarCalendario, maniana - hoy);
+}
+
 document.addEventListener('DOMContentLoaded', async function () {
+  actualizarCalendario();
   await renderizarPlan();
   var btn = document.getElementById('btnLimpiarPlan');
   if (btn) btn.addEventListener('click', async function () { await limpiarPlan(); });
