@@ -112,10 +112,28 @@
     </div>
     <div class="encabezado-acciones">
       <button class="btn-filtro" id="btnLimpiarPlan">🗑️ Limpiar semana</button>
+      <button class="btn-filtro" id="btnListaCompras">🛒 Lista de compras</button>
     </div>
   </div>
 
   <div class="planificador-grid" id="planificadorGrid">
+  </div>
+</div>
+
+<!-- LISTA DE COMPRAS MODAL -->
+<div class="modal oculto" id="modalListaCompras" onclick="if(event.target===this)cerrarListaCompras()">
+  <div class="modal-contenido modal-lista-compras">
+    <button class="modal-cerrar" onclick="cerrarListaCompras()">✕</button>
+    <h3>🛒 Calculadora de ingredientes</h3>
+    <p class="ayuda">Seleccioná las recetas que vas a cocinar para armar tu lista del super.</p>
+    <div class="lista-compras-recetas" id="listaComprasRecetas">
+      <p class="ayuda" id="listaComprasCarga">Cargando recetas...</p>
+    </div>
+    <button class="btn-guardar" id="btnGenerarLista" style="display:none">🧮 Generar lista</button>
+    <div class="lista-compras-resultado oculto" id="listaComprasResultado">
+      <h4>🧾 Lista de ingredientes</h4>
+      <ul id="listaComprasIngredientes"></ul>
+    </div>
   </div>
 </div>
 

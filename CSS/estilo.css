@@ -2176,6 +2176,53 @@ html.modo-noche .card-fav-btn {
   color: var(--verde-oscuro);
 }
 
+.modal-lista-compras { max-width: 28rem; }
+
+.lista-compras-recetas {
+  max-height: 260px;
+  overflow-y: auto;
+  margin: 0.75rem 0;
+  border: 1px solid var(--borde);
+  border-radius: 0.5rem;
+  padding: 0.25rem 0;
+}
+
+.lista-compras-receta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.1s;
+}
+.lista-compras-receta:hover { background: var(--crema-medio); }
+.lista-compras-receta input { accent-color: var(--verde); }
+
+.lista-compras-resultado { margin-top: 1rem; }
+.lista-compras-resultado h4 { font-size: 1rem; margin-bottom: 0.5rem; }
+.lista-compras-resultado ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  columns: 2;
+  column-gap: 1.5rem;
+}
+.lista-compras-resultado li {
+  padding: 0.2rem 0;
+  font-size: 0.813rem;
+  break-inside: avoid;
+}
+.lista-compras-resultado li::before {
+  content: '• ';
+  color: var(--verde);
+  font-weight: 700;
+}
+
+html.modo-noche .lista-compras-recetas { border-color: #555; }
+html.modo-noche .lista-compras-receta:hover { background: #2a3220; }
+html.modo-noche .lista-compras-receta input { accent-color: var(--verde-claro); }
+
 html.modo-noche .timer-display { color: var(--verde-claro); }
 
 .timer-barra-track {

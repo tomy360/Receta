@@ -232,9 +232,71 @@ function actualizarCalendario() {
   setTimeout(actualizarCalendario, maniana - hoy);
 }
 
+function abrirListaCompras() {
+  var modal = document.getElementById('modalListaCompras');
+  if (!modal) return;
+  modal.classList.remove('oculto');
+  var contenedor = document.getElementById('listaComprasRecetas');
+  var btnGenerar = document.getElementById('btnGenerarLista');
+  var resultado = document.getElementById('listaComprasResultado');
+  resultado.classList.add('oculto');
+  btnGenerar.style.display = 'none';
+  contenedor.innerHTML = '<p class="ayuda">Cargando recetas...</p>';
+  obtenerRecetas().then(function (recetas) {
+    obtenerPlan().then(function (plan) {
+      var idsEnPlan = {};
+      Object.keys(plan).forEach(function (dia) {
+        Object.keys(plan[dia]).forEach(function (comida) {
+          if (comida !== 'colapsado' && plan[dia][comida] && plan[dia][comida].id) {
+            idsEnPlan[plan[dia][comida].id] = true;
+          }
+        });
+      });
+      var html = '';
+      recetas.forEach(function (r) {
+        var checked = idsEnPlan[r.id] ? 'checked' : '';
+        html += '<label class="lista-compras-receta"><input type="checkbox" class="lcr-checkbox" data-id="' + r.id + '" ' + checked + '> ' + r.titulo + '</label>';
+      });
+      contenedor.innerHTML = html;
+      btnGenerar.style.display = '';
+    });
+  });
+}
+
+function generarLista() {
+  var checkboxes = document.querySelectorAll('.lcr-checkbox:checked');
+  if (!checkboxes.length) { alert('Seleccioná al menos una receta.'); return; }
+  var ids = Array.from(checkboxes).map(function (cb) { return cb.dataset.id; });
+  obtenerRecetas().then(function (recetas) {
+    var todos = new Set();
+    var recetasSel = recetas.filter(function (r) { return ids.indexOf(r.id) !== -1; });
+    recetasSel.forEach(function (r) {
+      (r.preparaciones || []).forEach(function (p) {
+        (p.ingredientes || []).forEach(function (ing) {
+          var limpio = ing.trim();
+          if (limpio) todos.add(limpio);
+        });
+      });
+    });
+    var lista = Array.from(todos).sort(function (a, b) { return a.localeCompare(b); });
+    var ul = document.getElementById('listaComprasIngredientes');
+    ul.innerHTML = lista.map(function (i) { return '<li>' + i + '</li>'; }).join('');
+    document.getElementById('listaComprasResultado').classList.remove('oculto');
+  });
+}
+
+function cerrarListaCompras() {
+  var modal = document.getElementById('modalListaCompras');
+  if (modal) modal.classList.add('oculto');
+}
+
 document.addEventListener('DOMContentLoaded', async function () {
   actualizarCalendario();
   await renderizarPlan();
   var btn = document.getElementById('btnLimpiarPlan');
   if (btn) btn.addEventListener('click', async function () { await limpiarPlan(); });
+  var btnLista = document.getElementById('btnListaCompras');
+  if (btnLista) btnLista.addEventListener('click', abrirListaCompras);
+  var btnGen = document.getElementById('btnGenerarLista');
+  if (btnGen) btnGen.addEventListener('click', generarLista);
 });
