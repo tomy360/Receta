@@ -257,18 +257,36 @@ function abrirListaCompras() {
         resultado.innerHTML = '<p class="ayuda" style="text-align:center;padding:1rem 0;">No se encontraron las recetas del plan.</p>';
         return;
       }
-      var todos = new Set();
+      var grupos = {};
       recetasPlan.forEach(function (r) {
         (r.preparaciones || []).forEach(function (p) {
           (p.ingredientes || []).forEach(function (ing) {
-            var limpio = ing.trim();
-            if (limpio) todos.add(limpio);
+            var t = ing.trim();
+            if (!t) return;
+            var cantidad = parseInt(t.match(/^\d+/), 10) || 0;
+            var key = t.toLowerCase()
+              .replace(/[.,;!?]+$/g, '')
+              .replace(/^\d+[a-z]*\s+/, '')
+              .trim()
+              .replace(/s$/, '');
+            if (!key) return;
+            if (!grupos[key]) grupos[key] = { total: 0, nombre: key };
+            grupos[key].total += cantidad;
           });
         });
       });
-      var lista = Array.from(todos).sort(function (a, b) { return a.localeCompare(b); });
+      var lineas = [];
+      Object.keys(grupos).sort().forEach(function (key) {
+        var g = grupos[key];
+        if (g.total > 0) {
+          var nombre = g.total > 1 ? g.nombre + (g.nombre.endsWith('s') ? '' : 's') : g.nombre;
+          lineas.push(g.total + ' ' + nombre);
+        } else {
+          lineas.push(g.nombre);
+        }
+      });
       var html = '<h4>🧾 Ingredientes</h4><ul>';
-      html += lista.map(function (i) { return '<li>' + i + '</li>'; }).join('');
+      html += lineas.map(function (i) { return '<li>' + i + '</li>'; }).join('');
       html += '</ul>';
       resultado.innerHTML = html;
     });
