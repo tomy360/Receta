@@ -258,20 +258,38 @@ function abrirListaCompras() {
         return;
       }
       var grupos = {};
+      function normFrac(s) {
+        return s.replace(/½/g,'1/2').replace(/¼/g,'1/4').replace(/¾/g,'3/4');
+      }
       recetasPlan.forEach(function (r) {
         (r.preparaciones || []).forEach(function (p) {
           (p.ingredientes || []).forEach(function (ing) {
             var t = ing.trim();
             if (!t) return;
-            var cantidad = parseInt(t.match(/^\d+/), 10) || 0;
-            var key = t.toLowerCase()
-              .replace(/[.,;!?]+$/g, '')
-              .replace(/^\d+[a-z]*\s+/, '')
-              .trim()
-              .replace(/s$/, '');
-            if (!key) return;
-            if (!grupos[key]) grupos[key] = { total: 0, nombre: key };
-            grupos[key].total += cantidad;
+            var partes = t.split(',').map(function(s){return s.trim();}).filter(Boolean);
+            partes.forEach(function(parte) {
+              var s = normFrac(parte);
+              s = s.replace(/([a-zA-Záéíóúñ])\.(?=\s|$)/g, '$1');
+              var cantidad = 0;
+              var resto = s;
+              var m = s.match(/^(\d+)\s+(\d+)\s*\/\s*(\d+)/);
+              if (m) { cantidad = parseInt(m[1]) + parseInt(m[2])/parseInt(m[3]); resto = s.slice(m[0].length); }
+              else { m = s.match(/^(\d+)\s*\/\s*(\d+)/); if (m) { cantidad = parseInt(m[1])/parseInt(m[2]); resto = s.slice(m[0].length); } }
+              resto = resto.trim();
+              var uMatch = resto.match(/^([a-zA-Záéíóúñ]+)\s+/);
+              var unidad = '';
+              if (uMatch && ['g','gr','kg','ml','cc','l','cda','cdita','cdta','taza','tazas','pizca','puñado','cucharada','cucharadita','vaso','diente','dientes'].indexOf(uMatch[1].toLowerCase()) !== -1) {
+                unidad = uMatch[1]; resto = resto.slice(uMatch[0].length).trim();
+              }
+              var nombreDisplay = resto.trim();
+              var key = resto.replace(/^de\s+(la\s+|los\s+|las\s+)?/i, '').trim().toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/[.,;!?]+$/g, '').trim().replace(/s$/, '');
+              if (!key) return;
+              if (!grupos[key]) grupos[key] = { total: 0, unidad: unidad, nombre: nombreDisplay };
+              grupos[key].total += cantidad;
+              if (!grupos[key].unidad && unidad) grupos[key].unidad = unidad;
+            });
           });
         });
       });
@@ -279,8 +297,11 @@ function abrirListaCompras() {
       Object.keys(grupos).sort().forEach(function (key) {
         var g = grupos[key];
         if (g.total > 0) {
-          var nombre = g.total > 1 ? g.nombre + (g.nombre.endsWith('s') ? '' : 's') : g.nombre;
-          lineas.push(g.total + ' ' + nombre);
+          var totalStr = Number.isInteger(g.total) ? g.total.toString() : g.total.toFixed(2).replace(/\.?0+$/,'');
+          var arr = [totalStr];
+          if (g.unidad) arr.push(g.unidad);
+          arr.push(g.nombre);
+          lineas.push(arr.join(' '));
         } else {
           lineas.push(g.nombre);
         }
