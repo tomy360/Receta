@@ -234,6 +234,7 @@ function renderizarDetalle() {
   var favBtn = logueado ? `<button class="btn-accion btn-fav" id="btnFavDetalle" onclick="toggleFavoritoDetalle()">🤍 Favorito</button>` : '';
   var eliminarBtn = logueado ? `<button class="btn-accion btn-eliminar" onclick="eliminarRecetaActual()">🗑️ Eliminar receta</button>` : '';
 
+  document.title = r.titulo + ' — Recetas del día';
   contenedor.innerHTML = `
     <div class="detalle-volver">
       <a href="index.html">

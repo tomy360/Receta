@@ -118,7 +118,7 @@ async function enviarFormulario() {
 
   // Si está vacío usa una imagen por defecto
   if (!imagen) {
-    imagen = './Imagenes/Recetas/sin-imagen.jpg';
+    imagen = './Imagenes/Recetas/sin-imagen.webp';
   }
   // Si no es una URL, asume que está en Imagenes/Recetas
   else if (
@@ -128,6 +128,11 @@ async function enviarFormulario() {
     !imagen.startsWith('../')
   ) {
     imagen = './Imagenes/Recetas/' + imagen;
+    var partes = imagen.split('/');
+    var archivo = partes[partes.length - 1];
+    if (archivo.indexOf('.') === -1) {
+      imagen += '.webp';
+    }
   }
 
   const videoUrl = document.getElementById('campoVideo').value.trim();
