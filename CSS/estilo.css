@@ -2176,9 +2176,9 @@ html.modo-noche .card-fav-btn {
   color: var(--verde-oscuro);
 }
 
-.modal-lista-compras { max-width: 28rem; }
+.modal-lista-compras { max-width: 28rem; max-height: 80vh; display: flex; flex-direction: column; overflow: hidden; }
 
-.lista-compras-resultado { margin-top: 0.75rem; }
+.lista-compras-resultado { margin-top: 0.75rem; overflow-y: auto; flex: 1; min-height: 0; }
 .lista-compras-resultado h4 { font-size: 1rem; margin-bottom: 0.5rem; }
 .lista-compras-resultado ul {
   list-style: none;
@@ -2196,6 +2196,11 @@ html.modo-noche .card-fav-btn {
   content: '• ';
   color: var(--verde);
   font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  .lista-compras-resultado ul { columns: 1; }
+  .modal-lista-compras { max-width: 95vw; }
 }
 
 html.modo-noche .timer-display { color: var(--verde-claro); }
