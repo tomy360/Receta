@@ -77,7 +77,7 @@
       return;
     }
     var item = e.target.closest('.pendientes-lista-item');
-    if (item) {
+    if (item && !e.target.closest('a')) {
       e.preventDefault();
       seleccionada = item.dataset.id;
       renderizar();
