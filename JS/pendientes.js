@@ -35,6 +35,7 @@
         '<div class="pendientes-lista-item-tipo">' + r.tipo + '</div>' +
         '<div class="pendientes-lista-item-nombre-row">' +
           '<span class="pendientes-lista-item-nombre">' + r.titulo + '</span>' +
+          '<a class="pend-abrir-btn" href="receta.html?id=' + r.id + '" title="Abrir receta">🔗</a>' +
           '<button class="pend-remove-btn" data-id="' + r.id + '" title="Quitar de pendientes">🗑️</button>' +
         '</div>' +
         '<div class="pendientes-lista-item-meta">' +
@@ -53,37 +54,10 @@
       detalle.innerHTML = '<p class="pendientes-detalle-vacio">Seleccioná una receta de la lista</p>';
       return;
     }
-    var estrellas = '★'.repeat(Math.round(r.puntuacion));
-    var estrellaVacia = '☆'.repeat(5 - Math.round(r.puntuacion));
     detalle.innerHTML =
-      '<div class="tarjeta visible">' +
-        '<a href="receta.html?id=' + r.id + '">' +
-          '<div class="tarjeta-imagen" style="background-image:url(\'' + r.imagen + '\')">' +
-            '<span class="tarjeta-tipo">' + r.tipo + '</span>' +
-          '</div>' +
-          '<div class="tarjeta-info">' +
-            '<div class="tarjeta-puntuacion">' +
-              '<span class="estrella">' + estrellas + estrellaVacia + '</span>' +
-              '<span>' + r.puntuacion + '</span>' +
-              '<span class="resenas-count">(' + r.resenas.length + ' reseñas)</span>' +
-            '</div>' +
-            '<h3 class="tarjeta-titulo">' + r.titulo + '</h3>' +
-            '<p class="tarjeta-descripcion">' + r.descripcion + '</p>' +
-            '<div class="tarjeta-autor">✍️ ' + (r.autor || 'Anónimo') + '</div>' +
-            (r.categorias || r.dieta ? '<div class="tarjeta-meta">' +
-              (r.categorias ? '<div class="tarjeta-categorias">' + r.categorias.split(',').map(function(c) { return '<span class="mini-categoria">' + c.trim() + '</span>'; }).join('') + '</div>' : '') +
-              (r.dieta ? '<span class="tarjeta-dieta">🥗 ' + r.dieta + '</span>' : '') +
-            '</div>' : '') +
-            '<div class="tarjeta-footer">' +
-              '<span>🕐 ' + r.tiempo + '</span>' +
-              '<span>📊 ' + r.dificultad + '</span>' +
-              '<span>👥 ' + (r.personas > 0 ? r.personas : '—') + ' pers.</span>' +
-            '</div>' +
-          '</div>' +
-        '</a>' +
-        '<div style="padding:0.75rem 1rem 1rem;text-align:center;">' +
-          '<a class="BotonP" href="receta.html?id=' + r.id + '" style="display:inline-block;">🔗 Abrir receta</a>' +
-        '</div>' +
+      crearTarjeta(r).replace('class="tarjeta"', 'class="tarjeta visible"') +
+      '<div style="padding:0.75rem 1rem 1rem;text-align:center;">' +
+        '<a class="BotonP" href="receta.html?id=' + r.id + '" style="display:inline-block;">🔗 Abrir receta</a>' +
       '</div>';
   }
 
