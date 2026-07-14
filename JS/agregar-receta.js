@@ -187,9 +187,11 @@ async function enviarFormulario() {
     });
   });
 
+  var destinoId;
   if (editandoId) {
+    destinoId = editandoId;
     var todas = await obtenerRecetas();
-    var existente = todas.find(function (r) { return r.id === editandoId; });
+    var existente = todas.find(function (r) { return r.id === destinoId; });
 
     if (existente) {
       await actualizarReceta({
@@ -212,8 +214,9 @@ async function enviarFormulario() {
       });
     }
   } else {
+    destinoId = Date.now().toString();
     await guardarReceta({
-      id: Date.now().toString(),
+      id: destinoId,
       titulo: titulo,
       descripcion: descripcion,
       tipo: tipo,
@@ -236,7 +239,7 @@ async function enviarFormulario() {
     });
   }
 
-  window.location.href = 'index.html';
+  window.location.href = 'receta.html?id=' + destinoId;
 }
 
 function configurarDropdownSugerencias() {
