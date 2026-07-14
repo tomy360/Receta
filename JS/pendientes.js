@@ -32,7 +32,7 @@
     grid.innerHTML = pendientesRecetas.map(function (r) {
       var estrellas = '★'.repeat(Math.round(r.puntuacion));
       var estrellaVacia = '☆'.repeat(5 - Math.round(r.puntuacion));
-      return '<div class="tarjeta" data-pend-id="' + r.id + '">' +
+      return '<div class="tarjeta visible" data-pend-id="' + r.id + '">' +
         '<button class="pend-remove-btn" data-id="' + r.id + '" title="Quitar de pendientes">🗑️</button>' +
         '<a href="receta.html?id=' + r.id + '">' +
           '<div class="tarjeta-imagen" style="background-image:url(\'' + r.imagen + '\')">' +
