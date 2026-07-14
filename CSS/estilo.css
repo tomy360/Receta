@@ -2707,8 +2707,7 @@ html.modo-noche .consejo-badge-categoria { background: #2a3a1a; color: var(--ver
 }
 
 .emoji-popup { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--blanco); border: 1.5px solid var(--borde); border-radius: 1rem; box-shadow: 0 8px 32px rgba(0,0,0,0.15); padding: 0.75rem; max-width: 440px; width: 94vw; z-index: 10001; max-height: 420px; overflow-y: auto; }
-.emoji-tabs { display: flex; gap: 0.35rem; overflow-x: auto; white-space: nowrap; padding-bottom: 0.5rem; margin-bottom: 0.4rem; scrollbar-width: none; -ms-overflow-style: none; }
-.emoji-tabs::-webkit-scrollbar { display: none; }
+.emoji-tabs { display: flex; flex-wrap: wrap; gap: 0.35rem; padding-bottom: 0.5rem; margin-bottom: 0.4rem; }
 .emoji-tab { border: 1px solid var(--borde); background: var(--blanco); border-radius: 1.5rem; padding: 0.25rem 0.65rem; font-size: 0.78rem; cursor: pointer; color: var(--texto-med); transition: all 0.15s; flex-shrink: 0; }
 .emoji-tab:hover { border-color: var(--verde-claro); color: var(--verde-hover); }
 .emoji-tab.activo { background: var(--verde); color: #fff; border-color: var(--verde); }

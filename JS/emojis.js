@@ -21,7 +21,7 @@ var MAPA_EMOJIS = {
   'tostador': { src: 'Tostador.png' }
 };
 
-var CATEGORIAS_EMOJIS = [
+var CATEGORIAS_EMOJIS_BASE = [
   { icono: '😀', nombre: 'Caras', emojis: ['😀','😂','🥰','😍','🥲','😋','😥','😢','😭','😱','😡','👨‍🍳','👩‍🍳','🧑‍🍳','👌','✨'] },
   { icono: '🍎', nombre: 'Frutas', emojis: ['🍇','🍈','🍉','🍊','🍋','🍌','🍍','🥭','🍎','🍏','🍐','🍑','🍒','🍓','🫐','🥝','🥥'] },
   { icono: '🥕', nombre: 'Verduras', emojis: ['🍅','🫒','🥑','🍆','🥔','🥕','🌽','🌶️','🫑','🥒','🫜','🍄','🫛','🫚','🌰','🫘','🥜','🧅','🧄','🥦','🥬'] },
@@ -30,6 +30,18 @@ var CATEGORIAS_EMOJIS = [
   { icono: '☕', nombre: 'Bebidas', emojis: ['☕','🫖','🍵','🍾','🍶','🍷','🍸','🍹','🍺','🍻','🥂','🥃','🫗','🥤','🧋','🧃','🧉','🧊','🥛','🍼'] },
   { icono: '🔪', nombre: 'Cocina', emojis: ['🥄','🍴','🍽️','🔪','🥢','🫙','🔥','💧','❄️','🌡️','⏲️','⌛','⏳','⚖️','🛒','🛍️'] }
 ];
+
+var todosUnicos = [];
+for (var _bi = 0; _bi < CATEGORIAS_EMOJIS_BASE.length; _bi++) {
+  var _cat = CATEGORIAS_EMOJIS_BASE[_bi];
+  for (var _bj = 0; _bj < _cat.emojis.length; _bj++) {
+    if (todosUnicos.indexOf(_cat.emojis[_bj]) === -1) todosUnicos.push(_cat.emojis[_bj]);
+  }
+}
+
+var CATEGORIAS_EMOJIS = [
+  { icono: '🌟', nombre: 'Todos', emojis: todosUnicos }
+].concat(CATEGORIAS_EMOJIS_BASE);
 
 var LISTA_EMOJIS_MODERNOS = ['alimento','flan','panadero','unicornio','aceite','batidora','cafe','caserola','cubiertos','cuchillo','espatula','heladera','licuadora','microondas','pava','rayador','sarten','tabla','te','tostador'];
 
