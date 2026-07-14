@@ -340,6 +340,7 @@ btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth"
 </script>
 
 <script>
+(function () { var m = document.getElementById('navMobileMenu'); if (m) { m.style.transition = 'none'; m.classList.add('visible'); void m.offsetHeight; m.classList.remove('visible'); requestAnimationFrame(function () { m.style.transition = ''; }); } })();
 (function () {
   const hamburger = document.getElementById('navHamburger');
   const menu      = document.getElementById('navMobileMenu');

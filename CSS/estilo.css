@@ -164,8 +164,10 @@ nav {
   flex-direction: column;
   gap: 0.25rem;
   z-index: 99;
-  transform: translateY(-8px);
+  transform: translateY(-8px) translateZ(0);
   opacity: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, visibility 0.25s ease;
 }
 
