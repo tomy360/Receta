@@ -2036,12 +2036,19 @@ html.modo-noche .sugerencia-receta { color: var(--verde-claro); }
 }
 .card-pend-activo {
   opacity: 1;
-  background: rgba(254,243,199,0.85);
-  color: #b45309;
+  background: #fbbf24;
+  color: #78350f;
+  transform: scale(1.15);
+  box-shadow: 0 0 8px rgba(251,191,36,0.5);
+  animation: pulse-pend 2s ease-in-out infinite;
 }
 .card-pend-activo:hover {
   opacity: 1;
-  background: rgba(254,243,199,0.95);
+  transform: scale(1.25);
+}
+@keyframes pulse-pend {
+  0%, 100% { box-shadow: 0 0 8px rgba(251,191,36,0.5); }
+  50% { box-shadow: 0 0 14px rgba(251,191,36,0.8); }
 }
 html.modo-noche .card-pend-btn {
   background: rgba(30,30,30,0.85);
@@ -2050,8 +2057,9 @@ html.modo-noche .card-pend-btn:hover {
   background: rgba(50,50,50,0.95);
 }
 html.modo-noche .card-pend-activo {
-  background: rgba(120,80,20,0.7);
-  color: #fbbf24;
+  background: rgba(180,120,30,0.8);
+  color: #fde68a;
+  box-shadow: 0 0 8px rgba(251,191,36,0.3);
 }
 
 .pend-remove-btn {
