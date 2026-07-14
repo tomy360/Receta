@@ -306,6 +306,7 @@ btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth"
     overlay.classList.add('visible');
     hamburger.setAttribute('aria-expanded', 'true');
     document.body.style.overflow = 'hidden';
+    [].slice.call(menu.children).forEach(function(el, i) { el.style.setProperty('--i', i); });
   }
 
   function cerrar() {

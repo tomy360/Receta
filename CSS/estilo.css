@@ -158,8 +158,9 @@ nav {
   right: 0;
   background: var(--blanco);
   border-bottom: 1.5px solid var(--crema-medio);
-  box-shadow: 0 8px 24px rgba(154,177,122,0.15);
-  padding: 1rem 1.5rem 1.25rem;
+  border-radius: 0 0 1.25rem 1.25rem;
+  box-shadow: 0 16px 40px rgba(154,177,122,0.22), 0 2px 8px rgba(0,0,0,0.06);
+  padding: 1rem 1.5rem calc(1.25rem + env(safe-area-inset-bottom));
   flex-direction: column;
   gap: 0.25rem;
   z-index: 99;
@@ -235,6 +236,28 @@ nav {
   opacity: 1;
   visibility: visible;
 }
+
+/* ========== MOBILE NAV STAGGER ========== */
+@keyframes navLinkIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.nav-mobile-menu.visible > * {
+  animation: navLinkIn 0.35s ease both;
+}
+.nav-mobile-menu.visible > *:nth-child(1)  { animation-delay: 0.035s; }
+.nav-mobile-menu.visible > *:nth-child(2)  { animation-delay: 0.07s;  }
+.nav-mobile-menu.visible > *:nth-child(3)  { animation-delay: 0.105s; }
+.nav-mobile-menu.visible > *:nth-child(4)  { animation-delay: 0.14s;  }
+.nav-mobile-menu.visible > *:nth-child(5)  { animation-delay: 0.175s; }
+.nav-mobile-menu.visible > *:nth-child(6)  { animation-delay: 0.21s;  }
+.nav-mobile-menu.visible > *:nth-child(7)  { animation-delay: 0.245s; }
+.nav-mobile-menu.visible > *:nth-child(8)  { animation-delay: 0.28s;  }
+.nav-mobile-menu.visible > *:nth-child(9)  { animation-delay: 0.315s; }
+.nav-mobile-menu.visible > *:nth-child(10) { animation-delay: 0.35s;  }
+.nav-mobile-menu.visible > *:nth-child(11) { animation-delay: 0.385s; }
+.nav-mobile-menu.visible > *:nth-child(12) { animation-delay: 0.42s;  }
 
 @media (max-width: 900px) {
   .BotonBa:not(.activo):not(:first-child):not(:last-child) {
@@ -2137,7 +2160,7 @@ html.modo-noche nav {
 html.modo-noche .nav-mobile-menu {
   background: #1e2615;
   border-color: #2a3220;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.3);
 }
 
 html.modo-noche .form-campo input,
@@ -2840,6 +2863,7 @@ html.modo-noche .tarjeta-imagen img, html.modo-noche .detalle-imagen img {
 }
 .nav-mobile-submenu-items.visible {
   max-height: 400px;
+  padding: 0.5rem 0 0.5rem 1.5rem;
 }
 
 /* ========== NOTAS AUTOR ========== */

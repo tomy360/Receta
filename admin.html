@@ -384,7 +384,7 @@ document.getElementById('btnRestore').addEventListener('click', async function (
   const hamburger = document.getElementById('navHamburger');
   const menu = document.getElementById('navMobileMenu');
   const overlay = document.getElementById('navOverlay');
-  function abrir() { hamburger.classList.add('abierto'); menu.classList.add('visible'); overlay.classList.add('visible'); hamburger.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; }
+  function abrir() { hamburger.classList.add('abierto'); menu.classList.add('visible'); overlay.classList.add('visible'); hamburger.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; [].slice.call(menu.children).forEach(function(el, i) { el.style.setProperty('--i', i); }); }
   function cerrar() { hamburger.classList.remove('abierto'); menu.classList.remove('visible'); overlay.classList.remove('visible'); hamburger.setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; }
   hamburger.addEventListener('click', function () { menu.classList.contains('visible') ? cerrar() : abrir(); });
   overlay.addEventListener('click', cerrar);
