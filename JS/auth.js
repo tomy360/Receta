@@ -110,6 +110,9 @@ function actualizarUI() {
   document.querySelectorAll('.nav-mobile-cta').forEach(function (el) {
     el.style.display = logueado ? 'flex' : 'none';
   });
+  document.querySelectorAll('.solo-login').forEach(function (el) {
+    el.style.display = logueado ? '' : 'none';
+  });
 
   var btnAgregarMobile = document.getElementById('btnAgregarMobile');
   if (btnAgregarMobile) {

@@ -186,3 +186,34 @@ async function quitarFavorito(userId, recipeId) {
     console.warn('Error al quitar favorito', e);
   }
 }
+
+async function obtenerPendientes(userId) {
+  try {
+    var data = await peticion(SUPABASE_URL + '/rest/v1/' + 'recetas_pendientes' + '?select=recipe_id&user_id=eq.' + encodeURIComponent(userId));
+    return data ? data.map(function (f) { return f.recipe_id; }) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+async function agregarPendiente(userId, recipeId) {
+  var id = userId + '-' + recipeId;
+  try {
+    await peticion(SUPABASE_URL + '/rest/v1/' + 'recetas_pendientes', {
+      method: 'POST',
+      body: JSON.stringify({ id: id, user_id: userId, recipe_id: recipeId })
+    });
+  } catch (e) {
+    if (e.message.indexOf('409') === -1) console.warn('Error al agregar pendiente', e);
+  }
+}
+
+async function quitarPendiente(userId, recipeId) {
+  try {
+    await peticion(SUPABASE_URL + '/rest/v1/' + 'recetas_pendientes' + '?user_id=eq.' + encodeURIComponent(userId) + '&recipe_id=eq.' + encodeURIComponent(recipeId), {
+      method: 'DELETE'
+    });
+  } catch (e) {
+    console.warn('Error al quitar pendiente', e);
+  }
+}

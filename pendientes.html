@@ -9,12 +9,14 @@
   <link rel="stylesheet" href="./CSS/auth.css">
   <style>.nav-cta,.nav-mobile-cta{display:none}</style>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍳</text></svg>">
-  <title>Añadir Receta - Recetas del día</title>
+  <title>Quiero hacer — Recetas del día</title>
   <script defer src="./JS/supabase.js?v=2"></script>
   <script defer src="./JS/datos.js?v=2"></script>
   <script defer src="./JS/db.js?v=2"></script>
+  <script defer src="./JS/timer.js?v=2"></script>
   <script defer src="./JS/auth.js?v=2"></script>
-  <script defer src="./JS/agregar-receta.js?v=2"></script>
+  <script defer src="./JS/recetas.js?v=2"></script>
+  <script defer src="./JS/pendientes.js?v=2"></script>
 </head>
 <body>
 
@@ -49,13 +51,13 @@
       </div>
       <a class="BotonBa" href="./planificador.html">📅 Planificador</a>
       <a class="BotonBa" href="./consejos.html">💡 Consejos</a>
-      <a class="BotonBa solo-login" href="./pendientes.html">⏱️ Quiero hacer</a>
+      <a class="BotonBa activo solo-login" href="./pendientes.html">⏱️ Quiero hacer</a>
       <button class="nav-dark-btn nav-timer-btn" onclick="abrirTimer()" title="Abrir temporizador">⏱️</button>
       <button class="nav-dark-btn" id="btnModoNoche" aria-label="Activar modo noche" title="Modo noche">🌕</button>
     </div>
 
     <div class="nav-cta">
-      <a class="BotonP activo" href="./agregar.html">+ Añadir Receta</a>
+      <a class="BotonP" href="./agregar.html">+ Añadir Receta</a>
     </div>
 
     <button class="nav-hamburger" id="navHamburger" aria-label="Abrir menú" aria-expanded="false">
@@ -117,7 +119,7 @@
     <a class="nav-mobile-link" href="./consejos.html">
       <span class="nav-mobile-icon">💡</span> Consejos
     </a>
-    <a class="nav-mobile-link solo-login" href="./pendientes.html">
+    <a class="nav-mobile-link activo solo-login" href="./pendientes.html">
       <span class="nav-mobile-icon">⏱️</span> Quiero hacer
     </a>
     <a class="nav-mobile-link" role="button" tabindex="0" onclick="abrirTimer()">
@@ -135,153 +137,55 @@
 
 <div class="nav-overlay" id="navOverlay"></div>
 
-<div class="form-contenedor">
-
-  <div class="detalle-volver">
-    <a href="index.html"><span class="flecha">←</span> Volver</a>
-  </div>
-
-  <div class="form-card">
-    <div class="form-header">
-      <h1>Añadir Nueva Receta</h1>
-      <p>Guarda tu receta en Recetas del día.</p>
+<div class="pendientes-page">
+  <div class="pendientes-toolbar">
+    <div>
+      <h1>⏱️ Quiero hacer</h1>
+      <p style="color:var(--texto-suave);margin:0.25rem 0 0;">Recetas que tenés pendientes por cocinar.</p>
     </div>
+  </div>
+  <div class="pendientes-grid" id="pendientesGrid"></div>
+  <p class="sin-resultados oculto" id="sinPendientes" style="text-align:center;padding:3rem;color:var(--texto-suave);">Aún no tenés recetas pendientes.</p>
+</div>
 
-    <form id="formReceta" autocomplete="off">
-      <div class="form-cuerpo">
-
-        <!-- Información Básica -->
-        <div>
-          <h3 class="form-seccion-titulo">Información Básica</h3>
-
-          <div class="form-campo">
-            <label for="campoTitulo">Nombre de la Receta *</label>
-            <input type="text" id="campoTitulo" spellcheck="true" lang="es" autocorrect="on" placeholder="Ej: Pizza Casera">
-            <div class="form-error" id="errorTitulo"></div>
-          </div>
-
-          <div class="form-campo">
-            <label for="campoDescripcion">Descripción corta</label>
-            <textarea id="campoDescripcion" spellcheck="true" lang="es" autocorrect="on" placeholder="Una breve descripción de por qué te gusta esta receta..."></textarea>
-          </div>
-
-          <div class="form-campo pos-rel">
-            <label for="campoAutor">Autor</label>
-            <div class="input-con-drop">
-              <input type="text" id="campoAutor" placeholder="Ej: Tu nombre">
-              <button type="button" class="drop-btn" data-target="campoAutor" data-drop="dropAutor" title="Autores existentes">▼</button>
-            </div>
-            <div class="drop-lista oculto" id="dropAutor"></div>
-          </div>
-
-          <div class="form-fila">
-            <div class="form-campo">
-              <label for="campoTipo">Momento *</label>
-              <select id="campoTipo">
-                <option value="Desayuno">Desayuno</option>
-                <option value="Almuerzo" selected>Almuerzo</option>
-                <option value="Cena">Cena</option>
-                <option value="Media Tarde">Media Tarde</option>
-                <option value="Indefinido">Indefinido</option>
-                <option value="Postre">Postre</option>
-                <option value="Acompañamiento">Acompañamiento</option>
-              </select>
-            </div>
-            <div class="form-campo">
-              <label for="campoDificultad">Dificultad *</label>
-              <select id="campoDificultad">
-                <option value="Fácil">Fácil</option>
-                <option value="Media" selected>Media</option>
-                <option value="Difícil">Difícil</option>
-              </select>
-            </div>
-            <div class="form-campo">
-              <label for="campoTiempo">Tiempo de prep. *</label>
-              <input type="text" id="campoTiempo" placeholder="Ej: 45 min">
-              <div class="form-error" id="errorTiempo"></div>
-            </div>
-            <div class="form-campo">
-              <label for="campoPorciones">Porciones</label>
-              <input type="number" id="campoPorciones" placeholder="Ej: 8" min="1" step="1">
-            </div>
-            <div class="form-campo">
-              <label for="campoPersonas">Cantidad de personas</label>
-              <input type="number" id="campoPersonas" placeholder="Ej: 4" min="0" step="1">
-            </div>
-            <div class="form-campo campo-ancho2 pos-rel">
-              <label for="campoCategorias">Categorías (Opcional)</label>
-              <div class="input-con-drop">
-                <input type="text" id="campoCategorias" spellcheck="true" lang="es" autocorrect="on" placeholder="Ej: tartas, guisos, pastas, ensaladas">
-                <button type="button" class="drop-btn" data-target="campoCategorias" data-drop="dropCategorias" title="Categorías existentes">▼</button>
-              </div>
-              <div class="drop-lista oculto" id="dropCategorias"></div>
-              <p class="ayuda">Separa con comas para poder filtrar. Ej: <strong>tartas, pastas, guisos</strong></p>
-            </div>
-            <div class="form-campo campo-ancho2">
-              <label for="campoEtiquetas">Etiquetas (Opcional)</label>
-              <input type="text" id="campoEtiquetas" spellcheck="true" lang="es" autocorrect="on" placeholder="Ej: papa, levadura, pan casero, hamburguesas">
-              <p class="ayuda">Separa con comas. Ej: <strong>papa, levadura, pan casero, acompañamiento</strong></p>
-            </div>
-            <div class="form-campo campo-ancho2">
-              <label for="campoDieta">Dieta especial</label>
-              <select id="campoDieta" style="width:100%;padding:0.65rem 1rem;border:1px solid var(--borde);border-radius:0.75rem;font-size:0.9rem;outline:none;box-sizing:border-box;background:var(--blanco);color:var(--texto);">
-                <option value="">Ninguna</option>
-                <option value="Diabéticos">Diabéticos</option>
-                <option value="Celíacos">Celíacos</option>
-                <option value="Veganos">Veganos</option>
-                <option value="Vegetarianos">Vegetarianos</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-divisor"></div>
-
-        <!-- Pasos e Ingredientes -->
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
-            <div>
-              <h3 class="form-seccion-titulo" style="margin-bottom:0;">Pasos e Ingredientes</h3>
-              <p style="font-size:0.875rem;color:#6b7280;margin-top:0.25rem;">
-                Si tu receta tiene varias partes (ej: Masa y Salsa), puedes añadir varias secciones.
-              </p>
-            </div>
-            <button type="button" class="btn-agregar-seccion" id="btnAgregarSeccion">+ Añadir nueva sección</button>
-          </div>
-          <div id="seccionesContainer"></div>
-        </div>
-
-        <div class="form-divisor"></div>
-
-        <!-- Multimedia -->
-        <div>
-          <h3 class="form-seccion-titulo">Multimedia</h3>
-          <div class="form-campo">
-            <label for="campoImagen">URL de la Imagen (Opcional)</label>
-          <input type="text" id="campoImagen" placeholder="pizza.jpg">
-<p class="ayuda">
-  Puedes escribir una URL o un archivo de la carpeta
-  <strong>Imagenes/Recetas</strong>.
-</p>
-          </div>
-          <div class="form-campo">
-            <label for="campoVideo">Video (Opcional)</label>
-            <input type="text" id="campoVideo" placeholder="https://youtube.com/... o ./videos/mireceta.mp4">
-            <p class="ayuda">YouTube, Instagram, TikTok, Facebook, o un archivo local: <strong>./videos/nombre.mp4</strong></p>
-          </div>
-          <div class="form-campo">
-            <label for="campoSocial">Red social (Opcional)</label>
-            <input type="text" id="campoSocial" placeholder="https://instagram.com/...">
-            <p class="ayuda">Link a Instagram, TikTok, Facebook, etc.</p>
-          </div>
-        </div>
-
-        <div class="form-submit">
-          <button type="submit" class="btn-guardar">💾 Guardar Receta en mi Libro</button>
-        </div>
-
+<!-- TIMER MODAL -->
+<div class="modal oculto" id="modalTimer" onclick="if(event.target===this)cerrarTimer()">
+  <div class="modal-contenido modal-timer">
+    <button class="modal-cerrar" onclick="cerrarTimer()">✕</button>
+    <h3>⏱️ Temporizador</h3>
+    <div class="timer-display" id="timerDisplay">10:00</div>
+    <div class="timer-barra-track"><div class="timer-barra-fill" id="timerBarra" style="width:100%"></div></div>
+    <div class="timer-acciones">
+      <button class="btn-accion" id="timerBoton" onclick="toggleTimer()">▶</button>
+      <button class="btn-accion" onclick="reiniciarTimer()">⟳</button>
+      <div class="timer-presets">
+        <button class="btn-categoria" onclick="abrirTimer('5 min')">5</button>
+        <button class="btn-categoria" onclick="abrirTimer('10 min')">10</button>
+        <button class="btn-categoria" onclick="abrirTimer('15 min')">15</button>
+        <button class="btn-categoria" onclick="abrirTimer('20 min')">20</button>
+        <button class="btn-categoria" onclick="abrirTimer('25 min')">25</button>
+        <button class="btn-categoria" onclick="abrirTimer('30 min')">30</button>
+        <button class="btn-categoria" onclick="abrirTimer('35 min')">35</button>
+        <button class="btn-categoria" onclick="abrirTimer('40 min')">40</button>
+        <button class="btn-categoria" onclick="abrirTimer('45 min')">45</button>
+        <button class="btn-categoria" onclick="abrirTimer('50 min')">50</button>
+        <button class="btn-categoria" onclick="abrirTimer('55 min')">55</button>
+        <button class="btn-categoria" onclick="abrirTimer('60 min')">60</button>
+        <button class="btn-categoria" onclick="abrirTimer('65 min')">65</button>
+        <button class="btn-categoria" onclick="abrirTimer('70 min')">70</button>
+        <button class="btn-categoria" onclick="abrirTimer('75 min')">75</button>
+        <button class="btn-categoria" onclick="abrirTimer('80 min')">80</button>
+        <button class="btn-categoria" onclick="abrirTimer('85 min')">85</button>
+        <button class="btn-categoria" onclick="abrirTimer('90 min')">90</button>
+        <button class="btn-categoria" onclick="abrirTimer('95 min')">95</button>
+        <button class="btn-categoria" onclick="abrirTimer('100 min')">100</button>
+        <button class="btn-categoria" onclick="abrirTimer('105 min')">105</button>
+        <button class="btn-categoria" onclick="abrirTimer('110 min')">110</button>
+        <button class="btn-categoria" onclick="abrirTimer('115 min')">115</button>
+        <button class="btn-categoria" onclick="abrirTimer('120 min')">120</button>
       </div>
-    </form>
+    </div>
+    <div class="timer-alarma oculto" id="timerAlarma">🔔 ¡Tiempo cumplido!</div>
   </div>
 </div>
 

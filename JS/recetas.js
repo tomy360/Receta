@@ -22,6 +22,7 @@ let busqueda = '';
 let filtroCategoria = 'Todas';
 let filtroDieta = 'Todas';
 var favoritosUsuario = [];
+var pendientesUsuario = [];
 const ORDEN_MOMENTO = ['Desayuno', 'Almuerzo', 'Media Tarde', 'Cena', 'Indefinido', 'Postre', 'Acompañamiento'];
 let ordenActual = 'none';
 let ordenMomentoRotacion = 0;
@@ -143,6 +144,8 @@ function cerrarDropdownOrden() {
 }
 
 async function init() {
+  var esIndex = !!document.getElementById('panelFiltros');
+
   mostrarSkeletonGrid(8);
   try {
     recetas = await obtenerRecetas();
@@ -154,7 +157,10 @@ async function init() {
   var sesion = obtenerSesion();
   if (sesion) {
     favoritosUsuario = await obtenerFavoritos(sesion.userId);
+    pendientesUsuario = await obtenerPendientes(sesion.userId);
   }
+
+  if (!esIndex) return;
 
   const params = new URLSearchParams(window.location.search);
   filtroTipo = params.get('tipo') || 'Todos';
@@ -542,6 +548,12 @@ document.addEventListener('click', async function (e) {
     await toggleFavorito(btn.dataset.id);
     return;
   }
+  var btnPend = e.target.closest('.card-pend-btn');
+  if (btnPend) {
+    e.preventDefault();
+    await togglePendiente(btnPend.dataset.id);
+    return;
+  }
 });
 
 async function toggleFavorito(id) {
@@ -573,14 +585,37 @@ async function toggleFavorito(id) {
   }
 }
 
+async function togglePendiente(id) {
+  var sesion = obtenerSesion();
+  if (!sesion) return;
+  var idx = pendientesUsuario.indexOf(id);
+  if (idx === -1) {
+    await agregarPendiente(sesion.userId, id);
+    pendientesUsuario.push(id);
+  } else {
+    await quitarPendiente(sesion.userId, id);
+    pendientesUsuario.splice(idx, 1);
+  }
+  var esPend = pendientesUsuario.indexOf(id) !== -1;
+  var btn = document.querySelector('.card-pend-btn[data-id="' + id + '"]');
+  if (btn) {
+    btn.classList.toggle('card-pend-activo', esPend);
+    btn.title = esPend ? 'Quitar de pendientes' : 'Añadir a pendientes';
+  }
+}
+
 function crearTarjeta(r) {
   const estrellas = '★'.repeat(Math.round(r.puntuacion));
   const estrellaVacia = '☆'.repeat(5 - Math.round(r.puntuacion));
   var esFav = r.favorito || favoritosUsuario.indexOf(r.id) !== -1;
   const favClase = esFav ? ' card-fav-activo' : '';
   const favBtn = estaLogueado() ? `<button class="card-fav-btn${favClase}" data-id="${r.id}" title="${esFav ? 'Quitar de favoritos' : 'Añadir a favoritos'}">${esFav ? '❤️' : '🤍'}</button>` : '';
+  var esPend = pendientesUsuario.indexOf(r.id) !== -1;
+  var pendClase = esPend ? ' card-pend-activo' : '';
+  var pendBtn = estaLogueado() ? `<button class="card-pend-btn${pendClase}" data-id="${r.id}" title="${esPend ? 'Quitar de pendientes' : 'Añadir a pendientes'}">⏰</button>` : '';
   return `
     <div class="tarjeta">
+      ${pendBtn}
       ${favBtn}
       <a href="receta.html?id=${r.id}">
         <div class="tarjeta-imagen" style="background-image:url('${r.imagen}')">
