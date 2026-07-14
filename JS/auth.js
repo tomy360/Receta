@@ -92,12 +92,12 @@ function avatarHtmlFor(username, avatarUrl, size) {
   var inicial = (username || '?').charAt(0).toUpperCase();
   var fontSize = Math.round(size * 0.45);
   if (avatarUrl) {
-    return '<span style="display:inline-block;position:relative;width:' + size + 'px;height:' + size + 'px;border-radius:50%;overflow:hidden;flex-shrink:0;">' +
+    return '<span style="display:inline-block;position:relative;width:' + size + 'px;height:' + size + 'px;border-radius:50%;overflow:hidden;flex-shrink:0;vertical-align:middle;">' +
       '<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--verde);color:#fff;font-weight:600;font-size:' + fontSize + 'px;">' + inicial + '</span>' +
       '<img src="' + avatarUrl + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\'">' +
       '</span>';
   }
-  return '<span style="width:' + size + 'px;height:' + size + 'px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--verde);color:#fff;font-weight:600;font-size:' + fontSize + 'px;flex-shrink:0;">' + inicial + '</span>';
+  return '<span style="width:' + size + 'px;height:' + size + 'px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--verde);color:#fff;font-weight:600;font-size:' + fontSize + 'px;flex-shrink:0;vertical-align:middle;">' + inicial + '</span>';
 }
 
 function actualizarUI() {
