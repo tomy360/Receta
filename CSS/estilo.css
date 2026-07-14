@@ -2055,26 +2055,18 @@ html.modo-noche .card-pend-activo {
 }
 
 .pend-remove-btn {
-  position: absolute;
-  top: 0.625rem;
-  right: 0.625rem;
-  z-index: 10;
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(4px);
+  background: none;
   border: none;
-  font-size: 1.15rem;
+  font-size: 1rem;
   cursor: pointer;
-  padding: 0.2rem 0.35rem;
+  padding: 0.1rem 0.2rem;
   border-radius: 9999px;
   line-height: 1;
-  transition: transform 0.2s, background 0.2s;
+  transition: transform 0.2s;
+  flex-shrink: 0;
 }
 .pend-remove-btn:hover {
-  transform: scale(1.2);
-  background: rgba(255,255,255,0.95);
-}
-html.modo-noche .pend-remove-btn {
-  background: rgba(30,30,30,0.85);
+  transform: scale(1.25);
 }
 
 /* ========== BOTÓN MODO NOCHE (NAV) ========== */
@@ -2711,8 +2703,21 @@ html.modo-noche .tf-btn:hover { background: #3a4a2a; border-color: var(--verde-c
 .pendientes-page { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
 .pendientes-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; }
 .pendientes-toolbar h1 { margin: 0; }
-.pendientes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: start; }
-@media (max-width: 860px) { .pendientes-grid { grid-template-columns: 1fr; } }
+.pendientes-layout { display: flex; gap: 1.5rem; align-items: flex-start; }
+.pendientes-lista { flex: 0 0 340px; display: flex; flex-direction: column; gap: 0.5rem; }
+.pendientes-lista-item { background: var(--blanco); border: 1px solid var(--crema-medio); border-radius: 0.75rem; padding: 0.75rem 1rem; cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; }
+.pendientes-lista-item:hover { border-color: var(--verde-claro); }
+.pendientes-lista-item.seleccionado { border-color: var(--verde); box-shadow: 0 0 0 2px rgba(34,197,94,0.2); }
+.pendientes-lista-item-tipo { font-size: 0.75rem; color: var(--texto-suave); text-transform: uppercase; letter-spacing: 0.5px; }
+.pendientes-lista-item-nombre-row { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin: 0.15rem 0 0.3rem; }
+.pendientes-lista-item-nombre { font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pendientes-lista-item-meta { display: flex; gap: 0.75rem; font-size: 0.8rem; color: var(--texto-med); }
+.pendientes-detalle { flex: 1; min-width: 0; }
+.pendientes-detalle-vacio { text-align: center; padding: 4rem 2rem; color: var(--texto-suave); background: var(--blanco); border-radius: 1rem; border: 2px dashed var(--crema-medio); }
+html.modo-noche .pendientes-lista-item { background: var(--fondo-tarjeta); border-color: #333; }
+html.modo-noche .pendientes-lista-item.seleccionado { border-color: var(--verde-claro); }
+html.modo-noche .pendientes-detalle-vacio { background: var(--fondo-tarjeta); border-color: #444; }
+@media (max-width: 860px) { .pendientes-layout { flex-direction: column; } .pendientes-lista { flex: none; width: 100%; } }
 .consejo-card { background: var(--blanco); border: 1px solid var(--crema-medio); border-radius: 1rem; padding: 1.25rem; }
 .consejo-card h3 { margin: 0 0 0.5rem; font-size: 1.1rem; }
 .consejo-card p { margin: 0; color: var(--texto-med); line-height: 1.6; white-space: pre-wrap; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; }
