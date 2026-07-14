@@ -2105,6 +2105,21 @@ html.modo-noche .card-pend-activo {
 .pend-remove-btn:hover {
   transform: scale(1.25);
 }
+.pend-abrir-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.1rem 0.2rem;
+  border-radius: 9999px;
+  line-height: 1;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+@media (max-width: 860px) {
+  .pend-abrir-btn { display: inline; }
+}
 
 /* ========== BOTÓN MODO NOCHE (NAV) ========== */
 .nav-dark-btn {
