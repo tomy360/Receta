@@ -49,16 +49,16 @@
   }
 
   function mostrarDetalle(id) {
-    var r = pendientesRecetas.find(function (r) { return r.id === id; });
-    if (!r) {
-      detalle.innerHTML = '<p class="pendientes-detalle-vacio">Seleccioná una receta de la lista</p>';
+    if (pendientesRecetas.length === 0) {
+      detalle.innerHTML = '<p class="pendientes-detalle-vacio">Aún no tenés recetas pendientes.</p>';
       return;
     }
-    detalle.innerHTML =
-      crearTarjeta(r).replace('class="tarjeta"', 'class="tarjeta visible"') +
-      '<div style="padding:0.75rem 1rem 1rem;text-align:center;">' +
-        '<a class="BotonP" href="receta.html?id=' + r.id + '" style="display:inline-block;">🔗 Abrir receta</a>' +
-      '</div>';
+    detalle.innerHTML = pendientesRecetas.map(function (r) {
+      var card = crearTarjeta(r).replace('class="tarjeta"', 'class="tarjeta visible' + (r.id === id ? ' pend-card-seleccionada' : '') + '"');
+      return card;
+    }).join('');
+    var target = detalle.querySelector('.pend-card-seleccionada');
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
   document.addEventListener('click', async function (e) {
