@@ -86,7 +86,6 @@ nav {
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--texto-muted);
-  border: 1.5px solid var(--borde);
   border-radius: 0.5rem;
   transition: all 0.2s;
   white-space: nowrap;
@@ -95,13 +94,11 @@ nav {
 .BotonBa:hover {
   color: var(--texto);
   background: var(--crema-medio);
-  border-color: var(--verde-claro);
 }
 
 .BotonBa.activo {
   color: var(--verde-hover);
   background: var(--crema-medio);
-  border-color: var(--verde);
   font-weight: 600;
 }
 
@@ -2176,11 +2173,8 @@ html.modo-noche nav {
   border-color: #2a3220;
   box-shadow: 0 1px 8px rgba(0,0,0,0.4);
 }
-html.modo-noche .BotonBa,
 html.modo-noche .nav-dark-btn { border-color: #3a4a2a; }
-html.modo-noche .BotonBa:hover,
 html.modo-noche .nav-dark-btn:hover { border-color: var(--verde-claro); }
-html.modo-noche .BotonBa.activo { border-color: var(--verde); }
 
 html.modo-noche .nav-mobile-menu {
   background: #1e2615;
