@@ -2765,6 +2765,8 @@ html.modo-noche .tf-btn:hover { background: #3a4a2a; border-color: var(--verde-c
 .pendientes-lista-item-nombre { font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pendientes-lista-item-meta { display: flex; gap: 0.75rem; font-size: 0.8rem; color: var(--texto-med); }
 .pendientes-detalle { flex: 1; min-width: 0; }
+.pendientes-detalle .tarjeta { max-width: 360px; }
+.pendientes-detalle .tarjeta-imagen { height: 140px; }
 .pendientes-detalle-vacio { text-align: center; padding: 4rem 2rem; color: var(--texto-suave); background: var(--blanco); border-radius: 1rem; border: 2px dashed var(--crema-medio); }
 html.modo-noche .pendientes-lista-item { background: var(--fondo-tarjeta); border-color: #333; }
 html.modo-noche .pendientes-lista-item.seleccionado { border-color: var(--verde-claro); }
