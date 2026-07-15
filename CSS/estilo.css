@@ -2123,8 +2123,8 @@ html.modo-noche .card-pend-activo {
 
 /* ========== BOTÓN MODO NOCHE (NAV) ========== */
 .nav-dark-btn {
-  background: var(--crema-medio);
-  border: 1.5px solid var(--borde);
+  background: transparent;
+  border: 1.5px solid transparent;
   font-size: 1.1rem;
   cursor: pointer;
   padding: 0.4rem 0.55rem;
@@ -2139,8 +2139,8 @@ html.modo-noche .card-pend-activo {
 }
 
 .nav-dark-btn:hover {
-  background: var(--verde-claro);
-  border-color: var(--verde);
+  background: var(--crema-medio);
+  border-color: var(--borde);
   transform: scale(1.05);
 }
 
