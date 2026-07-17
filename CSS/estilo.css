@@ -2920,11 +2920,12 @@ html.modo-noche .tarjeta-imagen img, html.modo-noche .detalle-imagen img {
 .nav-mobile-submenu-items {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease, padding 0.3s ease;
+  transition: max-height 0.15s ease, padding 0.15s ease;
   padding: 0 0 0 1.5rem;
+  contain: content;
 }
 .nav-mobile-submenu-items.visible {
-  max-height: 400px;
+  max-height: 250px;
   padding: 0.5rem 0 0.5rem 1.5rem;
 }
 
