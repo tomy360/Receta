@@ -11,8 +11,7 @@ async function init() {
 
   if (editandoId) {
     try {
-      var todas = await obtenerRecetas();
-      var receta = todas.find(function (r) { return r.id === editandoId; });
+      var receta = await obtenerRecetaCompleta(editandoId);
       if (receta) {
         document.querySelector('.form-header h1').textContent = 'Editar Receta';
         document.querySelector('.form-header p').textContent = 'Modifica los datos de tu receta.';
@@ -190,8 +189,7 @@ async function enviarFormulario() {
   var destinoId;
   if (editandoId) {
     destinoId = editandoId;
-    var todas = await obtenerRecetas();
-    var existente = todas.find(function (r) { return r.id === destinoId; });
+    var existente = await obtenerRecetaCompleta(destinoId);
 
     if (existente) {
       await actualizarReceta({

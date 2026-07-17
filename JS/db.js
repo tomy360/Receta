@@ -77,6 +77,39 @@ async function peticion(url, opts) {
   return res.json();
 }
 
+const COLUMNAS_LIVIANAS = 'id,titulo,tipo,imagen,dificultad,tiempo,autor,categorias,dieta,puntuacion,created_at,favorito,descripcion,personas,resenas,etiquetas,porciones';
+
+async function obtenerRecetasLivianas() {
+  try {
+    var data = await peticion(SUPABASE_URL + '/rest/v1/' + TABLA_RECETAS + '?select=' + encodeURIComponent(COLUMNAS_LIVIANAS) + '&order=created_at.asc');
+    if (data && data.length > 0) {
+      var norm = data.map(normalizarReceta);
+      try { localStorage.setItem(CLAVE_STORAGE + '_livianas', JSON.stringify(norm)); } catch (e) {}
+      return norm;
+    }
+  } catch (e) {
+    console.warn('Supabase no disponible, usando respaldo local liviano');
+  }
+  try {
+    var localData = localStorage.getItem(CLAVE_STORAGE + '_livianas');
+    if (localData) {
+      var recetas = JSON.parse(localData);
+      if (recetas && recetas.length) return recetas;
+    }
+  } catch (e) {}
+  return [];
+}
+
+async function obtenerRecetaCompleta(id) {
+  try {
+    var data = await peticion(SUPABASE_URL + '/rest/v1/' + TABLA_RECETAS + '?select=*&id=eq.' + encodeURIComponent(id));
+    if (data && data.length > 0) return normalizarReceta(data[0]);
+  } catch (e) {
+    console.warn('Supabase no disponible para obtener receta completa');
+  }
+  return null;
+}
+
 async function obtenerRecetas() {
   // 1) Intentar Supabase
   try {

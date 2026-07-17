@@ -187,8 +187,7 @@ async function init() {
   mostrarSkeletonDetalle();
 
   try {
-    var todas = await obtenerRecetas();
-    receta = todas.find(function (r) { return r.id === id; });
+    receta = await obtenerRecetaCompleta(id);
   } catch (e) {
     var sp = document.getElementById('spinner-global');
     if (sp) sp.classList.add('ocultar');

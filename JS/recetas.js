@@ -11,6 +11,9 @@ function normalizarTexto(s) {
 }
 
 let recetas = [];
+const CARDS_POR_PAGINA = 17;
+let paginaActual = 0;
+let _filtradasActuales = [];
 let filtroTipo = 'Todos';
 let filtroDificultad = 'Todas';
 let filtroTiempo = 'Cualquiera';
@@ -148,7 +151,7 @@ async function init() {
 
   mostrarSkeletonGrid(8);
   try {
-    recetas = await obtenerRecetas();
+    recetas = await obtenerRecetasLivianas();
   } catch (e) {
     console.error('Error al cargar recetas:', e);
     recetas = [];
@@ -496,6 +499,7 @@ function recetasFiltradas() {
 function renderizar() {
   const grid = document.getElementById('gridRecetas');
   const sinResultados = document.getElementById('sinResultados');
+  var cargarMas = document.getElementById('btnCargarMas');
   if (!grid) return;
 
   var filtradas = recetasFiltradas();
@@ -504,13 +508,41 @@ function renderizar() {
   if (filtradas.length === 0) {
     grid.innerHTML = '';
     sinResultados.classList.remove('oculto');
+    if (cargarMas) cargarMas.classList.add('oculto');
     return;
   }
 
   sinResultados.classList.add('oculto');
+  paginaActual = 0;
 
-  grid.innerHTML = filtradas.map(r => crearTarjeta(r)).join('');
+  var total = filtradas.length;
+  var mostrar = filtradas.slice(0, CARDS_POR_PAGINA);
+  grid.innerHTML = mostrar.map(r => crearTarjeta(r)).join('');
   animarTarjetas();
+
+  if (!cargarMas) {
+    cargarMas = document.createElement('button');
+    cargarMas.id = 'btnCargarMas';
+    cargarMas.className = 'btn-cargar-mas';
+    cargarMas.textContent = 'Cargar más';
+    grid.parentNode.appendChild(cargarMas);
+    cargarMas.addEventListener('click', function () {
+      paginaActual++;
+      var hasta = (paginaActual + 1) * CARDS_POR_PAGINA;
+      var todasVisibles = _filtradasActuales.slice(0, hasta);
+      grid.innerHTML = todasVisibles.map(r => crearTarjeta(r)).join('');
+      animarTarjetas();
+      if (hasta >= _filtradasActuales.length) cargarMas.classList.add('oculto');
+    });
+  }
+
+  _filtradasActuales = filtradas;
+
+  if (total <= CARDS_POR_PAGINA) {
+    cargarMas.classList.add('oculto');
+  } else {
+    cargarMas.classList.remove('oculto');
+  }
 }
 
 function animarTarjetas() {
@@ -568,13 +600,12 @@ async function toggleFavorito(id) {
       favoritosUsuario.splice(idx, 1);
     }
   } else {
-    var todas = await obtenerRecetas();
-    var r = todas.find(function (r) { return r.id === id; });
+    var r = await obtenerRecetaCompleta(id);
     if (!r) return;
     r.favorito = !r.favorito;
     await actualizarReceta(r);
   }
-  recetas = await obtenerRecetas();
+  recetas = await obtenerRecetasLivianas();
   var r = recetas.find(function (r) { return r.id === id; });
   var esFav = r ? (r.favorito || favoritosUsuario.indexOf(id) !== -1) : false;
   var btn = document.querySelector('.card-fav-btn[data-id="' + id + '"]');
@@ -625,7 +656,7 @@ function crearTarjeta(r) {
           <div class="tarjeta-puntuacion">
             <span class="estrella">${estrellas}${estrellaVacia}</span>
             <span>${r.puntuacion}</span>
-            <span class="resenas-count">(${r.resenas.length} reseñas)</span>
+            <span class="resenas-count">(${(r.resenas || []).length} reseñas)</span>
           </div>
           <h3 class="tarjeta-titulo">${r.titulo}</h3>
           <p class="tarjeta-descripcion">${r.descripcion}</p>
