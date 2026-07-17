@@ -490,7 +490,7 @@ function recetasFiltradas() {
     if (!porBusqueda) {
       var bNorm = normalizarTexto(busqueda);
       porBusqueda = normalizarTexto(r.titulo).includes(bNorm) ||
-        r.preparaciones.some(p => p.ingredientes.some(i => normalizarTexto(i).includes(bNorm)));
+        (r.preparaciones || []).some(p => p.ingredientes.some(i => normalizarTexto(i).includes(bNorm)));
     }
     return porTipo && porDificultad && porTiempo && porPorciones && porPuntuacion && porFavorito && porCategoria && porDieta && porAutor && porBusqueda;
   });
