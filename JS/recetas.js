@@ -11,7 +11,7 @@ function normalizarTexto(s) {
 }
 
 let recetas = [];
-const CARDS_POR_PAGINA = 17;
+const RECETAS_POR_PAGINA = 16;
 let paginaActual = 0;
 let _filtradasActuales = [];
 let filtroTipo = 'Todos';
@@ -499,50 +499,80 @@ function recetasFiltradas() {
 function renderizar() {
   const grid = document.getElementById('gridRecetas');
   const sinResultados = document.getElementById('sinResultados');
-  var cargarMas = document.getElementById('btnCargarMas');
   if (!grid) return;
 
-  var filtradas = recetasFiltradas();
-  filtradas = ordenarRecetas(filtradas);
+  _filtradasActuales = recetasFiltradas();
+  _filtradasActuales = ordenarRecetas(_filtradasActuales);
 
-  if (filtradas.length === 0) {
+  if (_filtradasActuales.length === 0) {
     grid.innerHTML = '';
     sinResultados.classList.remove('oculto');
-    if (cargarMas) cargarMas.classList.add('oculto');
+    var oldPag = document.querySelector('.paginacion');
+    if (oldPag) oldPag.remove();
     return;
   }
 
   sinResultados.classList.add('oculto');
   paginaActual = 0;
+  renderizarPagina();
+  renderizarPaginacion();
+}
 
-  var total = filtradas.length;
-  var mostrar = filtradas.slice(0, CARDS_POR_PAGINA);
-  grid.innerHTML = mostrar.map(r => crearTarjeta(r)).join('');
+function renderizarPagina() {
+  var grid = document.getElementById('gridRecetas');
+  var desde = paginaActual * RECETAS_POR_PAGINA;
+  var hasta = desde + RECETAS_POR_PAGINA;
+  var pagina = _filtradasActuales.slice(desde, hasta);
+  grid.innerHTML = pagina.map(function (r) { return crearTarjeta(r); }).join('');
   animarTarjetas();
+}
 
-  if (!cargarMas) {
-    cargarMas = document.createElement('button');
-    cargarMas.id = 'btnCargarMas';
-    cargarMas.className = 'btn-cargar-mas';
-    cargarMas.textContent = 'Cargar más';
-    grid.parentNode.appendChild(cargarMas);
-    cargarMas.addEventListener('click', function () {
-      paginaActual++;
-      var hasta = (paginaActual + 1) * CARDS_POR_PAGINA;
-      var todasVisibles = _filtradasActuales.slice(0, hasta);
-      grid.innerHTML = todasVisibles.map(r => crearTarjeta(r)).join('');
-      animarTarjetas();
-      if (hasta >= _filtradasActuales.length) cargarMas.classList.add('oculto');
+function renderizarPaginacion() {
+  var contenedor = document.querySelector('.paginacion') || (function () {
+    var el = document.createElement('div');
+    el.className = 'paginacion';
+    var grid = document.getElementById('gridRecetas');
+    grid.parentNode.appendChild(el);
+    return el;
+  })();
+
+  var totalPaginas = Math.ceil(_filtradasActuales.length / RECETAS_POR_PAGINA);
+  var p = paginaActual;
+  var html = '';
+
+  // Primera y anterior
+  html += '<button class="paginacion-btn" data-page="0"' + (p === 0 ? ' disabled' : '') + '>««</button>';
+  html += '<button class="paginacion-btn" data-page="' + (p - 1) + '"' + (p === 0 ? ' disabled' : '') + '>‹</button>';
+
+  // Números
+  var inicio = Math.max(0, p - 3);
+  var fin = Math.min(totalPaginas - 1, p + 3);
+  if (inicio > 0) {
+    html += '<button class="paginacion-btn" data-page="0">1</button>';
+    if (inicio > 1) html += '<span class="paginacion-ellipsis">…</span>';
+  }
+  for (var i = inicio; i <= fin; i++) {
+    html += '<button class="paginacion-btn' + (i === p ? ' activo' : '') + '" data-page="' + i + '">' + (i + 1) + '</button>';
+  }
+  if (fin < totalPaginas - 1) {
+    if (fin < totalPaginas - 2) html += '<span class="paginacion-ellipsis">…</span>';
+    html += '<button class="paginacion-btn" data-page="' + (totalPaginas - 1) + '">' + totalPaginas + '</button>';
+  }
+
+  // Siguiente y última
+  html += '<button class="paginacion-btn" data-page="' + (p + 1) + '"' + (p >= totalPaginas - 1 ? ' disabled' : '') + '>›</button>';
+  html += '<button class="paginacion-btn" data-page="' + (totalPaginas - 1) + '"' + (p >= totalPaginas - 1 ? ' disabled' : '') + '>»»</button>';
+
+  contenedor.innerHTML = html;
+
+  contenedor.querySelectorAll('.paginacion-btn:not([disabled])').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      paginaActual = parseInt(this.dataset.page, 10);
+      renderizarPagina();
+      renderizarPaginacion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-  }
-
-  _filtradasActuales = filtradas;
-
-  if (total <= CARDS_POR_PAGINA) {
-    cargarMas.classList.add('oculto');
-  } else {
-    cargarMas.classList.remove('oculto');
-  }
+  });
 }
 
 function animarTarjetas() {

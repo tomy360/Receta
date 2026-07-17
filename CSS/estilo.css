@@ -637,21 +637,46 @@ html.modo-noche .ordenar-opcion:hover {
   .grid-recetas { grid-template-columns: repeat(4, 1fr); }
 }
 
-.btn-cargar-mas {
-  display: block;
-  margin: 2rem auto 0;
-  padding: 0.75rem 2rem;
+.paginacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+.paginacion-btn {
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0 0.5rem;
+  border: 1.5px solid var(--borde);
+  border-radius: 0.5rem;
+  background: var(--blanco);
+  color: var(--texto);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.paginacion-btn:hover:not(:disabled):not(.activo) {
+  background: var(--crema-medio);
+  border-color: var(--verde-claro);
+}
+.paginacion-btn.activo {
   background: var(--verde);
   color: var(--texto-claro);
-  border: none;
-  border-radius: 2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
+  border-color: var(--verde);
+  cursor: default;
 }
-.btn-cargar-mas:hover { background: var(--verde-hover); }
-.btn-cargar-mas.oculto { display: none; }
+.paginacion-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.paginacion-ellipsis {
+  padding: 0 0.25rem;
+  color: var(--texto-muted);
+  font-size: 0.875rem;
+}
 
 /* ========== TARJETA DE RECETA ========== */
 .tarjeta {
