@@ -282,6 +282,22 @@ async function init() {
   if (spinner) spinner.classList.add('ocultar');
 }
 
+function actualizarHeaderFiltro(idContainer, label, valor, valorDefault) {
+  var grupo = document.getElementById(idContainer);
+  if (!grupo) return;
+  grupo = grupo.closest('.filtro-grupo');
+  if (!grupo) return;
+  var span = grupo.querySelector('.filtro-header span:first-child');
+  if (!span) return;
+  if (valor !== valorDefault) {
+    span.textContent = label + ': ' + valor;
+    span.classList.add('filtro-header-activo');
+  } else {
+    span.textContent = label;
+    span.classList.remove('filtro-header-activo');
+  }
+}
+
 function renderizarFiltrosTipo() {
   const contenedor = document.getElementById('filtrosTipo');
   if (!contenedor) return;
@@ -301,6 +317,7 @@ function renderizarFiltrosTipo() {
     });
     contenedor.appendChild(btn);
   });
+  actualizarHeaderFiltro('filtrosTipo', 'Momento del día', filtroTipo, 'Todos');
 }
 
 function renderizarFiltrosDificultad() {
@@ -318,6 +335,7 @@ function renderizarFiltrosDificultad() {
     });
     contenedor.appendChild(btn);
   });
+  actualizarHeaderFiltro('filtrosDificultad', 'Dificultad', filtroDificultad, 'Todas');
 }
 
 function renderizarFiltrosTiempo() {
@@ -335,6 +353,7 @@ function renderizarFiltrosTiempo() {
     });
     contenedor.appendChild(btn);
   });
+  actualizarHeaderFiltro('filtrosTiempo', 'Tiempo de preparación', filtroTiempo, 'Cualquiera');
 }
 
 function renderizarFiltrosPorciones() {
@@ -352,6 +371,7 @@ function renderizarFiltrosPorciones() {
     });
     contenedor.appendChild(btn);
   });
+  actualizarHeaderFiltro('filtrosPorciones', 'Porciones', filtroPorciones, 'Cualquiera');
 }
 
 function renderizarFiltrosPuntuacion() {
@@ -369,6 +389,7 @@ function renderizarFiltrosPuntuacion() {
     });
     contenedor.appendChild(btn);
   });
+  actualizarHeaderFiltro('filtrosPuntuacion', 'Puntuación', filtroPuntuacion, 'Cualquiera');
 }
 
 function renderizarFiltrosFavorito() {
@@ -386,6 +407,7 @@ function renderizarFiltrosFavorito() {
     });
     contenedor.appendChild(btn);
   });
+  actualizarHeaderFiltro('filtrosFavorito', 'Favoritos', filtroFavorito, 'Todos');
 }
 
 function renderizarFiltrosCategorias() {
@@ -415,6 +437,7 @@ function renderizarFiltrosCategorias() {
     });
     contenedor.appendChild(btn);
   });
+  actualizarHeaderFiltro('filtrosCategorias', 'Categorías', filtroCategoria, 'Todas');
 }
 
 function renderizarFiltrosDieta() {
@@ -436,6 +459,7 @@ function renderizarFiltrosDieta() {
     });
     contenedor.appendChild(btn);
   });
+  actualizarHeaderFiltro('filtrosDieta', 'Dieta especial', filtroDieta, 'Todas');
 }
 
 function renderizarFiltrosAutor() {
@@ -458,6 +482,7 @@ function renderizarFiltrosAutor() {
     });
     contenedor.appendChild(btn);
   });
+  actualizarHeaderFiltro('filtrosAutor', 'Autor', filtroAutor, 'Todos');
 }
 
 function recetasFiltradas() {

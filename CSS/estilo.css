@@ -585,6 +585,7 @@ html.modo-noche .ordenar-opcion:hover {
   transition: color 0.2s;
   border-radius: 0;
 }
+.filtro-header-activo { color: var(--verde); }
 
 .filtro-header:hover {
   color: var(--texto);
