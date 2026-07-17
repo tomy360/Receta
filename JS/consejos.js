@@ -6,6 +6,8 @@ var CATEGORIAS_CONSEJOS = ['Todas', 'Ahorro en la cocina', 'Arroces y pastas', '
 const CONSEJOS_POR_PAGINA = 12;
 let paginaActualConsejos = 0;
 let _filtradasConsejos = [];
+var favoritosTipsUsuario = [];
+var filtroFavoritoTips = false;
 
 async function peticionTips(url, opts) {
   var res = await fetch(url, {
@@ -86,6 +88,12 @@ async function initConsejos() {
     toggleBtn.classList.remove('oculto');
   }
 
+  if (sesion) {
+    favoritosTipsUsuario = await obtenerFavoritosTips(sesion.userId);
+  } else {
+    favoritosTipsUsuario = obtenerFavoritosTipsLocal();
+  }
+
   renderizarFiltrosCategoriaConsejo();
   var selectCat = document.getElementById('campoCategoriaConsejo');
   if (selectCat) {
@@ -110,6 +118,14 @@ async function initConsejos() {
     } else {
       ocultarFormularioConsejo();
     }
+  });
+
+  document.getElementById('btnCerrarConsejoForm').addEventListener('click', ocultarFormularioConsejo);
+
+  document.getElementById('btnFavTips').addEventListener('click', function () {
+    filtroFavoritoTips = !filtroFavoritoTips;
+    this.classList.toggle('activo', filtroFavoritoTips);
+    renderizarConsejos(tips);
   });
 
   document.getElementById('consejosForm').addEventListener('click', function (e) {
@@ -210,6 +226,7 @@ function consejosFiltrados(tips) {
       var contenido = (t.contenido || '').toLowerCase();
       if (titulo.indexOf(q) === -1 && contenido.indexOf(q) === -1) return false;
     }
+    if (filtroFavoritoTips && favoritosTipsUsuario.indexOf(t.id) === -1) return false;
     return true;
   });
 }
@@ -255,6 +272,7 @@ function renderizarPaginaConsejos() {
     if (t.created_at) {
       fecha = new Date(t.created_at).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     }
+    var esFav = favoritosTipsUsuario.indexOf(t.id) !== -1;
     var esPropio = sesion && t.user_id === sesion.userId;
     var avatarTip = t.user_id ? avatarHtmlFor(t.autor, t.avatar_url, 24) : '';
     var autor = (avatarTip ? avatarTip + ' ' : '') + '<span>' + (t.autor || 'Anónimo') + '</span>';
@@ -267,6 +285,7 @@ function renderizarPaginaConsejos() {
         '</div>'
       : '';
     return '<div class="consejo-card' + (largo ? ' truncado' : '') + '">' +
+      '<button class="tip-fav-btn' + (esFav ? ' activo' : '') + '" onclick="toggleFavoritoTip(\'' + t.id + '\', this)">' + (esFav ? '⭐' : '☆') + '</button>' +
       '<h3>' + convertirMarkdown(t.titulo) + '</h3>' +
       (badgeCategoria ? badgeCategoria : '') +
       '<p>' + convertirMarkdown(t.contenido) + '</p>' +
@@ -322,6 +341,22 @@ function renderizarPaginacionConsejos() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
+}
+
+async function toggleFavoritoTip(id, btn) {
+  var sesion = obtenerSesion();
+  var esFav = favoritosTipsUsuario.indexOf(id) !== -1;
+  if (esFav) {
+    favoritosTipsUsuario = favoritosTipsUsuario.filter(function (f) { return f !== id; });
+    if (sesion) await quitarFavoritoTip(sesion.userId, id);
+    else quitarFavoritoTipLocal(id);
+  } else {
+    favoritosTipsUsuario.push(id);
+    if (sesion) await agregarFavoritoTip(sesion.userId, id);
+    else agregarFavoritoTipLocal(id);
+  }
+  btn.textContent = esFav ? '☆' : '⭐';
+  btn.classList.toggle('activo');
 }
 
 async function editarTip(id) {

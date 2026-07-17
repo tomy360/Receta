@@ -156,12 +156,16 @@
       <input type="text" id="buscadorConsejos" placeholder="Buscar consejos por título o contenido...">
     </div>
     <button class="btn-filtro" id="btnToggleCategorias">📂 Categorías de consejos</button>
+    <button class="btn-filtro" id="btnFavTips">⭐ Favoritos</button>
     <div class="consejos-filtros-categoria oculto" id="filtrosCategoriaConsejo"></div>
   </div>
 
   <div class="consejos-form-wrapper oculto" id="consejosFormWrapper">
     <div class="consejos-form" id="consejosForm">
-      <h4 style="margin:0 0 1rem;">✏️ Nuevo consejo</h4>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin:0 0 1rem;">
+        <h4 style="margin:0;">✏️ Nuevo consejo</h4>
+        <button id="btnCerrarConsejoForm" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--texto);padding:0;line-height:1;" title="Cerrar">✕</button>
+      </div>
       <div class="form-campo">
         <label for="campoTituloConsejo">Título</label>
         <div class="toolbar-formato">

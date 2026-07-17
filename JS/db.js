@@ -278,3 +278,37 @@ function quitarPendienteLocal(id) {
   var i = pends.indexOf(id);
   if (i !== -1) { pends.splice(i, 1); localStorage.setItem(CLAVE_PEND_LOCAL, JSON.stringify(pends)); }
 }
+
+const CLAVE_FAV_TIPS_LOCAL = 'recetario-fav-tips-visitante';
+
+async function obtenerFavoritosTips(userId) {
+  try {
+    var data = await peticion(SUPABASE_URL + '/rest/v1/tips_favoritos?select=tip_id&user_id=eq.' + encodeURIComponent(userId));
+    return data ? data.map(function (f) { return f.tip_id; }) : [];
+  } catch (e) { return []; }
+}
+async function agregarFavoritoTip(userId, tipId) {
+  try {
+    await peticion(SUPABASE_URL + '/rest/v1/tips_favoritos', {
+      method: 'POST',
+      body: JSON.stringify({ id: userId + '-' + tipId, user_id: userId, tip_id: tipId })
+    });
+  } catch (e) { if (e.message.indexOf('409') === -1) console.warn('Error al agregar favorito tip', e); }
+}
+async function quitarFavoritoTip(userId, tipId) {
+  try {
+    await peticion(SUPABASE_URL + '/rest/v1/tips_favoritos?user_id=eq.' + encodeURIComponent(userId) + '&tip_id=eq.' + encodeURIComponent(tipId), { method: 'DELETE' });
+  } catch (e) { console.warn('Error al quitar favorito tip', e); }
+}
+function obtenerFavoritosTipsLocal() {
+  try { return JSON.parse(localStorage.getItem(CLAVE_FAV_TIPS_LOCAL)) || []; } catch (e) { return []; }
+}
+function agregarFavoritoTipLocal(id) {
+  var favs = obtenerFavoritosTipsLocal();
+  if (favs.indexOf(id) === -1) { favs.push(id); localStorage.setItem(CLAVE_FAV_TIPS_LOCAL, JSON.stringify(favs)); }
+}
+function quitarFavoritoTipLocal(id) {
+  var favs = obtenerFavoritosTipsLocal();
+  var i = favs.indexOf(id);
+  if (i !== -1) { favs.splice(i, 1); localStorage.setItem(CLAVE_FAV_TIPS_LOCAL, JSON.stringify(favs)); }
+}
