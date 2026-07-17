@@ -3,6 +3,9 @@ var editandoTipId = null;
 var filtroCategoriaConsejo = 'Todas';
 var busquedaConsejo = '';
 var CATEGORIAS_CONSEJOS = ['Todas', 'Ahorro en la cocina', 'Arroces y pastas', 'Carnes y aves', 'Cocinas del mundo', 'Condimentos y especias', 'Conservación de alimentos', 'Ensaladas y aderezos', 'Ingredientes', 'Métodos de cocción', 'Nutrición', 'Organización', 'Panadería y masas', 'Repostería', 'Seguridad e higiene', 'Trucos rápidos', 'Técnicas de cocina', 'Utensilios'];
+const CONSEJOS_POR_PAGINA = 12;
+let paginaActualConsejos = 0;
+let _filtradasConsejos = [];
 
 async function peticionTips(url, opts) {
   var res = await fetch(url, {
@@ -223,19 +226,31 @@ function renderizarFiltrosCategoriaConsejo() {
 }
 
 function renderizarConsejos(tips) {
-  var grid = document.getElementById('consejosGrid');
   var sin = document.getElementById('sinConsejos');
-  var sesion = obtenerSesion();
-  var filtradas = consejosFiltrados(tips);
+  _filtradasConsejos = consejosFiltrados(tips);
 
-  if (!filtradas.length) {
-    grid.innerHTML = '';
+  if (!_filtradasConsejos.length) {
+    document.getElementById('consejosGrid').innerHTML = '';
     sin.classList.remove('oculto');
+    var oldPag = document.querySelector('.paginacion');
+    if (oldPag) oldPag.remove();
     return;
   }
 
   sin.classList.add('oculto');
-  grid.innerHTML = filtradas.map(function (t) {
+  paginaActualConsejos = 0;
+  renderizarPaginaConsejos();
+  renderizarPaginacionConsejos();
+}
+
+function renderizarPaginaConsejos() {
+  var grid = document.getElementById('consejosGrid');
+  var sesion = obtenerSesion();
+  var desde = paginaActualConsejos * CONSEJOS_POR_PAGINA;
+  var hasta = desde + CONSEJOS_POR_PAGINA;
+  var pagina = _filtradasConsejos.slice(desde, hasta);
+
+  grid.innerHTML = pagina.map(function (t) {
     var fecha = '';
     if (t.created_at) {
       fecha = new Date(t.created_at).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -262,6 +277,51 @@ function renderizarConsejos(tips) {
       '</div>' +
     '</div>';
   }).join('');
+}
+
+function renderizarPaginacionConsejos() {
+  var contenedor = document.querySelector('.paginacion') || (function () {
+    var el = document.createElement('div');
+    el.className = 'paginacion';
+    var grid = document.getElementById('consejosGrid');
+    grid.parentNode.appendChild(el);
+    return el;
+  })();
+
+  var totalPaginas = Math.ceil(_filtradasConsejos.length / CONSEJOS_POR_PAGINA);
+  var p = paginaActualConsejos;
+  var html = '';
+
+  html += '<button class="paginacion-btn" data-page="0"' + (p === 0 ? ' disabled' : '') + '>««</button>';
+  html += '<button class="paginacion-btn" data-page="' + (p - 1) + '"' + (p === 0 ? ' disabled' : '') + '>‹</button>';
+
+  var inicio = Math.max(0, p - 3);
+  var fin = Math.min(totalPaginas - 1, p + 3);
+  if (inicio > 0) {
+    html += '<button class="paginacion-btn" data-page="0">1</button>';
+    if (inicio > 1) html += '<span class="paginacion-ellipsis">…</span>';
+  }
+  for (var i = inicio; i <= fin; i++) {
+    html += '<button class="paginacion-btn' + (i === p ? ' activo' : '') + '" data-page="' + i + '">' + (i + 1) + '</button>';
+  }
+  if (fin < totalPaginas - 1) {
+    if (fin < totalPaginas - 2) html += '<span class="paginacion-ellipsis">…</span>';
+    html += '<button class="paginacion-btn" data-page="' + (totalPaginas - 1) + '">' + totalPaginas + '</button>';
+  }
+
+  html += '<button class="paginacion-btn" data-page="' + (p + 1) + '"' + (p >= totalPaginas - 1 ? ' disabled' : '') + '>›</button>';
+  html += '<button class="paginacion-btn" data-page="' + (totalPaginas - 1) + '"' + (p >= totalPaginas - 1 ? ' disabled' : '') + '>»»</button>';
+
+  contenedor.innerHTML = html;
+
+  contenedor.querySelectorAll('.paginacion-btn:not([disabled])').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      paginaActualConsejos = parseInt(this.dataset.page, 10);
+      renderizarPaginaConsejos();
+      renderizarPaginacionConsejos();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
 }
 
 async function editarTip(id) {
