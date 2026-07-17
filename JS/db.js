@@ -250,3 +250,31 @@ async function quitarPendiente(userId, recipeId) {
     console.warn('Error al quitar pendiente', e);
   }
 }
+
+const CLAVE_FAV_LOCAL = 'recetario-fav-visitante';
+const CLAVE_PEND_LOCAL = 'recetario-pend-visitante';
+
+function obtenerFavoritosLocal() {
+  try { return JSON.parse(localStorage.getItem(CLAVE_FAV_LOCAL)) || []; } catch (e) { return []; }
+}
+function agregarFavoritoLocal(id) {
+  var favs = obtenerFavoritosLocal();
+  if (favs.indexOf(id) === -1) { favs.push(id); localStorage.setItem(CLAVE_FAV_LOCAL, JSON.stringify(favs)); }
+}
+function quitarFavoritoLocal(id) {
+  var favs = obtenerFavoritosLocal();
+  var i = favs.indexOf(id);
+  if (i !== -1) { favs.splice(i, 1); localStorage.setItem(CLAVE_FAV_LOCAL, JSON.stringify(favs)); }
+}
+function obtenerPendientesLocal() {
+  try { return JSON.parse(localStorage.getItem(CLAVE_PEND_LOCAL)) || []; } catch (e) { return []; }
+}
+function agregarPendienteLocal(id) {
+  var pends = obtenerPendientesLocal();
+  if (pends.indexOf(id) === -1) { pends.push(id); localStorage.setItem(CLAVE_PEND_LOCAL, JSON.stringify(pends)); }
+}
+function quitarPendienteLocal(id) {
+  var pends = obtenerPendientesLocal();
+  var i = pends.indexOf(id);
+  if (i !== -1) { pends.splice(i, 1); localStorage.setItem(CLAVE_PEND_LOCAL, JSON.stringify(pends)); }
+}

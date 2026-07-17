@@ -222,15 +222,15 @@ function renderizarDetalle() {
   }
   let socialEmbedHtml = generarSocialEmbed(r.socialUrl);
 
-  var logueado = estaLogueado();
   var sesion = obtenerSesion();
   var esFav = r.favorito;
-  if (sesion) {
-    var recetaFavId = r.id;
+  if (!sesion) {
+    esFav = obtenerFavoritosLocal().indexOf(r.id) !== -1;
   }
 
+  var logueado = !!sesion;
   var editarBtn = logueado ? `<a href="agregar.html?id=${r.id}" class="btn-accion btn-editar">✏️ Editar receta</a>` : '';
-  var favBtn = logueado ? `<button class="btn-accion btn-fav" id="btnFavDetalle" onclick="toggleFavoritoDetalle()">🤍 Favorito</button>` : '';
+  var favBtn = `<button class="btn-accion ${esFav ? 'btn-fav-activo' : 'btn-fav'}" id="btnFavDetalle" onclick="toggleFavoritoDetalle()">${esFav ? '❤️' : '🤍'} Favorito</button>`;
   var eliminarBtn = logueado ? `<button class="btn-accion btn-eliminar" onclick="eliminarRecetaActual()">🗑️ Eliminar receta</button>` : '';
 
   document.title = r.titulo + ' — Recetas del día';
@@ -331,18 +331,6 @@ function renderizarDetalle() {
   `;
 
   renderizarTab('ingredientes');
-
-  if (logueado) {
-    obtenerFavoritos(sesion.userId).then(function (favs) {
-      if (favs.indexOf(r.id) !== -1) {
-        var btn = document.getElementById('btnFavDetalle');
-        if (btn) {
-          btn.innerHTML = '❤️ Favorito';
-          btn.className = 'btn-accion btn-fav-activo';
-        }
-      }
-    });
-  }
 }
 
 function configurarTabs() {
@@ -1027,19 +1015,24 @@ function renderizarCocinaPaso() {
 
 async function toggleFavoritoDetalle() {
   var sesion = obtenerSesion();
-  if (!sesion) return;
-  var r = receta;
-  var favs = await obtenerFavoritos(sesion.userId);
-  var esFav = favs.indexOf(r.id) !== -1;
+  var id = receta.id;
+  var esFav = obtenerFavoritosLocal().indexOf(id) !== -1;
+  if (sesion) {
+    esFav = (await obtenerFavoritos(sesion.userId)).indexOf(id) !== -1;
+  }
   if (esFav) {
-    await quitarFavorito(sesion.userId, r.id);
+    if (sesion) { await quitarFavorito(sesion.userId, id); }
+    else { quitarFavoritoLocal(id); }
+    esFav = false;
   } else {
-    await agregarFavorito(sesion.userId, r.id);
+    if (sesion) { await agregarFavorito(sesion.userId, id); }
+    else { agregarFavoritoLocal(id); }
+    esFav = true;
   }
   var btn = document.getElementById('btnFavDetalle');
   if (btn) {
-    btn.innerHTML = esFav ? '🤍 Favorito' : '❤️ Favorito';
-    btn.className = 'btn-accion ' + (esFav ? 'btn-fav' : 'btn-fav-activo');
+    btn.innerHTML = esFav ? '❤️ Favorito' : '🤍 Favorito';
+    btn.className = 'btn-accion ' + (esFav ? 'btn-fav-activo' : 'btn-fav');
   }
 }
 

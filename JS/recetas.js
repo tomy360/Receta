@@ -161,6 +161,9 @@ async function init() {
   if (sesion) {
     favoritosUsuario = await obtenerFavoritos(sesion.userId);
     pendientesUsuario = await obtenerPendientes(sesion.userId);
+  } else {
+    favoritosUsuario = obtenerFavoritosLocal();
+    pendientesUsuario = obtenerPendientesLocal();
   }
 
   if (!esIndex) return;
@@ -266,17 +269,11 @@ async function init() {
   renderizarFiltrosTiempo();
   renderizarFiltrosPorciones();
   renderizarFiltrosPuntuacion();
-  if (estaLogueado()) renderizarFiltrosFavorito();
+  renderizarFiltrosFavorito();
   renderizarFiltrosAutor();
   renderizarFiltrosCategorias();
   renderizarFiltrosDieta();
   renderizar();
-
-  var filtroFavGrupo = document.querySelector('.panel-filtros .filtro-grupo:nth-child(6)');
-  if (filtroFavGrupo) filtroFavGrupo.style.display = estaLogueado() ? '' : 'none';
-  document.querySelectorAll('.ordenar-opcion.solo-login').forEach(function(el) {
-    el.style.display = estaLogueado() ? '' : 'none';
-  });
 
   var spinner = document.getElementById('spinner-global');
   if (spinner) spinner.classList.add('ocultar');
@@ -645,24 +642,24 @@ document.addEventListener('click', async function (e) {
 
 async function toggleFavorito(id) {
   var sesion = obtenerSesion();
-  if (sesion) {
-    var idx = favoritosUsuario.indexOf(id);
-    if (idx === -1) {
+  var idx = favoritosUsuario.indexOf(id);
+  if (idx === -1) {
+    favoritosUsuario.push(id);
+    if (sesion) {
       await agregarFavorito(sesion.userId, id);
-      favoritosUsuario.push(id);
     } else {
-      await quitarFavorito(sesion.userId, id);
-      favoritosUsuario.splice(idx, 1);
+      agregarFavoritoLocal(id);
     }
   } else {
-    var r = await obtenerRecetaCompleta(id);
-    if (!r) return;
-    r.favorito = !r.favorito;
-    await actualizarReceta(r);
+    favoritosUsuario.splice(idx, 1);
+    if (sesion) {
+      await quitarFavorito(sesion.userId, id);
+    } else {
+      quitarFavoritoLocal(id);
+    }
   }
   recetas = await obtenerRecetasLivianas();
-  var r = recetas.find(function (r) { return r.id === id; });
-  var esFav = r ? (r.favorito || favoritosUsuario.indexOf(id) !== -1) : false;
+  var esFav = favoritosUsuario.indexOf(id) !== -1;
   var btn = document.querySelector('.card-fav-btn[data-id="' + id + '"]');
   if (btn) {
     btn.classList.toggle('card-fav-activo', esFav);
@@ -673,14 +670,21 @@ async function toggleFavorito(id) {
 
 async function togglePendiente(id) {
   var sesion = obtenerSesion();
-  if (!sesion) return;
   var idx = pendientesUsuario.indexOf(id);
   if (idx === -1) {
-    await agregarPendiente(sesion.userId, id);
     pendientesUsuario.push(id);
+    if (sesion) {
+      await agregarPendiente(sesion.userId, id);
+    } else {
+      agregarPendienteLocal(id);
+    }
   } else {
-    await quitarPendiente(sesion.userId, id);
     pendientesUsuario.splice(idx, 1);
+    if (sesion) {
+      await quitarPendiente(sesion.userId, id);
+    } else {
+      quitarPendienteLocal(id);
+    }
   }
   var esPend = pendientesUsuario.indexOf(id) !== -1;
   var btn = document.querySelector('.card-pend-btn[data-id="' + id + '"]');
@@ -695,10 +699,10 @@ function crearTarjeta(r) {
   const estrellaVacia = '☆'.repeat(5 - Math.round(r.puntuacion));
   var esFav = r.favorito || favoritosUsuario.indexOf(r.id) !== -1;
   const favClase = esFav ? ' card-fav-activo' : '';
-  const favBtn = estaLogueado() ? `<button class="card-fav-btn${favClase}" data-id="${r.id}" title="${esFav ? 'Quitar de favoritos' : 'Añadir a favoritos'}">${esFav ? '❤️' : '🤍'}</button>` : '';
+  const favBtn = `<button class="card-fav-btn${favClase}" data-id="${r.id}" title="${esFav ? 'Quitar de favoritos' : 'Añadir a favoritos'}">${esFav ? '❤️' : '🤍'}</button>`;
   var esPend = pendientesUsuario.indexOf(r.id) !== -1;
   var pendClase = esPend ? ' card-pend-activo' : '';
-  var pendBtn = estaLogueado() ? `<button class="card-pend-btn${pendClase}" data-id="${r.id}" title="${esPend ? 'Quitar de pendientes' : 'Añadir a pendientes'}">⏰</button>` : '';
+  var pendBtn = `<button class="card-pend-btn${pendClase}" data-id="${r.id}" title="${esPend ? 'Quitar de pendientes' : 'Añadir a pendientes'}">⏰</button>`;
   return `
     <div class="tarjeta">
       ${pendBtn}

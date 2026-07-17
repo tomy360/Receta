@@ -1,9 +1,4 @@
 (function () {
-  if (!estaLogueado()) {
-    window.location.replace('./index.html');
-    return;
-  }
-
   var pendientesRecetas = [];
   var seleccionada = null;
   var lista = document.getElementById('pendientesLista');
@@ -11,8 +6,7 @@
 
   async function cargar() {
     var sesion = obtenerSesion();
-    if (!sesion) return;
-    var ids = await obtenerPendientes(sesion.userId);
+    var ids = sesion ? await obtenerPendientes(sesion.userId) : obtenerPendientesLocal();
     if (!ids || ids.length === 0) {
       lista.innerHTML = '';
       detalle.innerHTML = '<p class="pendientes-detalle-vacio">Aún no tenés recetas pendientes.</p>';
@@ -20,7 +14,6 @@
     }
     var todas = await obtenerRecetas();
     pendientesRecetas = todas.filter(function (r) { return ids.indexOf(r.id) !== -1; });
-    // no preseleccionar ninguna
     renderizar();
   }
 
@@ -67,8 +60,11 @@
       e.preventDefault();
       var id = btn.dataset.id;
       var sesion = obtenerSesion();
-      if (!sesion) return;
-      await quitarPendiente(sesion.userId, id);
+      if (sesion) {
+        await quitarPendiente(sesion.userId, id);
+      } else {
+        quitarPendienteLocal(id);
+      }
       pendientesRecetas = pendientesRecetas.filter(function (r) { return r.id !== id; });
       if (seleccionada === id) {
         seleccionada = pendientesRecetas.length > 0 ? pendientesRecetas[0].id : null;
