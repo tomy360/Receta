@@ -157,6 +157,9 @@ async function init() {
     recetas = [];
   }
 
+  var contador = document.getElementById('contadorRecetas');
+  if (contador) contador.textContent = recetas.length;
+
   var sesion = obtenerSesion();
   if (sesion) {
     favoritosUsuario = await obtenerFavoritos(sesion.userId);
