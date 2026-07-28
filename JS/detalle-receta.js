@@ -1,3 +1,5 @@
+function esMovil() { return 'ontouchstart' in window || navigator.maxTouchPoints > 0; }
+
 let receta = null;
 let porcionesEscala = 1;
 var cocinaPaso = 0;
@@ -549,7 +551,7 @@ function configurarNotasInput() {
 
     btn.addEventListener('click', guardar);
     input.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); guardar(); }
+      if (e.key === 'Enter' && !e.shiftKey && !esMovil()) { e.preventDefault(); guardar(); }
     });
 }
 
@@ -587,7 +589,7 @@ function configurarNotasAcciones() {
   const editInput = document.getElementById('editNotaInput');
   if (editInput) {
     editInput.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' && !e.shiftKey) {
+      if (e.key === 'Enter' && !e.shiftKey && !esMovil()) {
         const btn = document.getElementById('btnSaveEditNota');
         if (btn) guardarEditarNota(btn.dataset.id);
       }
